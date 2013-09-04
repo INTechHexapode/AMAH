@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Tech The Coconut - /hardware/library/libINTech.lbr - Changements - Wiki de INTech</title>
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<link rel='shortcut icon' href='/favicon.ico?1307994907' />
+<link href="/themes/squeejee/stylesheets/application.css?1242525306" media="all" rel="stylesheet" type="text/css" />
+
+<script src="/javascripts/prototype.js?1307994922" type="text/javascript"></script>
+<script src="/javascripts/effects.js?1307994907" type="text/javascript"></script>
+<script src="/javascripts/dragdrop.js?1307994907" type="text/javascript"></script>
+<script src="/javascripts/controls.js?1307994907" type="text/javascript"></script>
+<script src="/javascripts/application.js?1307994922" type="text/javascript"></script>
+
+<link href="/stylesheets/jstoolbar.css?1307994922" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/stylesheets/csshover.htc?1307994907);}
+    </style>
+<![endif]-->
+
+	<link href="/plugin_assets/redmine_jchat/stylesheets/main.css?1308109305" media="screen" rel="stylesheet" type="text/css" />
+        <script type="text/javascript">
+//<![CDATA[
+var redmineRootPath=""
+//]]>
+</script>
+	<script src="/plugin_assets/redmine_jchat/javascripts/main.js?1308109305" type="text/javascript"></script>
+
+ 
+
+
+<!-- page specific tags -->
+
+  <script src="/javascripts/repository_navigation.js?1307994907" type="text/javascript"></script>
+</head>
+<body class="theme-Squeejee controller-repositories action-changes">
+<div id="wrapper">
+<div id="wrapper2">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="/my/account" class="my-account">Mon compte</a></li>
+<li><a href="/logout" class="logout">Déconnexion</a></li></ul>    </div>
+    <div id="loggedas">Connecté en tant que <a href="/users/41">PF</a></div>
+    <ul><li><a href="/" class="home">Page d'accueil</a></li>
+<li><a href="/my/page" class="my-page">Ma page</a></li>
+<li><a href="/projects" class="projects">Projets</a></li>
+<li><a href="/knowledgebase" class="knowledgebase">Base de Connaissance</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Aide</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="/search/index/techthecoconut" method="get">
+        <input name="changesets" type="hidden" value="1" />
+        <a href="/search/index/techthecoconut" accesskey="4">Recherche </a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+        </form>
+        <select onchange="if (this.value != '') { window.location = this.value; }"><option value=''>Aller à un projet...</option><option value="" disabled="disabled">---</option><option value="/projects/formation?jump=repository">Formation</option><option value="/projects/formation-suiveur-de-ligne?jump=repository">&nbsp;&nbsp;&#187; Suiveur de ligne</option><option value="/projects/intech-2013?jump=repository">INTech 2013</option><option value="/projects/simulator?jump=repository">&nbsp;&nbsp;&#187; Simulateur</option><option selected="selected" value="/projects/techthecoconut?jump=repository">Tech The Coconut</option><option value="/projects/techtheking?jump=repository">Tech The King</option></select>
+    </div>
+    
+    <h1>Tech The Coconut</h1>
+    
+    
+    <div id="main-menu">
+        <ul><li><a href="/projects/techthecoconut" class="overview">Aperçu</a></li>
+<li><a href="/projects/techthecoconut/activity" class="activity">Activité</a></li>
+<li><a href="/projects/techthecoconut/issues" class="issues">Demandes</a></li>
+<li><a href="/projects/techthecoconut/issues/new" accesskey="7" class="new-issue">Nouvelle demande</a></li>
+<li><a href="/projects/techthecoconut/issues/gantt" class="gantt">Gantt</a></li>
+<li><a href="/projects/techthecoconut/issues/calendar" class="calendar">Calendrier</a></li>
+<li><a href="/projects/techthecoconut/news" class="news">Annonces</a></li>
+<li><a href="/projects/techthecoconut/documents" class="documents">Documents</a></li>
+<li><a href="/projects/techthecoconut/wiki" class="wiki">Wiki</a></li>
+<li><a href="/projects/techthecoconut/files" class="files">Fichiers</a></li>
+<li><a href="/projects/techthecoconut/repository" class="repository selected">Dépôt</a></li>
+<li><a href="/projects/techthecoconut/settings" class="settings">Configuration</a></li></ul>
+    </div>
+    
+</div>
+
+<div class="nosidebar" id="main">
+    <div id="sidebar">        
+        
+        
+    </div>
+    
+    <div id="content">
+				
+        
+
+<div class="contextual">
+  
+
+<a href="/projects/techthecoconut/repository/statistics" class="icon icon-stats">Statistiques</a>
+
+<form action="/projects/techthecoconut/repository/changes/hardware/library/libINTech.lbr?rev=" id="revision_selector" method="get">  <!-- Branches Dropdown -->
+      | Branche: 
+    <select id="branch" name="branch"><option value=""></option>
+<option value="clean_asservissement">clean_asservissement</option>
+<option value="master" selected="selected">master</option></select>
+  
+  
+  | Révision : 
+  <input id="rev" name="rev" size="8" type="text" value="master" />
+</form>
+</div>
+
+<h2>
+  <a href="/projects/techthecoconut/repository/revisions/master/show">root</a>
+
+    / <a href="/projects/techthecoconut/repository/revisions/master/show/hardware">hardware</a>
+
+    / <a href="/projects/techthecoconut/repository/revisions/master/show/hardware/library">library</a>
+
+
+    / <a href="/projects/techthecoconut/repository/revisions/master/changes/hardware/library/libINTech.lbr">libINTech.lbr</a>
+
+
+@ master
+
+
+</h2>
+
+<p>
+
+<p>
+Historique |
+
+    <a href="/projects/techthecoconut/repository/revisions/master/entry/hardware/library/libINTech.lbr">Voir</a> |
+
+
+    <a href="/projects/techthecoconut/repository/revisions/master/annotate/hardware/library/libINTech.lbr">Annoter</a> |
+
+<a href="/projects/techthecoconut/repository/revisions/master/raw/hardware/library/libINTech.lbr">Télécharger</a>
+(4,05 ko)
+</p>
+
+
+</p>
+
+
+
+<form action="/projects/techthecoconut/repository/diff/hardware/library/libINTech.lbr" method="get">
+<table class="list changesets">
+<thead><tr>
+<th>#</th>
+<th></th>
+<th></th>
+<th>Date</th>
+<th>Auteur</th>
+<th>Commentaire</th>
+</tr></thead>
+<tbody>
+
+
+
+<tr class="changeset odd">
+<td class="id"><a href="/projects/techthecoconut/repository/revisions/99a12377292c9b628738e46eb253ff935214056c" title="Revision 99a12377">99a12377</a></td>
+<td class="checkbox"><input checked="checked" id="cb-1" name="rev" onclick="$('cbto-2').checked=true;" type="radio" value="99a12377292c9b628738e46eb253ff935214056c" /></td>
+<td class="checkbox"></td>
+<td class="committed_on">28/02/2012 00:13</td>
+<td class="author">Jérémy Cheynet</td>
+<td class="comments"><p>Rajout et mise à jour des lib eagle</p>
+
+
+	<p>Rajout de 2 lib eagle pour avoir le composant d'alim (L5973AD)<br />Mise à jour d'une lib pour rajouter les composants qu'il me manquait <img src="/plugin_assets/redmine_wiki_extensions/images/smile.png" alt=":)"></p>
+
+
+	<p>Signed-off-by: Jérémy Cheynet &lt;<a class="email" href="mailto:jeremy@minet.net">jeremy@minet.net</a>&gt;</p></td>
+</tr>
+
+
+<tr class="changeset even">
+<td class="id"><a href="/projects/techthecoconut/repository/revisions/ad550ee0e42c44334a68d8af41df3af57fb079db" title="Revision ad550ee0">ad550ee0</a></td>
+<td class="checkbox"></td>
+<td class="checkbox"><input checked="checked" id="cbto-2" name="rev_to" onclick="if ($('cb-2').checked==true) {$('cb-1').checked=true;}" type="radio" value="ad550ee0e42c44334a68d8af41df3af57fb079db" /></td>
+<td class="committed_on">11/02/2012 16:50</td>
+<td class="author">Jérémy Cheynet</td>
+<td class="comments"><p>Lib Composant</p>
+
+
+	<p>Rajout de la lib INTech.</p>
+
+
+	<p>Signed-off-by: Jérémy &lt;<a class="email" href="mailto:jeremy@minet.net">jeremy@minet.net</a>&gt;</p></td>
+</tr>
+
+
+</tbody>
+</table>
+<input type="submit" value="Voir les différences" />
+</form>
+
+
+
+        
+				<div style="clear:both;"></div>
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Chargement...</span></div>
+	
+<div id="footer">
+  <div class="bgl"><div class="bgr">
+    Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2011 Jean-Philippe Lang
+  </div></div>
+</div>
+</div>
+</div>
+
+	<link href="/plugin_assets/redmine_jchat/stylesheets/main.css?1308109305" media="screen" rel="stylesheet" type="text/css" />
+	<script src="/plugin_assets/redmine_jchat/javascripts/main.js?1308109305" type="text/javascript"></script>
+
+
+
+
+<div id="chatFooter" onclick="toggleChat();">Tchat</div>
+<div id="chatArea" style="display: none;">
+<div id="chatMessages" class="chatMessage" title="0">.</div>
+<input type="text" id="txtMsg" class="chatInput" />
+</div>
+
+<script>chat_init();</script>
+
+
+ 
+</body>
+</html>

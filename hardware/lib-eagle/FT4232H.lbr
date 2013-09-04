@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="6.1">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="no" active="yes"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="no" active="yes"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="no" active="yes"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="no" active="yes"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="no" active="yes"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="no" active="yes"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="no" active="yes"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="no" active="yes"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="no" active="yes"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="no" active="yes"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="no" active="yes"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="no" active="yes"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<packages>
+<package name="FT4232H-MODULE">
+<wire x1="0" y1="29.15" x2="35.58" y2="29.15" width="0.127" layer="21"/>
+<wire x1="35.58" y1="29.15" x2="35.58" y2="0" width="0.127" layer="21"/>
+<wire x1="35.58" y1="0" x2="0" y2="0" width="0.127" layer="21"/>
+<wire x1="0" y1="0" x2="0" y2="29.15" width="0.127" layer="21"/>
+<wire x1="-1.93" y1="10.725" x2="8.07" y2="10.725" width="0.127" layer="21"/>
+<wire x1="8.07" y1="10.725" x2="8.07" y2="18.425" width="0.127" layer="21"/>
+<wire x1="8.07" y1="18.425" x2="-1.93" y2="18.425" width="0.127" layer="21"/>
+<wire x1="-1.93" y1="18.425" x2="-1.93" y2="10.725" width="0.127" layer="21"/>
+<pad name="11" x="3.25" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="222" x="3.25" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$3" x="5.79" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="1" x="3.25" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$5" x="5.79" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="7" x="8.33" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="31" x="10.87" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$8" x="13.41" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$9" x="15.95" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$10" x="18.49" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="8" x="21.03" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$11" x="23.57" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$13" x="26.11" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$14" x="28.65" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$15" x="31.19" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="9" x="33.73" y="27.29" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="5" x="8.33" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="30" x="10.87" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$19" x="13.41" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$20" x="15.95" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$21" x="18.49" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$22" x="21.03" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="6" x="23.57" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$24" x="26.11" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$25" x="28.65" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$26" x="31.19" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="10" x="33.73" y="24.75" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="4" x="3.25" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="3" x="5.79" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="12" x="5.79" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="13" x="8.33" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="2" x="8.33" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$33" x="10.87" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="14" x="10.87" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="15" x="13.41" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$36" x="13.41" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$37" x="15.95" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="16" x="15.95" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$39" x="18.49" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="17" x="23.57" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$41" x="21.03" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$42" x="18.49" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$43" x="21.03" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="18" x="23.57" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$45" x="26.11" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$46" x="26.11" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$47" x="28.65" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$48" x="28.65" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$49" x="31.19" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$50" x="31.19" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$51" x="33.73" y="4.4" drill="0.8" diameter="1.6764" shape="square"/>
+<pad name="P$52" x="33.73" y="1.86" drill="0.8" diameter="1.6764" shape="square"/>
+<wire x1="3.175" y1="24.765" x2="5.715" y2="24.765" width="1.016" layer="16"/>
+<wire x1="8.255" y1="1.905" x2="8.255" y2="-2.54" width="1.016" layer="16"/>
+<wire x1="8.255" y1="-2.54" x2="15.875" y2="-2.54" width="1.016" layer="16"/>
+<wire x1="15.875" y1="-2.54" x2="15.875" y2="1.905" width="1.016" layer="16"/>
+</package>
+</packages>
+<symbols>
+<symbol name="FT4232H-MODULE">
+<wire x1="-12.7" y1="15.24" x2="12.7" y2="15.24" width="0.254" layer="94"/>
+<wire x1="12.7" y1="15.24" x2="12.7" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-15.24" x2="-12.7" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="-15.24" x2="-12.7" y2="15.24" width="0.254" layer="94"/>
+<pin name="RX1" x="17.78" y="12.7" length="middle" rot="R180"/>
+<pin name="TX1" x="17.78" y="10.16" length="middle" rot="R180"/>
+<pin name="RX2" x="17.78" y="5.08" length="middle" rot="R180"/>
+<pin name="TX2" x="17.78" y="2.54" length="middle" rot="R180"/>
+<pin name="RX3" x="17.78" y="-2.54" length="middle" rot="R180"/>
+<pin name="TX3" x="17.78" y="-5.08" length="middle" rot="R180"/>
+<pin name="RX4" x="17.78" y="-10.16" length="middle" rot="R180"/>
+<pin name="TX4" x="17.78" y="-12.7" length="middle" rot="R180"/>
+<pin name="GND" x="0" y="-20.32" length="middle" rot="R90"/>
+<pin name="3.3VOUT" x="0" y="20.32" length="middle" rot="R270"/>
+<pin name="PWREN#" x="-17.78" y="7.62" length="middle"/>
+<pin name="EECS" x="-17.78" y="2.54" length="middle"/>
+<pin name="EECLK" x="-17.78" y="-2.54" length="middle"/>
+<pin name="EEDATA" x="-17.78" y="-7.62" length="middle"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="FT4232H">
+<gates>
+<gate name="G$1" symbol="FT4232H-MODULE" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="FT4232H-MODULE">
+<connects>
+<connect gate="G$1" pin="3.3VOUT" pad="11 12 13 16"/>
+<connect gate="G$1" pin="EECLK" pad="7"/>
+<connect gate="G$1" pin="EECS" pad="5"/>
+<connect gate="G$1" pin="EEDATA" pad="30"/>
+<connect gate="G$1" pin="GND" pad="2 3 4 222"/>
+<connect gate="G$1" pin="PWREN#" pad="31"/>
+<connect gate="G$1" pin="RX1" pad="15"/>
+<connect gate="G$1" pin="RX2" pad="18"/>
+<connect gate="G$1" pin="RX3" pad="10"/>
+<connect gate="G$1" pin="RX4" pad="8"/>
+<connect gate="G$1" pin="TX1" pad="14"/>
+<connect gate="G$1" pin="TX2" pad="17"/>
+<connect gate="G$1" pin="TX3" pad="9"/>
+<connect gate="G$1" pin="TX4" pad="6"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+</eagle>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="6.1">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="no" active="yes"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="no" active="yes"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="no" active="yes"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="no" active="yes"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="no" active="yes"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="no" active="yes"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="no" active="yes"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="no" active="yes"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="no" active="yes"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="no" active="yes"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="no" active="yes"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="no" active="yes"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<packages>
+<package name="BUS_2013">
+<pad name="P$1" x="-5.08" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="14" x="-5.08" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="15" x="-2.54" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$4" x="-2.54" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$5" x="0" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="16" x="0" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="17" x="2.54" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$8" x="2.54" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$9" x="5.08" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="18" x="5.08" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="13" x="-7.62" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$12" x="-7.62" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$13" x="-10.16" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="12" x="-10.16" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="11" x="-12.7" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$16" x="-12.7" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$17" x="-15.24" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="10" x="-15.24" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="19" x="7.62" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$20" x="7.62" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$21" x="10.16" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="20" x="10.16" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="9" x="-17.78" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$24" x="-17.78" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$25" x="-20.32" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="8" x="-20.32" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="7" x="-22.86" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$28" x="-22.86" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$29" x="-25.4" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="6" x="-25.4" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="5" x="-27.94" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$32" x="-27.94" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$33" x="12.7" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="21" x="12.7" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="22" x="15.24" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$36" x="15.24" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$37" x="17.78" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="23" x="17.78" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="24" x="20.32" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$40" x="20.32" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$41" x="22.86" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="25" x="22.86" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="4" x="-30.48" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$44" x="-30.48" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$45" x="-33.02" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="3" x="-33.02" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$47" x="-35.56" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="2" x="-35.56" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="1" x="-38.1" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$50" x="-38.1" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="26" x="25.4" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="P$52" x="25.4" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$53" x="27.94" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$54" x="30.48" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$55" x="33.02" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$56" x="35.56" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$57" x="38.1" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="P$58" x="40.64" y="3.81" drill="0.8" shape="offset" rot="R90"/>
+<pad name="27" x="27.94" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="28" x="30.48" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="29" x="33.02" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="30" x="35.56" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="31" x="38.1" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<pad name="32" x="40.64" y="6.35" drill="0.8" shape="offset" rot="R270"/>
+<wire x1="-50" y1="-2.54" x2="-50" y2="100" width="0.127" layer="20"/>
+<wire x1="-50" y1="100" x2="50" y2="100" width="0.127" layer="20"/>
+<wire x1="50" y1="100" x2="50" y2="-2.54" width="0.127" layer="20"/>
+<wire x1="50" y1="-2.54" x2="-50" y2="-2.54" width="0.127" layer="20"/>
+<hole x="-46.99" y="96.52" drill="3.2"/>
+<hole x="45.72" y="96.52" drill="3.2"/>
+<circle x="45.72" y="0" radius="1.27" width="0.127" layer="20"/>
+<circle x="-43.18" y="0" radius="1.27" width="0.127" layer="20"/>
+<circle x="-38.354" y="95.25" radius="2.83980625" width="0.127" layer="51"/>
+</package>
+</packages>
+<symbols>
+<symbol name="BUS_2013">
+<pin name="TX1" x="5.08" y="-35.56" length="middle" rot="R180"/>
+<pin name="GND~2" x="5.08" y="-30.48" length="middle" rot="R180"/>
+<pin name="ULTRASON_2" x="5.08" y="-25.4" length="middle" rot="R180"/>
+<pin name="CAP_ANALOG_1" x="5.08" y="-5.08" length="middle" rot="R180"/>
+<pin name="JUMPER" x="5.08" y="0" length="middle" rot="R180"/>
+<pin name="ASCENCEUR_2" x="5.08" y="5.08" length="middle" rot="R180"/>
+<pin name="ASCENCEUR_1" x="5.08" y="10.16" length="middle" rot="R180"/>
+<pin name="COD_GAUCHE_2" x="5.08" y="35.56" length="middle" rot="R180"/>
+<pin name="COD_GAUCHE_1" x="5.08" y="40.64" length="middle" rot="R180"/>
+<pin name="COD_DROITE_2" x="5.08" y="45.72" length="middle" rot="R180"/>
+<pin name="COD_DROITE_1" x="5.08" y="50.8" length="middle" rot="R180"/>
+<pin name="GND~1" x="5.08" y="66.04" length="middle" rot="R180"/>
+<pin name="10V" x="5.08" y="71.12" length="middle" rot="R180"/>
+<pin name="24V" x="5.08" y="76.2" length="middle" rot="R180"/>
+<pin name="RX1" x="5.08" y="-40.64" length="middle" rot="R180"/>
+<pin name="TX2" x="5.08" y="-45.72" length="middle" rot="R180"/>
+<pin name="RX2" x="5.08" y="-50.8" length="middle" rot="R180"/>
+<pin name="TX3" x="5.08" y="-55.88" length="middle" rot="R180"/>
+<pin name="RX3" x="5.08" y="-60.96" length="middle" rot="R180"/>
+<pin name="5V" x="5.08" y="60.96" length="middle" rot="R180"/>
+<pin name="CAP_ANALOG_2" x="5.08" y="-10.16" length="middle" rot="R180"/>
+<pin name="RESET" x="5.08" y="-15.24" length="middle" rot="R180"/>
+<pin name="ULTRASON_1" x="5.08" y="-20.32" length="middle" rot="R180"/>
+<pin name="TX4" x="5.08" y="-66.04" length="middle" rot="R180"/>
+<pin name="RX4" x="5.08" y="-71.12" length="middle" rot="R180"/>
+<pin name="GND~3" x="5.08" y="-76.2" length="middle" rot="R180"/>
+<pin name="AX" x="5.08" y="-81.28" length="middle" rot="R180"/>
+<pin name="COD_MAX1_1" x="5.08" y="30.48" length="middle" rot="R180"/>
+<pin name="COD_MAX1_2" x="5.08" y="25.4" length="middle" rot="R180"/>
+<pin name="COD_MAX2_1" x="5.08" y="20.32" length="middle" rot="R180"/>
+<pin name="COD_MAX2_2" x="5.08" y="15.24" length="middle" rot="R180"/>
+<pin name="ALIM_RASPBERRY" x="5.08" y="55.88" length="middle" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="BUS_2013">
+<description>Modèle de carte pour bus INTech 2013.
+
+@Made by Nils.</description>
+<gates>
+<gate name="CARTE_2013" symbol="BUS_2013" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BUS_2013">
+<connects>
+<connect gate="CARTE_2013" pin="10V" pad="2"/>
+<connect gate="CARTE_2013" pin="24V" pad="1"/>
+<connect gate="CARTE_2013" pin="5V" pad="4"/>
+<connect gate="CARTE_2013" pin="ALIM_RASPBERRY" pad="5"/>
+<connect gate="CARTE_2013" pin="ASCENCEUR_1" pad="14"/>
+<connect gate="CARTE_2013" pin="ASCENCEUR_2" pad="15"/>
+<connect gate="CARTE_2013" pin="AX" pad="32"/>
+<connect gate="CARTE_2013" pin="CAP_ANALOG_1" pad="17"/>
+<connect gate="CARTE_2013" pin="CAP_ANALOG_2" pad="18"/>
+<connect gate="CARTE_2013" pin="COD_DROITE_1" pad="6"/>
+<connect gate="CARTE_2013" pin="COD_DROITE_2" pad="7"/>
+<connect gate="CARTE_2013" pin="COD_GAUCHE_1" pad="8"/>
+<connect gate="CARTE_2013" pin="COD_GAUCHE_2" pad="9"/>
+<connect gate="CARTE_2013" pin="COD_MAX1_1" pad="10"/>
+<connect gate="CARTE_2013" pin="COD_MAX1_2" pad="11"/>
+<connect gate="CARTE_2013" pin="COD_MAX2_1" pad="12"/>
+<connect gate="CARTE_2013" pin="COD_MAX2_2" pad="13"/>
+<connect gate="CARTE_2013" pin="GND~1" pad="3"/>
+<connect gate="CARTE_2013" pin="GND~2" pad="22"/>
+<connect gate="CARTE_2013" pin="GND~3" pad="31"/>
+<connect gate="CARTE_2013" pin="JUMPER" pad="16"/>
+<connect gate="CARTE_2013" pin="RESET" pad="19"/>
+<connect gate="CARTE_2013" pin="RX1" pad="24"/>
+<connect gate="CARTE_2013" pin="RX2" pad="26"/>
+<connect gate="CARTE_2013" pin="RX3" pad="28"/>
+<connect gate="CARTE_2013" pin="RX4" pad="30"/>
+<connect gate="CARTE_2013" pin="TX1" pad="23"/>
+<connect gate="CARTE_2013" pin="TX2" pad="25"/>
+<connect gate="CARTE_2013" pin="TX3" pad="27"/>
+<connect gate="CARTE_2013" pin="TX4" pad="29"/>
+<connect gate="CARTE_2013" pin="ULTRASON_1" pad="20"/>
+<connect gate="CARTE_2013" pin="ULTRASON_2" pad="21"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+</eagle>
