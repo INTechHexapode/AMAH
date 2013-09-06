@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "serialib.h"
 #include "Hexapod.hpp"
 
@@ -7,19 +8,21 @@ int main()
 	serialib LS;                                                            // Object of the serialib class
     int Ret;                                                                // Used for return values
     char Buffer[128];
-
-
-
-
     // Open serial port
-
     Ret=LS.Open("/dev/ttyUSB0",115200);                                        // Open serial link at 115200 bauds
     if (Ret!=1) {                                                           // If an error occured...
         printf ("Error while opening port. Permission problem ?\n");        // ... display a message ...
         return Ret;                                                         // ... quit the application
     }
     printf ("Serial port opened successfully !\n");
-
+    
+    Hexapod hexa(LS);
+    hexa.test();
+    sleep(1);
+    
+    hexa.disable();
+    
+/*
     // Write the AT command on the serial port
     
     Ret=LS.WriteString("fefaefaf");                                              // Send the command on the serial port
@@ -39,7 +42,7 @@ int main()
 
 
 
-    // Close the connection with the device
+    // Close the connection with the device*/
 
     LS.Close();
 }

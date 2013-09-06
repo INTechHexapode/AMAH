@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <unistd.h>
 
 #include "Leg.hpp"
 #include "serialib.h"
@@ -12,35 +13,84 @@ class Hexapod
 	public:
 		Hexapod(serialib& serial);
 		~Hexapod();
+		void disable();
+		void update();
+		void moveListLegs(std::vector<std::shared_ptr<Leg> > legs, int alpha, int beta, int eta);
+		void stand();
+		void setReady();
+		void test();
+		
 	private:
 		std::vector<std::shared_ptr<Leg> > m_legs;
-		Leg m_leg0;
-		Leg m_leg1;
-		Leg m_leg2;
-		Leg m_leg3;
-		Leg m_leg4;
-		Leg m_leg5;
 };
 
-Hexapod::Hexapod(serialib& serial):
-	m_leg0(serial, "29", "30", "31"),
-	m_leg1(serial, "13", "14", "15"),
-	m_leg2(serial, "25", "26", "27"),
-	m_leg3(serial, "8", "9", "10"),
-	m_leg4(serial, "17", "18", "19"),
-	m_leg5(serial, "0", "1", "2")
+Hexapod::Hexapod(serialib& serial)
 {
-	m_legs.push_back(std::shared_ptr<Leg>(new Leg(m_leg0)));
-	m_legs.push_back(std::shared_ptr<Leg>(new Leg(m_leg1)));
-	m_legs.push_back(std::shared_ptr<Leg>(new Leg(m_leg2)));
-	m_legs.push_back(std::shared_ptr<Leg>(new Leg(m_leg3)));
-	m_legs.push_back(std::shared_ptr<Leg>(new Leg(m_leg4)));
-	m_legs.push_back(std::shared_ptr<Leg>(new Leg(m_leg5)));
+	m_legs.push_back(std::shared_ptr<Leg>(new Leg(serial, "29", "30", "31")));
+	m_legs.push_back(std::shared_ptr<Leg>(new Leg(serial, "13", "14", "15")));
+	m_legs.push_back(std::shared_ptr<Leg>(new Leg(serial, "25", "26", "27")));
+	m_legs.push_back(std::shared_ptr<Leg>(new Leg(serial, "8", "9", "10")));
+	m_legs.push_back(std::shared_ptr<Leg>(new Leg(serial, "17", "18", "19")));
+	m_legs.push_back(std::shared_ptr<Leg>(new Leg(serial, "0", "1", "2")));
 }
 
 Hexapod::~Hexapod()
 {
 	
 }
+
+void Hexapod::disable()
+{
+	for(unsigned int l(0); l < m_legs.size(); ++l)
+		m_legs[l]->disable();
+}
+
+void Hexapod::test()
+{
+	std::vector<std::shared_ptr<Leg> > tri1;
+	tri1.push_back(m_legs[1]);
+	tri1.push_back(m_legs[2]);
+	tri1.push_back(m_legs[4]);
+	moveListLegs(tri1, 1500, 1500, 1500);
+}
+
+void Hexapod::update()
+{
+	for(unsigned int l(0); l < m_legs.size(); ++l)
+		m_legs[l]->update();
+}
+
+void Hexapod::moveListLegs(std::vector<std::shared_ptr<Leg> > legs, int alpha, int beta, int eta)
+{
+	std::cout << legs.size() << std::endl;
+	for(unsigned int l(0); l < legs.size(); ++l)
+		m_legs[l]->move(alpha, beta, eta);
+}
+
+void Hexapod::stand()
+{
+	std::vector<std::shared_ptr<Leg> > tri1;
+	tri1.push_back(m_legs[1]);
+	tri1.push_back(m_legs[2]);
+	tri1.push_back(m_legs[5]);
+	
+	std::vector<std::shared_ptr<Leg> > tri2;
+	tri2.push_back(m_legs[0]);
+	tri2.push_back(m_legs[3]);
+	tri2.push_back(m_legs[4]);
+	
+	for(int i(0); i < 5; ++i)
+	{
+		moveListLegs(tri1, 1400, 1900, 1500);
+		sleep(1);
+		moveListLegs(tri1, 1400, 1400, 1500);
+		sleep(1);
+		moveListLegs(tri2, 1400, 1900, 1500);
+		sleep(1);
+		moveListLegs(tri2, 1400, 1400, 1500);
+		sleep(1);
+	}
+}
+
 
 #endif

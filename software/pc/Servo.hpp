@@ -54,6 +54,7 @@ void Servo::move(int pulse)
 	if(pulse < m_minPulse)
 		pulse = m_minPulse;
 	std::string message = "#" + m_ID + " P" + toString(pulse) + "\r";
+	std::cout << message << std::endl;
 	m_serial.WriteString((const char*)message.c_str());
 }
 
