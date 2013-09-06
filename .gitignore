@@ -1,5 +1,5 @@
 *~
 *.o
 *.swp
-build/
-bin/
+software/build/
+software/bin/
