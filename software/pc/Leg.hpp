@@ -22,6 +22,12 @@ class Leg
 		void setReady();
 		//Met jour les m_currentAngle respectifs des servos pour atteinre la position (x,y,z)
 		void goTo(int x, int y, int z);
+		void moveMidleTop();
+		void moveLeftTop();
+		void moveRightTop();
+		void moveMidleBottom();
+		void moveLeftBottom();
+		void moveRightBottom();
 	
 	private:
 		Servo m_alpha;
@@ -80,6 +86,48 @@ void Leg::setReady()
 void Leg::goTo(int x, int y, int z)
 {
 	
+}
+
+void Leg::moveMidleTop()
+{
+	m_alpha.move(1500);
+	m_beta.move(1900);
+	m_eta.move(1500);
+}
+
+void Leg::moveLeftTop()
+{
+	m_alpha.move(1900);
+	m_beta.move(1900);
+	m_eta.move(1500);
+}
+
+void Leg::moveRightTop()
+{
+	m_alpha.move(1200);
+	m_beta.move(1900);
+	m_eta.move(1500);
+}
+
+void Leg::moveMidleBottom()
+{
+	m_alpha.move(1500);
+	m_beta.move(1600);
+	m_eta.move(1500);
+}
+
+void Leg::moveLeftBottom()
+{
+	m_alpha.move(1900);
+	m_beta.move(1600);
+	m_eta.move(1500);
+}
+
+void Leg::moveRightBottom()
+{
+	m_alpha.move(1200);
+	m_beta.move(1600);
+	m_eta.move(1500);
 }
 
 #endif

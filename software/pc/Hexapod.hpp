@@ -3,10 +3,10 @@
 
 #include <vector>
 #include <memory>
-#include <unistd.h>
 
 #include "Leg.hpp"
 #include "serialib.h"
+#include "utility.hpp"
 
 class Hexapod
 {
@@ -19,6 +19,7 @@ class Hexapod
 		void stand();
 		void setReady();
 		void test();
+		void walk();
 		
 	private:
 		std::vector<std::shared_ptr<Leg> > m_legs;
@@ -47,11 +48,8 @@ void Hexapod::disable()
 
 void Hexapod::test()
 {
-	std::vector<std::shared_ptr<Leg> > tri1;
-	tri1.push_back(m_legs[1]);
-	tri1.push_back(m_legs[2]);
-	tri1.push_back(m_legs[4]);
-	moveListLegs(tri1, 1500, 1500, 1500);
+	for(int i(0); i<m_legs.size(); ++i)
+		m_legs[i]->moveLeftTop();
 }
 
 void Hexapod::update()
@@ -62,9 +60,9 @@ void Hexapod::update()
 
 void Hexapod::moveListLegs(std::vector<std::shared_ptr<Leg> > legs, int alpha, int beta, int eta)
 {
-	std::cout << legs.size() << std::endl;
 	for(unsigned int l(0); l < legs.size(); ++l)
-		m_legs[l]->move(alpha, beta, eta);
+		legs[l]->move(alpha, beta, eta);
+	milliSleep(100);
 }
 
 void Hexapod::stand()
@@ -79,17 +77,59 @@ void Hexapod::stand()
 	tri2.push_back(m_legs[3]);
 	tri2.push_back(m_legs[4]);
 	
-	for(int i(0); i < 5; ++i)
+	setReady();
+	
+	for(int i(0); i < 6; ++i)
 	{
 		moveListLegs(tri1, 1400, 1900, 1500);
-		sleep(1);
 		moveListLegs(tri1, 1400, 1400, 1500);
-		sleep(1);
 		moveListLegs(tri2, 1400, 1900, 1500);
-		sleep(1);
 		moveListLegs(tri2, 1400, 1400, 1500);
-		sleep(1);
 	}
+}
+
+void Hexapod::setReady()
+{
+	for(unsigned int l(0); l < m_legs.size(); ++l)
+		m_legs[l]->setReady();
+}
+
+void Hexapod::walk()
+{
+	/*while (true)
+	{
+		setReady();
+		int pulseMin = 1200;
+		int pulseMax = 1500;
+		std::vector<std::shared_ptr<Leg> > trilegs1;
+		std::vector<std::shared_ptr<Leg> > trilegs2;
+		trilegs1.push_back(m_legs[0]);
+		trilegs1.push_back(m_legs[3]);
+		trilegs1.push_back(m_legs[4]);
+		
+		trilegs2.push_back(m_legs[1]);
+		trilegs2.push_back(m_legs[2]);
+		trilegs2.push_back(m_legs[5]);
+		
+		moveListLegs(trilegs1, pulsemin, 1900, 1500)
+		moveListLegs([legs[3]], pulsemax, 1900, 1500)
+		
+		moveListLegs([legs[0], legs[4]], pulsemin, 1400, 1500)
+		moveListLegs([legs[3]], pulsemax, 1400, 1500)
+		
+		moveListLegs([legs[1], legs[5]], pulsemax, 1900, 1500)
+		moveListLegs([legs[2]], pulsemin, 1900, 1500)
+		
+		
+		moveListLegs([legs[0], legs[4]], pulsemax, 1400, 1500)
+		moveListLegs([legs[3]], pulsemin, 1400, 1500)
+		
+		moveListLegs([legs[1], legs[5]], pulsemax, 1400, 1500)
+		moveListLegs([legs[2]], pulsemin, 1400, 1500)
+		
+		moveListLegs([legs[1], legs[5]], pulsemin, 1400, 1500)
+		moveListLegs([legs[2]], pulsemax, 1400, 1500)
+	}*/	
 }
 
 
