@@ -18,4 +18,8 @@ void milliSleep(int sec)
 	usleep(sec * 1000);
 }
 
+enum legPosAlpha {LEFT, RIGHT, MIDDLE};
+enum legPosHigh {TOP, BOTTOM};
+enum legPosGap {FAR, CLOSE};
+
 #endif

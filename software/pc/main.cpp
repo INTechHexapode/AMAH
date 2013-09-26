@@ -7,7 +7,7 @@ int main()
 {
 	serialib LS;                                                            // Object of the serialib class
     int Ret;                                                                // Used for return values
-    char Buffer[128];
+    //char Buffer[128];
     // Open serial port
     Ret=LS.Open("/dev/ttyUSB0",115200);                                        // Open serial link at 115200 bauds
     if (Ret!=1) {                                                           // If an error occured...

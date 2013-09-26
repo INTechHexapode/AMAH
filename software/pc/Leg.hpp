@@ -6,6 +6,7 @@
 
 #include "Servo.hpp"
 #include "serialib.h"
+#include "utility.hpp"
 
 class Leg
 {
@@ -15,19 +16,14 @@ class Leg
 		//Arrête les servomoteurs de la jambe
 		void disable();
 		//Déplace les trois servos aux angles alpha, beta et eta
-		void move(int alpha, int beta, int eta);
+		void moveAngle(int alpha, int beta, int eta);
 		//Met à jour la position des trois servos à leurs m_currentAngle respectifs
 		void update();
 		//Active les trois servos
 		void setReady();
 		//Met jour les m_currentAngle respectifs des servos pour atteinre la position (x,y,z)
 		void goTo(int x, int y, int z);
-		void moveMidleTop();
-		void moveLeftTop();
-		void moveRightTop();
-		void moveMidleBottom();
-		void moveLeftBottom();
-		void moveRightBottom();
+		void move(legPosAlpha alpha, legPosHigh high, legPosGap gap);
 	
 	private:
 		Servo m_alpha;
@@ -64,7 +60,7 @@ void Leg::disable()
 	m_eta.disable();
 }
 
-void Leg::move(int alpha, int beta, int eta)
+void Leg::moveAngle(int alpha, int beta, int eta)
 {
 	m_alpha.move(alpha);
 	m_beta.move(beta);
@@ -73,7 +69,7 @@ void Leg::move(int alpha, int beta, int eta)
 
 void Leg::update()
 {
-	move(m_alpha.m_currentPule, m_beta.m_currentPule, m_eta.m_currentPule);
+	moveAngle(m_alpha.m_currentPule, m_beta.m_currentPule, m_eta.m_currentPule);
 }
 
 void Leg::setReady()
@@ -88,46 +84,37 @@ void Leg::goTo(int x, int y, int z)
 	
 }
 
-void Leg::moveMidleTop()
+void Leg::move(legPosAlpha alpha, legPosHigh high, legPosGap gap)
 {
-	m_alpha.move(1500);
-	m_beta.move(1900);
-	m_eta.move(1500);
-}
-
-void Leg::moveLeftTop()
-{
-	m_alpha.move(1900);
-	m_beta.move(1900);
-	m_eta.move(1500);
-}
-
-void Leg::moveRightTop()
-{
-	m_alpha.move(1200);
-	m_beta.move(1900);
-	m_eta.move(1500);
-}
-
-void Leg::moveMidleBottom()
-{
-	m_alpha.move(1500);
-	m_beta.move(1600);
-	m_eta.move(1500);
-}
-
-void Leg::moveLeftBottom()
-{
-	m_alpha.move(1900);
-	m_beta.move(1600);
-	m_eta.move(1500);
-}
-
-void Leg::moveRightBottom()
-{
-	m_alpha.move(1200);
-	m_beta.move(1600);
-	m_eta.move(1500);
+	int angleAlpha(0);
+	int angleBeta(0);
+	int angleEta(0);
+	switch(alpha)
+	{
+		case LEFT:
+			angleAlpha = 1900;
+			break;
+		case RIGHT:
+			angleAlpha = 1200;
+			break;
+		case MIDDLE:
+			angleAlpha = 1500;
+			break;
+	}
+	
+	if(high == TOP)
+		angleBeta = 2000;
+	else if(high == BOTTOM)
+		angleBeta = 1800;
+	
+	if(gap == FAR)
+		angleEta = 1600;
+	else if(gap == CLOSE)
+		angleEta = 1800;
+		
+	m_alpha.move(angleAlpha);
+	m_beta.move(angleBeta);
+	m_eta.move(angleEta);
 }
 
 #endif

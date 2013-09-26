@@ -48,8 +48,7 @@ void Hexapod::disable()
 
 void Hexapod::test()
 {
-	for(int i(0); i<m_legs.size(); ++i)
-		m_legs[i]->moveLeftTop();
+	m_legs[0]->move(MIDDLE, BOTTOM, FAR);
 }
 
 void Hexapod::update()
@@ -61,7 +60,7 @@ void Hexapod::update()
 void Hexapod::moveListLegs(std::vector<std::shared_ptr<Leg> > legs, int alpha, int beta, int eta)
 {
 	for(unsigned int l(0); l < legs.size(); ++l)
-		legs[l]->move(alpha, beta, eta);
+		legs[l]->moveAngle(alpha, beta, eta);
 	milliSleep(100);
 }
 
