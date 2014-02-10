@@ -1,5 +1,6 @@
 package hexapode;
 
+import markov.Etat;
 import serial.Serial;
 
 	/**
