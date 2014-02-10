@@ -24,8 +24,6 @@ public class SerialManager
 	
 	//Pour chaque carte, on connait a l'avance son nom, son ping et son baudrate
 	private SpecificationCard carteAsservissement = new SpecificationCard("serieAsservissement", 0, 9600);
-	private SpecificationCard carteCapteursActionneurs = new SpecificationCard("serieCapteursActionneurs", 3, 9600);
-	private SpecificationCard carteLaser = new SpecificationCard("serieLaser", 4, 9600); // TODO 38400);
 
 	//On stock les cartes dans une liste
 	private Hashtable<String, SpecificationCard> cards = new Hashtable<String, SpecificationCard>();
@@ -43,8 +41,6 @@ public class SerialManager
 	public SerialManager() throws SerialManagerException
 	{
 		cards.put(this.carteAsservissement.name, this.carteAsservissement);
-		cards.put(this.carteCapteursActionneurs.name, this.carteCapteursActionneurs);
-		cards.put(this.carteLaser.name, this.carteLaser);
 
 		Enumeration<SpecificationCard> e = cards.elements();
 		while (e.hasMoreElements())
@@ -55,12 +51,8 @@ public class SerialManager
 		}
 
 		this.serieAsservissement = new Serial(this.carteAsservissement.name);
-		this.serieCapteursActionneurs = new Serial(this.carteCapteursActionneurs.name);
-		this.serieLaser = new Serial(this.carteLaser.name);
 		
 		this.series.put(this.carteAsservissement.name, this.serieAsservissement);
-		this.series.put(this.carteCapteursActionneurs.name, this.serieCapteursActionneurs);
-		this.series.put(this.carteLaser.name, this.serieLaser);
 
 		checkSerial();
 		createSerial();
