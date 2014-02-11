@@ -4,7 +4,7 @@ import hexapode.markov.EtatPatte;
 import serial.Serial;
 
 	/**
-	 * Classe des pattes, qui contiennent chacune 3 moteurs
+	 * Classe des pattes, qui contiennent chacune 3 moteurs. Visibilité en "friendly"
 	 * @author pf
 	 *
 	 */
