@@ -16,8 +16,6 @@ public class SerialManager
 
 	//Series a instancier
 	public Serial serieAsservissement = null;
-	public Serial serieCapteursActionneurs = null;
-	public Serial serieLaser = null;
 	
 	//On stock les series dans une liste
 	private Hashtable<String, Serial> series = new Hashtable<String, Serial>();
@@ -123,14 +121,6 @@ public class SerialManager
 			{
 				this.serieAsservissement.initialize(pings[serial.id], serial.baudrate);
 			}
-			else if(serial.id == 3 && pings[serial.id] != null)
-			{
-				this.serieCapteursActionneurs.initialize(pings[serial.id], serial.baudrate);
-			}	
-			else if(serial.id == 4 && pings[serial.id] != null)
-			{
-				this.serieLaser.initialize(pings[serial.id], serial.baudrate);
-			}
 
 			if (pings[serial.id] == null)
 			{
@@ -171,8 +161,6 @@ public class SerialManager
 		else
 		{
 			System.out.println("Aucune série du nom : " + name + " n'existe");
-			System.out.println("Vérifiez les branchements ou l'interface+simulateur (redémarrez si besoin).");
-			System.out.println("Vérifiez aussi que tous les processus Java exécutant ce code sont éteints.");
 			throw new SerialManagerException("serie non trouvée");
 		}
 	}

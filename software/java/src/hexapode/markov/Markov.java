@@ -1,4 +1,4 @@
-package markov;
+package hexapode.markov;
 
 /**
  * La chaîne de Markov. Le mieux serait de l'avoir en sérializable afin d'avoir des données persistantes
@@ -10,7 +10,7 @@ package markov;
 
 public class Markov {
 
-	public Etat next(Etat e)
+	public EtatHexa next(EtatHexa e)
 	{
 		// TODO 
 		return e;

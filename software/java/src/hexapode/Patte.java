@@ -1,6 +1,6 @@
 package hexapode;
 
-import markov.Etat;
+import hexapode.markov.EtatPatte;
 import serial.Serial;
 
 	/**
@@ -9,23 +9,20 @@ import serial.Serial;
 	 *
 	 */
 
-public class Patte {
+class Patte {
 
-	// TODO renommer les moteurs afin d'avoir des noms clairs
-	private Moteur moteur0, moteur1, moteur2;
+	private Moteur[] moteurs;
 	
-	public Patte(Serial serie)
+	public Patte(Serial serie, int id)
 	{
-		moteur0 = new Moteur(serie);
-		moteur1 = new Moteur(serie);
-		moteur2 = new Moteur(serie);
+		for(int i = 0; i < 3; i++)
+			moteurs[i] = new Moteur(serie, 10*id+i);
 	}
 	
-	public void goto_etat(Etat e)
+	public void goto_etat(EtatPatte e)
 	{
-		moteur0.goto_etat(e);
-		moteur1.goto_etat(e);
-		moteur2.goto_etat(e);
+		for(int i = 0; i < 3; i++)
+			moteurs[i].goto_etat(e.em[i]);
 	}
 	
 }
