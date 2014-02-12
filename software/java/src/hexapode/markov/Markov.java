@@ -7,12 +7,30 @@ package hexapode.markov;
  */
 
 // TODO serializable
+// TODO générateur de nombres pseudo-aléatoires
 
 public class Markov {
 
+	/**
+	 * Constructeur pour récupération d'une matrice déjà créée
+	 */
+	public Markov()
+	{
+		// TODO
+	}
+	
+	/**
+	 * Constructeur pour une nouvelle matrice
+	 * @param dimension
+	 */
+	public Markov(int dimension)
+	{
+		// TODO
+	}
+	
 	public EtatHexa next(EtatHexa e)
 	{
-		// TODO 
+		// TODO
 		return e;
 	}
 	

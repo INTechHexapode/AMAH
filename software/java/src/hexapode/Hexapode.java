@@ -6,6 +6,8 @@ import serial.Serial;
 
 public class Hexapode {
 	
+	private int nb_etats;
+	
 	private Patte[] pattes;
 	private Markov markov;
 	private EtatHexa etat_actuel;
@@ -14,7 +16,7 @@ public class Hexapode {
 	{
 		etat_actuel = etat_initial;
 		// TODO sérialisation
-		markov = new Markov();
+		markov = new Markov(nb_etats);
 		pattes = new Patte[6];
 		for(int i = 0; i < 6; i++)
 			pattes[i] = new Patte(serie, i);
