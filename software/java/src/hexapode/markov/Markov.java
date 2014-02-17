@@ -9,16 +9,8 @@ package hexapode.markov;
 // TODO serializable
 // TODO générateur de nombres pseudo-aléatoires
 
-public class Markov {
+public class Markov implements java.io.Serializable {
 
-	/**
-	 * Constructeur pour récupération d'une matrice déjà créée
-	 */
-	public Markov()
-	{
-		// TODO
-	}
-	
 	/**
 	 * Constructeur pour une nouvelle matrice
 	 * @param dimension

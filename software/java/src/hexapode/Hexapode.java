@@ -12,11 +12,11 @@ public class Hexapode {
 	private Markov markov;
 	private EtatHexa etat_actuel;
 	
-	public Hexapode(Serial serie, EtatHexa etat_initial)
+	public Hexapode(Serial serie, EtatHexa etat_initial, Markov markov)
 	{
 		etat_actuel = etat_initial;
 		// TODO sérialisation
-		markov = new Markov(nb_etats);
+		this.markov = markov;
 		pattes = new Patte[6];
 		for(int i = 0; i < 6; i++)
 			pattes[i] = new Patte(serie, i);
