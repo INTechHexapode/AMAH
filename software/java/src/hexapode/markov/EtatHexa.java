@@ -8,11 +8,24 @@ package hexapode.markov;
 
 public class EtatHexa {
 
-	public EtatPatte[] epattes;
+	public EtatPatte[] epattes = new EtatPatte[6];
 
+	/**
+	 * Constructeur classique
+	 * @param epattes
+	 */
 	public EtatHexa(EtatPatte[] epattes)
 	{
 		this.epattes = epattes;
+	}
+	
+	/**
+	 * Constructeur aleatoire
+	 */
+	public EtatHexa()
+	{
+		for(int i = 0; i < 6; i++)
+			epattes[i] = new EtatPatte();
 	}
 	
 }
