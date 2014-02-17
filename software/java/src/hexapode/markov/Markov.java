@@ -1,23 +1,26 @@
 package hexapode.markov;
 
 /**
- * La chaîne de Markov. Le mieux serait de l'avoir en sérializable afin d'avoir des données persistantes
+ * Contient la matrice de transition. Sérialisable afin d'avoir des données persistantes.
  * @author pf
  *
  */
 
-// TODO serializable
-// TODO générateur de nombres pseudo-aléatoires
-
 public class Markov implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
+	private float matrice[][];
+	
 	/**
 	 * Constructeur pour une nouvelle matrice
 	 * @param dimension
 	 */
 	public Markov(int dimension)
 	{
-		// TODO
+		matrice = new float[dimension][dimension];
+		for(int i = 0; i < dimension; i++)
+			for(int j = 0; j < dimension; j++)
+				matrice[i][j] = 0;
 	}
 	
 	public EtatHexa next(EtatHexa e)

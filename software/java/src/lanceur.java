@@ -53,7 +53,9 @@ public class lanceur {
 		try {
 			FileInputStream fichier = new FileInputStream("markov.dat");
 			ObjectInputStream ois = new ObjectInputStream(fichier);
-			return (Markov) ois.readObject();		
+			Markov markov = (Markov) ois.readObject();
+			ois.close();
+			return markov;
 		}
 		catch(Exception e)
 		{

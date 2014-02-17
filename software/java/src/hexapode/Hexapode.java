@@ -15,7 +15,6 @@ public class Hexapode {
 	public Hexapode(Serial serie, EtatHexa etat_initial, Markov markov)
 	{
 		etat_actuel = etat_initial;
-		// TODO sérialisation
 		this.markov = markov;
 		pattes = new Patte[6];
 		for(int i = 0; i < 6; i++)
