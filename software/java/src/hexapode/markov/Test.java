@@ -1,5 +1,7 @@
 package hexapode.markov;
 
+import hexapode.Hexapode;
+
 /**
  * Classe abstraite à hériter pour coder les tests.
  * @author Stud
@@ -11,9 +13,11 @@ public abstract class Test {
 	protected int nbIteration;				//Nombre de tests à executer
 	protected double consecutiveLearnTime;	//Temps de test entre chaque pause en seconde
 	protected double pauseTime;				//Temps d'arrêt par pause en seconde
+	private Hexapode hexapode;
 	
-	public void Test(int nbIteration, double consecutiveLearnTime, double pauseTime)
+	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime)
 	{
+		this.hexapode = hexapode;
 		this.nbIteration = nbIteration;
 		this.consecutiveLearnTime = consecutiveLearnTime;
 		this.pauseTime = pauseTime;

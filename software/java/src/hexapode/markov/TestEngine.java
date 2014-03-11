@@ -1,8 +1,5 @@
 package hexapode.markov;
 
-import hexapode.Hexapode;
-
-
 /**
  * Gère le déroulement des tests.
  * @author Stud
@@ -12,12 +9,10 @@ import hexapode.Hexapode;
 
 public class TestEngine {
 	
-	private Hexapode hexapode;
 	private Test test;
 	
-	public TestEngine(Hexapode hexapode, Test test)
+	public TestEngine(Test test)
 	{
-		this.hexapode = hexapode;
 		this.test = test;
 	}
 	
