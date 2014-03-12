@@ -1,4 +1,4 @@
-package hexapode.markov;
+package test;
 
 import hexapode.Hexapode;
 

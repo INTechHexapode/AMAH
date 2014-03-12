@@ -1,4 +1,4 @@
-package hexapode.markov;
+package test;
 
 /**
  * Gère le déroulement des tests.
