@@ -9,13 +9,13 @@ import java.util.Random;
  */
 public class EtatMoteur {
 
-	public float angle;
+	public int angle;
 
 	/**
 	 * Constructeur classique
 	 * @param angle
 	 */
-	public EtatMoteur(float angle)
+	public EtatMoteur(int angle)
 	{
 		this.angle = angle;
 	}	
@@ -26,7 +26,7 @@ public class EtatMoteur {
 	public EtatMoteur()
 	{
 		// TODO: traitement supplémentaire nécessaire pour les bornes (nextFloat: entre 0 et 1)
-		angle = new Random().nextFloat();
+		angle = new Random().nextInt();
 	}
 	
 }

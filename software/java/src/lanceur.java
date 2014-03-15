@@ -10,6 +10,15 @@ public class lanceur {
 
 	// TODO
 	public static void main(String[] args) {
+		SerialManager serialmanager;
+		try {
+			serialmanager = new SerialManager();
+		Serial serie = serialmanager.getSerial("serieAsservissement");
+		} catch (SerialManagerException e) {
+			e.printStackTrace();
+		}
+		
+		/*
 		try {
 			// Etat initial
 			EtatHexa e = new EtatHexa(null);
@@ -29,7 +38,7 @@ public class lanceur {
 			sauvegarde_matrice(markov);
 		} catch (SerialManagerException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 

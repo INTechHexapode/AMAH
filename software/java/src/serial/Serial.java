@@ -222,13 +222,14 @@ public class Serial implements SerialPortEventListener
 				input.readLine();
 	
 				//ping
-				output.write("?\r".getBytes());
+				output.write("Q\r".getBytes());
 				//evacuation de l'acquittement
 				input.readLine();
-	
 				//recuperation de l'id de la carte
 				ping = input.readLine();
-	
+				System.out.println("ping: "+ping);
+				if(ping == ".")
+					ping = "0";
 			}
 			catch (Exception e)
 			{

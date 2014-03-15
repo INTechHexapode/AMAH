@@ -16,7 +16,7 @@ class Patte {
 	public Patte(Serial serie, int id)
 	{
 		for(int i = 0; i < 3; i++)
-			moteurs[i] = new Moteur(serie, 10*id+i);
+			moteurs[i] = new Moteur(serie, 5*id+i+1);
 	}
 	
 	public void goto_etat(EtatPatte e)

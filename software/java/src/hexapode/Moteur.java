@@ -27,12 +27,20 @@ class Moteur {
 	 */
 	public void goto_etat(EtatMoteur e)
 	{	
-		String chaines[] = {"m", Integer.toString(id), Float.toString(e.angle)};
 		try {
-			serie.communiquer(chaines, 0);
+			serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle), 0);
 		} catch (SerialException e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	public void desasserv()
+	{
+		try {
+			serie.communiquer("#"+Integer.toString(id)+"L", 0);
+		} catch (SerialException e1) {
+			e1.printStackTrace();
+		}		
 	}
 	
 }
