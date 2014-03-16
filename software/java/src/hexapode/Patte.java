@@ -34,21 +34,11 @@ class Patte {
 	
 	public void lever()
 	{
-		EtatMoteur e = new EtatMoteur(1500);
-		moteurs[0].goto_etat(e);
-		e = new EtatMoteur(2000);
-		moteurs[1].goto_etat(e);
-		e = new EtatMoteur(1200);
-		moteurs[2].goto_etat(e);
+		goto_etat(new EtatPatte(true));
 	}
 	
 	public void baisser()
 	{
-		EtatMoteur e = new EtatMoteur(1500);
-		moteurs[0].goto_etat(e);
-		e = new EtatMoteur(1200);
-		moteurs[1].goto_etat(e);
-		e = new EtatMoteur(1200);
-		moteurs[2].goto_etat(e);
+		goto_etat(new EtatPatte(false));
 	}
 }
