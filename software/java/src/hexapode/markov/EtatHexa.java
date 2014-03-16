@@ -28,4 +28,9 @@ public class EtatHexa {
 			epattes[i] = new EtatPatte();
 	}
 	
+	public void change_moteur(int nbPatte, int nbMoteur, int angle)
+	{
+		epattes[nbPatte].change_moteur(nbMoteur, angle);
+	}
+	
 }

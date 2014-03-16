@@ -26,5 +26,9 @@ public class EtatPatte {
 		for(int i = 0; i < 3; i++)
 			em[i] = new EtatMoteur();
 	}
-	
+
+	public void change_moteur(int nbMoteur, int angle)
+	{
+		em[nbMoteur].angle = angle;
+	}
 }

@@ -44,5 +44,12 @@ public class Hexapode {
 	{
 		pattes[i].baisser();
 	}
+	
+	public void change_moteur(int nbPatte, int nbMoteur, int angle)
+	{
+		etat_actuel.change_moteur(nbPatte, nbMoteur, angle);
+		goto_etat(etat_actuel);
+	}
+
 
 }
