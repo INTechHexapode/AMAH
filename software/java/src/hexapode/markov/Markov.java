@@ -29,4 +29,9 @@ public class Markov implements java.io.Serializable {
 		return e;
 	}
 	
+	public void updateMatrix(int resultat)
+	{
+		
+	}
+	
 }
