@@ -1,18 +1,25 @@
 package test;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.GregorianCalendar;
+
 import hexapode.Hexapode;
+import hexapode.markov.Markov;
 
 /**
- * Classe abstraite à hériter pour coder les tests.
+ * Classe abstraite ï¿½ hï¿½riter pour coder les tests.
  * @author Stud
  *
  */
 
 public abstract class Test {
 	
-	protected int nbIteration;				//Nombre de tests à executer
+	protected int nbIteration;				//Nombre de tests ï¿½ executer
 	protected double consecutiveLearnTime;	//Temps de test entre chaque pause en seconde
-	protected double pauseTime;				//Temps d'arrêt par pause en seconde
+	protected double pauseTime;				//Temps d'arrï¿½t par pause en seconde
 	private Hexapode hexapode;
 	
 	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime)
@@ -26,6 +33,8 @@ public abstract class Test {
 	public abstract void onStart();
 	public abstract void onExit();
 	public abstract void proceedTest();
+	public abstract void init();
+	public abstract void terminate();
 	
 	public int getNbIteration()
 	{
@@ -42,4 +51,45 @@ public abstract class Test {
 		return pauseTime;
 	}
 	
+	public void sauvegarde_matrice(Markov m)
+	{
+		try {
+			FileOutputStream fichier = new FileOutputStream("logs/markov-"+System.currentTimeMillis()+"dat");
+			ObjectOutputStream oos = new ObjectOutputStream(fichier);
+			oos.writeObject(m);
+			oos.flush();
+			oos.close();
+			fichier = new FileOutputStream("markov.dat");
+			oos = new ObjectOutputStream(fichier);
+			oos.writeObject(m);
+			oos.flush();
+			oos.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public Markov chargement_matrice()
+	{
+		return chargement_matrice("markov.dat");
+	}
+	
+	public Markov chargement_matrice(String filename)
+	{
+		try {
+			FileInputStream fichier = new FileInputStream(filename);
+			ObjectInputStream ois = new ObjectInputStream(fichier);
+			Markov markov = (Markov) ois.readObject();
+			ois.close();
+			return markov;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

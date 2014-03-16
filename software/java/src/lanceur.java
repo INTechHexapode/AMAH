@@ -42,35 +42,4 @@ public class lanceur {
 		
 	}
 
-	public static void sauvegarde_matrice(Markov m)
-	{
-		try {
-			FileOutputStream fichier = new FileOutputStream("markov.dat");
-			ObjectOutputStream oos = new ObjectOutputStream(fichier);
-			oos.writeObject(m);
-			oos.flush();
-			oos.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public static Markov chargement_matrice()
-	{
-		try {
-			FileInputStream fichier = new FileInputStream("markov.dat");
-			ObjectInputStream ois = new ObjectInputStream(fichier);
-			Markov markov = (Markov) ois.readObject();
-			ois.close();
-			return markov;
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 }
