@@ -20,7 +20,7 @@ public class Markov implements java.io.Serializable {
 		matrice = new float[dimension][dimension];
 		for(int i = 0; i < dimension; i++)
 			for(int j = 0; j < dimension; j++)
-				matrice[i][j] = 0;
+				matrice[i][j] = 1f/dimension;
 	}
 	
 	public EtatHexa next(EtatHexa e)
