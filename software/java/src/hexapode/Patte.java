@@ -1,6 +1,5 @@
 package hexapode;
 
-import hexapode.markov.EtatMoteur;
 import hexapode.markov.EtatPatte;
 import serial.Serial;
 
