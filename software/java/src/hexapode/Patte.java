@@ -12,7 +12,7 @@ import serial.Serial;
 
 class Patte {
 
-	private Moteur[] moteurs;
+	private Moteur[] moteurs = new Moteur[3];
 	
 	public Patte(Serial serie, int id)
 	{
@@ -37,6 +37,7 @@ class Patte {
 		EtatMoteur e = new EtatMoteur(2000);
 		moteurs[1].goto_etat(e);
 	}
+
 	
 	public void baisser()
 	{

@@ -28,7 +28,7 @@ class Moteur {
 	public void goto_etat(EtatMoteur e)
 	{	
 		try {
-			serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle), 0);
+			serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle));
 		} catch (SerialException e1) {
 			e1.printStackTrace();
 		}
@@ -37,7 +37,7 @@ class Moteur {
 	public void desasserv()
 	{
 		try {
-			serie.communiquer("#"+Integer.toString(id)+"L", 0);
+			serie.communiquer("#"+Integer.toString(id)+"L");
 		} catch (SerialException e1) {
 			e1.printStackTrace();
 		}		

@@ -1,7 +1,6 @@
 package hexapode;
 
 import hexapode.markov.EtatHexa;
-import hexapode.markov.Markov;
 import serial.Serial;
 
 public class Hexapode {
@@ -17,7 +16,7 @@ public class Hexapode {
 			pattes[i] = new Patte(serie, i);
 	}
 	
-	private void goto_etat(EtatHexa e)
+	public void goto_etat(EtatHexa e)
 	{
 		for(int i = 0; i < 6; i++)
 			pattes[i].goto_etat(e.epattes[i]);
@@ -36,4 +35,21 @@ public class Hexapode {
 //		0/2/4
 	}
 	
+	public void leverPatte(int i)
+	{
+		pattes[i].lever();
+	}
+
+	public void baisserPatte(int i)
+	{
+		pattes[i].baisser();
+	}
+	
+	public void change_moteur(int nbPatte, int nbMoteur, int angle)
+	{
+		etat_actuel.change_moteur(nbPatte, nbMoteur, angle);
+		goto_etat(etat_actuel);
+	}
+
+
 }
