@@ -14,12 +14,12 @@ public class TestEngine {
 	public TestEngine(Test test)
 	{
 		this.test = test;
+		test.init();
 	}
 	
 	public void start()
 	{
 		long lastPauseTime = System.currentTimeMillis();
-		test.init();
 		for(int index = 0; index < test.getNbIteration(); ++index)
 		{
 			long currentTime = System.currentTimeMillis();
