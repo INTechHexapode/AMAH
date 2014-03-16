@@ -16,7 +16,7 @@ public class Hexapode {
 			pattes[i] = new Patte(serie, i);
 	}
 	
-	private void goto_etat(EtatHexa e)
+	public void goto_etat(EtatHexa e)
 	{
 		for(int i = 0; i < 6; i++)
 			pattes[i].goto_etat(e.epattes[i]);
