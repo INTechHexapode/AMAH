@@ -1,6 +1,7 @@
 package test;
 
 import hexapode.Hexapode;
+import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 public class StandStillTest extends Test {
@@ -9,7 +10,6 @@ public class StandStillTest extends Test {
 			double consecutiveLearnTime, double pauseTime)
 	{
 		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime);
-		markov = new Markov(6);
 	}
 
 	@Override
@@ -21,20 +21,31 @@ public class StandStillTest extends Test {
 	@Override
 	public void onExit()
 	{
-		// TODO Auto-generated method stub
-
+		
+		
 	}
 
 	@Override
 	public void proceedTest()
 	{
-		// TODO Auto-generated method stub
-
+		EtatHexa etat = hexapode.getEtat_actuel();
+		hexapode.goto_etat((markov.next(etat)));
+		try
+		{
+			Thread.sleep(2000);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		int result = Integer.parseInt(System.console().readLine());
+		markov.updateMatrix(result);
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+		markov = new Markov(6);
 		
 	}
 
