@@ -22,13 +22,15 @@ public abstract class Test {
 	protected double pauseTime;				//Temps d'arr�t par pause en seconde
 	protected Hexapode hexapode;
 	protected Markov markov;
+	protected boolean restartMarkov;
 	
-	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime)
+	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov)
 	{
 		this.hexapode = hexapode;
 		this.nbIteration = nbIteration;
 		this.consecutiveLearnTime = consecutiveLearnTime;
 		this.pauseTime = pauseTime;
+		this.restartMarkov = restartMarkov;
 	}
 
 	public abstract void onStart();
@@ -97,5 +99,5 @@ public abstract class Test {
 		}
 		return null;
 	}
-
+	
 }

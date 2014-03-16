@@ -7,9 +7,9 @@ import hexapode.markov.Markov;
 public class StandStillTest extends Test {
 
 	public StandStillTest(Hexapode hexapode, int nbIteration,
-			double consecutiveLearnTime, double pauseTime)
+			double consecutiveLearnTime, double pauseTime, boolean restartMarkov)
 	{
-		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime);
+		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov);
 	}
 
 	@Override
@@ -45,8 +45,10 @@ public class StandStillTest extends Test {
 
 	@Override
 	public void init() {
-		markov = new Markov(6);
-		
+		if(restartMarkov)
+			markov = new Markov(2);
+		else
+			markov = chargement_matrice();
 	}
 
 	@Override
