@@ -1,5 +1,6 @@
 package hexapode;
 
+import hexapode.markov.EtatMoteur;
 import hexapode.markov.EtatPatte;
 import serial.Serial;
 
@@ -25,4 +26,21 @@ class Patte {
 			moteurs[i].goto_etat(e.em[i]);
 	}
 	
+	public void desasserv()
+	{
+		for(int i = 0; i < 3; i++)
+			moteurs[i].desasserv();	
+	}
+	
+	public void lever()
+	{
+		EtatMoteur e = new EtatMoteur(2000);
+		moteurs[1].goto_etat(e);
+	}
+	
+	public void baisser()
+	{
+		EtatMoteur e = new EtatMoteur(1200);
+		moteurs[1].goto_etat(e);
+	}
 }

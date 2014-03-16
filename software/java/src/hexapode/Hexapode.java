@@ -6,16 +6,12 @@ import serial.Serial;
 
 public class Hexapode {
 	
-	private int nb_etats;
-	
 	private Patte[] pattes;
-	private Markov markov;
 	private EtatHexa etat_actuel;
 	
-	public Hexapode(Serial serie, EtatHexa etat_initial, Markov markov)
+	public Hexapode(Serial serie, EtatHexa etat_initial)
 	{
 		etat_actuel = etat_initial;
-		this.markov = markov;
 		pattes = new Patte[6];
 		for(int i = 0; i < 6; i++)
 			pattes[i] = new Patte(serie, i);
@@ -27,18 +23,17 @@ public class Hexapode {
 			pattes[i].goto_etat(e.epattes[i]);
 	}
 	
-	public void next()
+	public void desasserv()
 	{
-		etat_actuel = markov.next(etat_actuel);
-		goto_etat(etat_actuel);
-
-		// on attend que l'hexapode finisse le mouvement (appels à la série non bloquants)
-		// valeur à ajuster expérimetalement
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		for(int i = 0; i < 6; i++)
+			pattes[i].desasserv();
+	}
+	
+	public void stand_up()
+	{
+		
+//		1/3/5
+//		0/2/4
 	}
 	
 }
