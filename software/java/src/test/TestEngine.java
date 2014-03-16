@@ -29,8 +29,17 @@ public class TestEngine {
 				test.proceedTest();
 				test.onExit();
 			}
-			else if((currentTime - lastPauseTime) / 1000 > test.getPauseTime())
+			else
 			{
+				test.onBreak();
+				try 
+				{
+					Thread.sleep((long)(test.getPauseTime() * 1000));
+				} 
+				catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
 				lastPauseTime = System.currentTimeMillis();
 			}
 		}

@@ -55,4 +55,9 @@ public class StandStillTest extends Test {
 		
 	}
 
+	@Override
+	public void onBreak() {
+		hexapode.desasserv();
+	}
+
 }

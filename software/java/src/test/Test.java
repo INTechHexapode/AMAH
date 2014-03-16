@@ -33,6 +33,7 @@ public abstract class Test {
 
 	public abstract void onStart();
 	public abstract void onExit();
+	public abstract void onBreak();
 	public abstract void proceedTest();
 	public abstract void init();
 	
