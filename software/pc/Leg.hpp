@@ -92,10 +92,10 @@ void Leg::move(legPosAlpha alpha, legPosHigh high, legPosGap gap)
 	switch(alpha)
 	{
 		case LEFT:
-			angleAlpha = 1900;
+			angleAlpha = 1850;
 			break;
 		case RIGHT:
-			angleAlpha = 1200;
+			angleAlpha = 1300;
 			break;
 		case MIDDLE:
 			angleAlpha = 1500;
@@ -103,14 +103,23 @@ void Leg::move(legPosAlpha alpha, legPosHigh high, legPosGap gap)
 	}
 	
 	if(high == TOP)
-		angleBeta = 2000;
+	{
+		if(gap == FAR)
+			angleEta = 1600;
+		else if(gap == CLOSE)
+			angleEta = 1800;
+		angleBeta = 1900;
+	}
 	else if(high == BOTTOM)
-		angleBeta = 1800;
+	{
+		if(gap == FAR)
+			angleEta = 1400;
+		else if(gap == CLOSE)
+			angleEta = 1500;
+		angleBeta = 1400;
+	}
+		
 	
-	if(gap == FAR)
-		angleEta = 1600;
-	else if(gap == CLOSE)
-		angleEta = 1800;
 		
 	m_alpha.move(angleAlpha);
 	m_beta.move(angleBeta);

@@ -1,6 +1,7 @@
 package test;
 
 import hexapode.Hexapode;
+import hexapode.markov.Markov;
 
 public class StandStillTest extends Test {
 
@@ -8,14 +9,13 @@ public class StandStillTest extends Test {
 			double consecutiveLearnTime, double pauseTime)
 	{
 		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime);
-		// TODO Auto-generated constructor stub
+		markov = new Markov(6);
 	}
 
 	@Override
 	public void onStart()
 	{
-		// TODO Auto-generated method stub
-
+		hexapode.stand_up();
 	}
 
 	@Override
