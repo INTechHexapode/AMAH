@@ -211,30 +211,25 @@ public class Serial implements SerialPortEventListener
 	synchronized String ping()
 	{
 		synchronized(output) {
-			String ping = null;
+			int ping;
 			try
 			{
 				//On vide le buffer de la serie cote PC
 				output.flush();
 	
-				//On vide le buffer de la serie cote avr avec un texte random
-				output.write("çazç\r".getBytes());
-				input.readLine();
-	
 				//ping
 				output.write("Q\r".getBytes());
 				//evacuation de l'acquittement
-				input.readLine();
+				ping = input.read();
 				//recuperation de l'id de la carte
-				ping = input.readLine();
-				System.out.println("ping: "+ping);
-				if(ping == ".")
-					ping = "0";
+				if(ping == 46)
+					return "0";
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
-			return ping;
+			return "1";
 		}
 	}
 

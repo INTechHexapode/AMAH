@@ -3,8 +3,6 @@ import serial.SerialManager;
 import serial.SerialManagerException;
 import hexapode.Hexapode;
 import hexapode.markov.EtatHexa;
-import hexapode.markov.Markov;
-import java.io.*;
 
 public class lanceur {
 
@@ -13,33 +11,21 @@ public class lanceur {
 		SerialManager serialmanager;
 		try {
 			serialmanager = new SerialManager();
-		Serial serie = serialmanager.getSerial("serieAsservissement");
+			Serial serie = serialmanager.getSerial("serieAsservissement");
+			EtatHexa e = new EtatHexa(null);
+			Hexapode hexa = new Hexapode(serie, e);
+			hexa.desasserv();
+			hexa.leverPatte(0);
+			hexa.leverPatte(2);
+			hexa.leverPatte(4);
+			hexa.baisserPatte(1);
+			hexa.baisserPatte(3);
+			hexa.baisserPatte(5);
+			serie.close();
 		} catch (SerialManagerException e) {
 			e.printStackTrace();
 		}
-		
-		/*
-		try {
-			// Etat initial
-			EtatHexa e = new EtatHexa(null);
-
-			// Récupération de la matrice de l'hexapode
-			Markov markov = chargement_matrice();
-			
-			// Initialisation de la série, de l'hexapode et de la chaîne de Markov
-			SerialManager serialmanager = new SerialManager();
-			Serial serie = serialmanager.getSerial("serieAsservissement");
-			Hexapode hexa = new Hexapode(serie, e, markov);
-			
-			for(int i = 0; i < 100; i++)
-			{
-				hexa.next();
-			}
-			sauvegarde_matrice(markov);
-		} catch (SerialManagerException e) {
-			e.printStackTrace();
-		}*/
-		
+				
 	}
 
 }
