@@ -1,6 +1,8 @@
 import serial
 import time
 import math
+import pygame, sys
+from pygame.locals import *
 
 def angleToPulse(angle):
 	return 10*angle + 1500
@@ -58,26 +60,87 @@ class Hexapod:
 	
 	def walk(self):
 		pulsemin = 1200
-		pulsemax = 1500
-		while 1:
-			self.setReady()	
-			self.moveListLegs([legs[0], legs[4]], pulsemin, 1900, 1500)
-			self.moveListLegs([legs[3]], pulsemax, 1900, 1500)
-			time.sleep(0.1)
-			self.moveListLegs([legs[0], legs[4]], pulsemin, 1400, 1500)
-			self.moveListLegs([legs[3]], pulsemax, 1400, 1500)
-			time.sleep(0.1)
-			self.moveListLegs([legs[1], legs[5]], pulsemax, 1900, 1500)
-			self.moveListLegs([legs[2]], pulsemin, 1900, 1500)
+		pulsminOpposite = 1400
+		pulsemax = 1400
+		pulsemaxOpposite = 1200
+		sleep = 0.2
+		self.setReady()	
+		i = 0
+		self.moveListLegs([legs[0]], 1350, 1900, 1500)
+		self.moveListLegs([legs[1]], 1000, 1400, 1500)
+		self.moveListLegs([legs[2]], 1600, 1400, 1500)
+		self.moveListLegs([legs[3]], 1400, 1900, 1500)
+		self.moveListLegs([legs[4]], 1250, 1900, 1500)
+		self.moveListLegs([legs[5]], 1200, 1400, 1500)
+		time.sleep(sleep)
+		while i < 1:
+			self.moveListLegs([legs[0]], 1350, 1400, 1500)
+			self.moveListLegs([legs[1]], 1200, 1400, 1500)
+			self.moveListLegs([legs[2]], 1400, 1400, 1500)
+			self.moveListLegs([legs[3]], 1400, 1400, 1500)
+			self.moveListLegs([legs[4]], 1250, 1400, 1500)
+			self.moveListLegs([legs[5]], 1400, 1400, 1500)
+			time.sleep(sleep)		
+			self.moveListLegs([legs[0]], 1600, 1400, 1500)
+			self.moveListLegs([legs[1]], 1200, 1900, 1500)
+			self.moveListLegs([legs[2]], 1400, 1900, 1500)
+			self.moveListLegs([legs[3]], 1200, 1400, 1500)
+			self.moveListLegs([legs[4]], 1400, 1400, 1500)
+			self.moveListLegs([legs[5]], 1400, 1900, 1500)
+			time.sleep(sleep)
+			self.moveListLegs([legs[0]], 1600, 1400, 1500)
+			self.moveListLegs([legs[1]], 1200, 1400, 1500)
+			self.moveListLegs([legs[2]], 1400, 1400, 1500)
+			self.moveListLegs([legs[3]], 1200, 1400, 1500)
+			self.moveListLegs([legs[4]], 1400, 1400, 1500)
+			self.moveListLegs([legs[5]], 1400, 1400, 1500)
+			time.sleep(sleep)
+			self.moveListLegs([legs[0]], 1350, 1900, 1500)
+			self.moveListLegs([legs[1]], 1000, 1400, 1500)
+			self.moveListLegs([legs[2]], 1600, 1400, 1500)
+			self.moveListLegs([legs[3]], 1400, 1900, 1500)
+			self.moveListLegs([legs[4]], 1250, 1900, 1500)
+			self.moveListLegs([legs[5]], 1200, 1400, 1500)
+			i += 1
 			
-			self.moveListLegs([legs[0], legs[4]], pulsemax, 1400, 1500)
-			self.moveListLegs([legs[3]], pulsemin, 1400, 1500)
-			time.sleep(0.1)
-			self.moveListLegs([legs[1], legs[5]], pulsemax, 1400, 1500)
-			self.moveListLegs([legs[2]], pulsemin, 1400, 1500)
-			time.sleep(0.1)
-			self.moveListLegs([legs[1], legs[5]], pulsemin, 1400, 1500)
-			self.moveListLegs([legs[2]], pulsemax, 1400, 1500)
+	def endWalk(self):
+		for leg in legs:
+			leg.betaServo.move(1400)
+		time.sleep(0.2)		
+
+		"""
+		while i < 5:
+			self.setReady()	
+			self.moveListLegs([legs[0]], pulsemin, 1900, 1500)
+			self.moveListLegs([legs[4]], pulsemin - 200, 1900, 1500)
+			self.moveListLegs([legs[3]], pulsminOpposite, 1900, 1500)
+			time.sleep(sleep)
+			self.moveListLegs([legs[0]], pulsemin, 1500, 1500)
+			self.moveListLegs([legs[4]], pulsemin - 200, 1500, 1500)
+			self.moveListLegs([legs[3]], pulsminOpposite, 1500, 1500)
+			time.sleep(sleep)
+			self.moveListLegs([legs[1]], 1600, 1900, 1500)
+			self.moveListLegs([legs[5]], 1800 + 200, 1900, 1500)
+			self.moveListLegs([legs[2]], pulsemaxOpposite, 1900, 1500)
+			time.sleep(sleep)
+			
+			self.moveListLegs([legs[0]], pulsemax, 1500, 1500)
+			self.moveListLegs([legs[4]], pulsemax - 200, 1500, 1500)
+			self.moveListLegs([legs[3]], pulsemaxOpposite, 1500, 1500)
+			time.sleep(sleep)
+			self.moveListLegs([legs[1]], 1600, 1500, 1500)
+			self.moveListLegs([legs[5]], 1800, 1500, 1500)
+			self.moveListLegs([legs[2]], pulsemaxOpposite, 1500, 1500)
+			time.sleep(sleep)
+			self.moveListLegs([legs[0]], pulsemax, 1900, 1500)
+			self.moveListLegs([legs[4]], pulsemax - 200, 1900, 1500)
+			self.moveListLegs([legs[3]], pulsemaxOpposite, 1900, 1500)
+			time.sleep(sleep)
+			self.moveListLegs([legs[1]], 1800, 1500, 1500)
+			self.moveListLegs([legs[5]], 1600, 1500, 1500)
+			self.moveListLegs([legs[2]], pulsminOpposite, 1500, 1500)
+			time.sleep(sleep)
+			i += 1"""
 		
 		
 	def turn(self, hipBodyPulseStart, hipBodyPulseEnd):
@@ -187,9 +250,9 @@ class Leg:
 		
 	
 	def setReady(self):
-		self.alpha.setReady()
-		self.beta.setReady()
-		self.eta.setReady() 
+		self.alphaServo.setReady()
+		self.betaServo.setReady()
+		self.etaServo.setReady() 
 		
 	def move(self, hipAngleY, hipAngleX, kneeAngle):
 		self.alphaServo.move(hipAngleY)
@@ -264,19 +327,44 @@ legs.append(leg5)
 legs.append(leg6)	
 
 hexapod = Hexapod(legs)
-#hexapod.disable()
-leg1.goTo(0, 50, 100)
-leg1.update()
-time.sleep(2)
-hexapod.disable()
+hexapod.stand()
+time.sleep(1)
 
+# set up pygame
+pygame.init()
 
-"""legs[0].wakeUp()
-legs[4].wakeUp()
-legs[3].wakeUp()"""
-"""
-for servo in servos:
-	servo.move(1200)"""
+# set up the window
+windowSurface = pygame.display.set_mode((500, 400), 0, 32)
+pygame.display.set_caption('Hello world!')
+
+# set up the colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+
+# set up fonts
+basicFont = pygame.font.SysFont(None, 48)
+
+while True:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            hexapod.disable()
+            pygame.quit()
+            sys.exit()
+    key = pygame.key.get_pressed()
+    if key[pygame.K_UP] == True:
+		hexapod.walk()
+    elif key[pygame.K_RIGHT] == True:
+		hexapod.turnRight(10)
+    elif key[pygame.K_LEFT] == True:
+		hexapod.turnLeft(10)
+    elif key[pygame.K_SPACE] == True:
+		hexapod.stand()
+    else:
+		hexapod.endWalk()
+		
 	
 serial.close()
 

@@ -1,7 +1,7 @@
 package test;
 
 /**
- * Gère le déroulement des tests.
+ * Gï¿½re le dï¿½roulement des tests.
  * @author Stud
  *
  */
@@ -19,6 +19,7 @@ public class TestEngine {
 	public void start()
 	{
 		long lastPauseTime = System.currentTimeMillis();
+		test.init();
 		for(int index = 0; index < test.getNbIteration(); ++index)
 		{
 			long currentTime = System.currentTimeMillis();
@@ -33,6 +34,7 @@ public class TestEngine {
 				lastPauseTime = System.currentTimeMillis();
 			}
 		}
+		test.terminate();
 	}
 
 }

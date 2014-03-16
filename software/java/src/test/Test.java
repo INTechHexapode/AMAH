@@ -20,7 +20,8 @@ public abstract class Test {
 	protected int nbIteration;				//Nombre de tests � executer
 	protected double consecutiveLearnTime;	//Temps de test entre chaque pause en seconde
 	protected double pauseTime;				//Temps d'arr�t par pause en seconde
-	private Hexapode hexapode;
+	protected Hexapode hexapode;
+	protected Markov markov;
 	
 	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime)
 	{
@@ -34,7 +35,11 @@ public abstract class Test {
 	public abstract void onExit();
 	public abstract void proceedTest();
 	public abstract void init();
-	public abstract void terminate();
+	
+	public void terminate()
+	{
+		sauvegarde_matrice();
+	}
 	
 	public int getNbIteration()
 	{
@@ -51,17 +56,17 @@ public abstract class Test {
 		return pauseTime;
 	}
 	
-	public void sauvegarde_matrice(Markov m)
+	public void sauvegarde_matrice()
 	{
 		try {
 			FileOutputStream fichier = new FileOutputStream("logs/markov-"+System.currentTimeMillis()+"dat");
 			ObjectOutputStream oos = new ObjectOutputStream(fichier);
-			oos.writeObject(m);
+			oos.writeObject(markov);
 			oos.flush();
 			oos.close();
 			fichier = new FileOutputStream("markov.dat");
 			oos = new ObjectOutputStream(fichier);
-			oos.writeObject(m);
+			oos.writeObject(markov);
 			oos.flush();
 			oos.close();
 		}
