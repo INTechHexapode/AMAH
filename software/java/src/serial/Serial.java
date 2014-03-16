@@ -101,58 +101,14 @@ public class Serial implements SerialPortEventListener
 	 * 					Un tableau contenant le message
 	 * @throws SerialException 
 	 */
-	public String[] communiquer(String message, int nb_lignes_reponse) throws SerialException
+	public void communiquer(String message) throws SerialException
 	{
-		String[] messages = {message};
-		return communiquer(messages, nb_lignes_reponse);
-	}
-	
-	/**
-	 * Méthode pour parler à l'avr
-	 * @param messages
-	 * 					Messages à envoyer
-	 * @param nb_lignes_reponse
-	 * 					Nombre de lignes que l'avr va répondre (sans compter les acquittements)
-	 * @return
-	 * 					Un tableau contenant le message
-	 * @throws SerialException 
-	 */
-	public String[] communiquer(String[] messages, int nb_lignes_reponse) throws SerialException
-	{
-		long t1 = System.currentTimeMillis();
 		synchronized(output)
 		{
-			long t2 = System.currentTimeMillis();
-			if(t2-t1 > 1000)
-				System.out.println("Temps accès mutex "+name+": "+(t2-t1));
-			else if(t2-t1 > 100)
-				System.out.println("Temps accès mutex "+name+": "+(t2-t1));
-
-			String inputLines[] = new String[nb_lignes_reponse];
 			try
 			{
-				for (String m : messages)
-				{
-					m += "\r";
-					output.write(m.getBytes());
-					int nb_tests = 0;
-					char acquittement = ' ';
-	
-					while (acquittement != '_')
-					{
-						nb_tests++;
-						acquittement = input.readLine().charAt(0);
-						if (acquittement != '_')
-						{
-							output.write(m.getBytes());
-						}
-						if (nb_tests > 10)
-						{
-							System.out.println("La série" + this.name + " ne répond pas après " + nb_tests + " tentatives");
-							break;
-						}
-					}
-				}
+				message += "\r";
+				output.write(message.getBytes());
 			}
 			catch (Exception e)
 			{
@@ -160,30 +116,11 @@ public class Serial implements SerialPortEventListener
 				System.out.println("Ne peut pas parler à la carte " + this.name);
 				throw new SerialException();
 			}
-	
-			try
-			{
-				for (int i = 0 ; i < nb_lignes_reponse; i++)
-				{
-					inputLines[i] = input.readLine();
-				}
-			}
-			catch (Exception e)
-			{
-				System.out.println("Ne peut pas parler à la carte " + this.name);
-				throw new SerialException();
-			}
 			
-		if(t2-t1 > 1000)
-			System.out.println("Temps communiquer "+name+": "+(t2-t1));
-		else if(t2-t1 > 700)
-			System.out.println("Temps communiquer "+name+": "+(t2-t1));
-			
-		return inputLines;
-		
 		}
+		return;
 	}
-
+	
 	/**
 	 * Doit être appelé quand on arrête de se servir de la série
 	 */
