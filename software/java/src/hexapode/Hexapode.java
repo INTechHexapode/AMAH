@@ -35,6 +35,16 @@ public class Hexapode {
 //		0/2/4
 	}
 	
+	public EtatHexa getEtat_actuel()
+	{
+		return etat_actuel;
+	}
+	
+	public void setEtat_actuel(EtatHexa etat)
+	{
+		etat_actuel = etat;
+	}
+	
 	public void leverPatte(int i)
 	{
 		pattes[i].lever();
