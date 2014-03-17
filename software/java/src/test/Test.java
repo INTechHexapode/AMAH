@@ -61,11 +61,15 @@ public abstract class Test {
 	public void sauvegarde_matrice()
 	{
 		try {
+			java.io.File fichier_creation = new java.io.File("logs/markov-"+System.currentTimeMillis()+"dat");
+			fichier_creation.createNewFile();
 			FileOutputStream fichier = new FileOutputStream("logs/markov-"+System.currentTimeMillis()+"dat");
 			ObjectOutputStream oos = new ObjectOutputStream(fichier);
 			oos.writeObject(markov);
 			oos.flush();
 			oos.close();
+			fichier_creation = new java.io.File("markov.dat");
+			fichier_creation.createNewFile();
 			fichier = new FileOutputStream("markov.dat");
 			oos = new ObjectOutputStream(fichier);
 			oos.writeObject(markov);

@@ -28,11 +28,23 @@ public class EtatPatte {
 	public EtatPatte(boolean leve)
 	{
 		em[0] = new EtatMoteur(1500);
-		em[2] = new EtatMoteur(1200);
 		if(leve)
 			em[1] = new EtatMoteur(2000);
 		else
 			em[1] = new EtatMoteur(1200);
+		em[2] = new EtatMoteur(1200);
+	}
+	
+	public boolean isLeve()
+	{
+		return equals(new EtatPatte(true));
+	}
+	
+	public boolean equals(EtatPatte e)
+	{
+		return e.em[0].angle == em[0].angle
+				&& e.em[1].angle == em[1].angle
+				&& e.em[2].angle == em[2].angle;
 	}
 
 	/**

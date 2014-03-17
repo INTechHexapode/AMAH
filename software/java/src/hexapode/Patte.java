@@ -11,12 +11,12 @@ import serial.Serial;
 
 class Patte {
 
-	private Moteur[] moteurs = new Moteur[3];
+	public Moteur[] moteurs = new Moteur[3];
 	
-	public Patte(Serial serie, int id)
+	public Patte(Serial serie, int id, EtatPatte etat)
 	{
 		for(int i = 0; i < 3; i++)
-			moteurs[i] = new Moteur(serie, 5*id+i+1);
+			moteurs[i] = new Moteur(serie, 5*id+i+1, etat.em[i]);
 	}
 	
 	public void goto_etat(EtatPatte e)

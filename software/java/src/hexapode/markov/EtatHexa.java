@@ -28,6 +28,15 @@ public class EtatHexa {
 			epattes[i] = new EtatPatte();
 	}
 	
+	/**
+	 * Constructeur si toutes les pattes sont au même état
+	 */
+	public EtatHexa(EtatPatte e)
+	{
+		for(int i = 0; i < 6; i++)
+			epattes[i] = e;		
+	}
+	
 	public void change_moteur(int nbPatte, int nbMoteur, int angle)
 	{
 		epattes[nbPatte].change_moteur(nbMoteur, angle);

@@ -14,9 +14,12 @@ class Moteur {
 
 	private Serial serie;
 	private int id;
+	@SuppressWarnings("unused")
+	private EtatMoteur etat;
 	
-	public Moteur(Serial serie, int id)
+	public Moteur(Serial serie, int id, EtatMoteur etat)
 	{
+		this.etat = etat;
 		this.serie = serie;
 		this.id = id;
 	}
@@ -27,11 +30,13 @@ class Moteur {
 	 */
 	public void goto_etat(EtatMoteur e)
 	{	
-		try {
-			serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle));
-		} catch (SerialException e1) {
-			e1.printStackTrace();
-		}
+		if(e.angle >= 1000 && e.angle <= 2000)
+			try {
+				serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle));
+				etat = e;
+			} catch (SerialException e1) {
+				e1.printStackTrace();
+			}
 	}
 	
 	public void desasserv()

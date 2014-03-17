@@ -1,11 +1,16 @@
 package test;
 
+import java.util.Scanner;
+
+import util.Sleep;
 import hexapode.Hexapode;
 import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 public class StandStillTest extends Test {
 
+	Scanner scanner = new Scanner(System.in);
+	
 	public StandStillTest(Hexapode hexapode, int nbIteration,
 			double consecutiveLearnTime, double pauseTime, boolean restartMarkov)
 	{
@@ -21,26 +26,20 @@ public class StandStillTest extends Test {
 	@Override
 	public void onExit()
 	{
-		
-		
+		hexapode.lay_down();
+		Sleep.sleep(1000);
+		sauvegarde_matrice();
 	}
 
 	@Override
 	public void proceedTest()
 	{
-		EtatHexa etat = hexapode.getEtat_actuel();
-		hexapode.goto_etat((markov.next(etat)));
-		try
-		{
-			Thread.sleep(2000);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		int result = Integer.parseInt(System.console().readLine());
-		markov.updateMatrix(result);
+		EtatHexa etat_suivant = markov.next();
+		hexapode.goto_etat(etat_suivant);
+		Sleep.sleep(500);
+		System.out.println("Veuillez entrer le résultat: 0 (tombé) ou 1 (debout)");
+		int result = Integer.parseInt(scanner.nextLine());		
+		markov.updateMatrix(result, etat_suivant);
 	}
 
 	@Override
@@ -53,8 +52,7 @@ public class StandStillTest extends Test {
 
 	@Override
 	public void terminate() {
-		// TODO Auto-generated method stub
-		
+		hexapode.desasserv();
 	}
 
 	@Override

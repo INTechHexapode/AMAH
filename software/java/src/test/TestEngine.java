@@ -1,5 +1,7 @@
 package test;
 
+import util.Sleep;
+
 /**
  * G�re le d�roulement des tests.
  * @author Stud
@@ -31,15 +33,10 @@ public class TestEngine {
 			}
 			else
 			{
+				System.out.println("Début de pause. Durée: "+test.getPauseTime());
 				test.onBreak();
-				try 
-				{
-					Thread.sleep((long)(test.getPauseTime() * 1000));
-				} 
-				catch (InterruptedException e) 
-				{
-					e.printStackTrace();
-				}
+				Sleep.sleep((long)(test.getPauseTime() * 1000));
+				System.out.println("Fin de pause.");
 				lastPauseTime = System.currentTimeMillis();
 			}
 		}
