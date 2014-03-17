@@ -18,6 +18,21 @@ public class EtatPatte {
 		this.em = em;
 	}
 
+	/**
+	 * Constructeur aléatoire
+	 */
+	public EtatPatte()
+	{
+		for(int i = 0; i < 3; i++)
+			em[i] = new EtatMoteur();
+	}
+
+	/**
+	 * Constructeur user-friendly
+	 * @param angle0
+	 * @param angle1
+	 * @param angle2
+	 */
 	public EtatPatte(int angle0, int angle1, int angle2)
 	{
 		em[0] = new EtatMoteur(angle0);
@@ -25,6 +40,10 @@ public class EtatPatte {
 		em[2] = new EtatMoteur(angle2);
 	}
 	
+	/**
+	 * Constructeur de patte debout ou baissée
+	 * @param leve
+	 */
 	public EtatPatte(boolean leve)
 	{
 		em[0] = new EtatMoteur(1500);
@@ -35,29 +54,25 @@ public class EtatPatte {
 		em[2] = new EtatMoteur(1200);
 	}
 	
+	/**
+	 * La patte est-elle levée?
+	 * @return true si c'est le cas, false sinon
+	 */
 	public boolean isLeve()
 	{
 		return equals(new EtatPatte(true));
 	}
-	
-	public boolean equals(EtatPatte e)
-	{
-		return e.em[0].angle == em[0].angle
-				&& e.em[1].angle == em[1].angle
-				&& e.em[2].angle == em[2].angle;
-	}
 
 	/**
-	 * Constructeur aléatoire
+	 * Méthode equals
 	 */
-	public EtatPatte()
+	@Override
+	public boolean equals(Object e)
 	{
-		for(int i = 0; i < 3; i++)
-			em[i] = new EtatMoteur();
+		return e instanceof EtatPatte
+				&& ((EtatPatte) e).em[0].angle == em[0].angle
+				&& ((EtatPatte) e).em[1].angle == em[1].angle
+				&& ((EtatPatte) e).em[2].angle == em[2].angle;
 	}
 
-	public void change_moteur(int nbMoteur, int angle)
-	{
-		em[nbMoteur].angle = angle;
-	}
 }

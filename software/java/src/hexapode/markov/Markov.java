@@ -4,6 +4,7 @@ import java.util.Random;
 
 /**
  * Contient la matrice de transition. Sérialisable afin d'avoir des données persistantes.
+ * Changera à chaque changement de tests
  * @author pf
  *
  */

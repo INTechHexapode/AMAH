@@ -33,7 +33,7 @@ public class TestEngine {
 			}
 			else
 			{
-				System.out.println("Début de pause. Durée: "+test.getPauseTime());
+				System.out.println("Début de pause. Durée: "+test.getPauseTime()+"s");
 				test.onBreak();
 				Sleep.sleep((long)(test.getPauseTime() * 1000));
 				System.out.println("Fin de pause.");

@@ -52,7 +52,7 @@ public class StandStillTest extends Test {
 
 	@Override
 	public void terminate() {
-		hexapode.desasserv();
+		super.terminate();	// sauvegarde
 	}
 
 	@Override

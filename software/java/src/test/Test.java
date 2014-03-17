@@ -11,6 +11,7 @@ import hexapode.markov.Markov;
 /**
  * Classe abstraite � h�riter pour coder les tests.
  * @author Stud
+ * @author pf
  *
  */
 
@@ -58,12 +59,13 @@ public abstract class Test {
 		return pauseTime;
 	}
 	
-	public void sauvegarde_matrice()
+	protected void sauvegarde_matrice()
 	{
 		try {
-			java.io.File fichier_creation = new java.io.File("logs/markov-"+System.currentTimeMillis()+"dat");
+			long date = System.currentTimeMillis();
+			java.io.File fichier_creation = new java.io.File("logs/markov-"+date+"dat");
 			fichier_creation.createNewFile();
-			FileOutputStream fichier = new FileOutputStream("logs/markov-"+System.currentTimeMillis()+"dat");
+			FileOutputStream fichier = new FileOutputStream("logs/markov-"+date+"dat");
 			ObjectOutputStream oos = new ObjectOutputStream(fichier);
 			oos.writeObject(markov);
 			oos.flush();
@@ -82,12 +84,12 @@ public abstract class Test {
 		}
 	}
 	
-	public Markov chargement_matrice()
+	protected Markov chargement_matrice()
 	{
 		return chargement_matrice("markov.dat");
 	}
 	
-	public Markov chargement_matrice(String filename)
+	protected Markov chargement_matrice(String filename)
 	{
 		try {
 			FileInputStream fichier = new FileInputStream(filename);

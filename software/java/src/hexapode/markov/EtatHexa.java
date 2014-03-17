@@ -37,9 +37,15 @@ public class EtatHexa {
 			epattes[i] = e;		
 	}
 	
+	/**
+	 * Change l'état d'un moteur uniquement
+	 * @param nbPatte (entre 0 et 5)
+	 * @param nbMoteur (entre 0 et 2)
+	 * @param angle
+	 */
 	public void change_moteur(int nbPatte, int nbMoteur, int angle)
 	{
-		epattes[nbPatte].change_moteur(nbMoteur, angle);
+		epattes[nbPatte].em[nbMoteur].angle = angle;
 	}
 	
 }

@@ -29,9 +29,4 @@ public class EtatMoteur {
 		angle = new Random().nextInt();
 	}
 	
-	public void goto_etat(EtatMoteur e)
-	{
-		angle = e.angle;
-	}
-	
 }

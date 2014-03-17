@@ -18,11 +18,6 @@ public class lanceur {
 			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
-/*			hexa.lay_down();
-			hexa.stand_up();
-			System.out.println("Attente");
-			scanner.nextLine();
-			hexa.desasserv();*/
 			StandStillTest standstilltest = new StandStillTest(hexa, 10, 60., 15., true);
 			TestEngine testengine = new TestEngine(standstilltest);
 			testengine.start();
