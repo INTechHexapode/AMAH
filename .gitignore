@@ -3,3 +3,6 @@
 *.swp
 software/build/
 software/bin/
+logs/*
+markov.dat
+
