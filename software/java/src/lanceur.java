@@ -18,7 +18,7 @@ public class lanceur {
 			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
-			StandStillTest standstilltest = new StandStillTest(hexa, 10, 600., 0., false);
+			StandStillTest standstilltest = new StandStillTest(hexa, 100, 600., 0., false, true);
 			TestEngine testengine = new TestEngine(standstilltest);
 			testengine.start();
 			scanner.close();

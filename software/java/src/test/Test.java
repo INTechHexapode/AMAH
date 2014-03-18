@@ -23,30 +23,44 @@ public abstract class Test {
 	protected Hexapode hexapode;
 	protected Markov markov;
 	protected boolean restartMarkov;
+	private boolean validation;
 	
-	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov)
+	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
 	{
 		this.hexapode = hexapode;
 		this.nbIteration = nbIteration;
 		this.consecutiveLearnTime = consecutiveLearnTime;
 		this.pauseTime = pauseTime;
 		this.restartMarkov = restartMarkov;
+		this.validation = validation;
 	}
 
 	public abstract void onStart();
-	public abstract void onExit();
 	public abstract void onBreak();
 	public abstract void proceedTest();
+	public abstract void validTest();
 	public abstract void init();
 	
+	public void onExit()
+	{
+		if(!validation)
+			sauvegarde_matrice(false);
+	}
+
 	public void terminate()
 	{
-		sauvegarde_matrice(true);
+		if(!validation)
+			sauvegarde_matrice(true);
 	}
 	
 	public int getNbIteration()
 	{
 		return nbIteration;
+	}
+
+	public boolean isValidation()
+	{
+		return validation;
 	}
 	
 	public double getConsecutiveLearnTime()

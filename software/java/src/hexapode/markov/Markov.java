@@ -66,6 +66,11 @@ public class Markov implements java.io.Serializable {
 		System.out.println(s);
 	}
 	
+	public double getMat(EtatHexa e)
+	{
+		return matrice[getNum(e)];
+	}
+	
 	public int getNum(EtatHexa e)
 	{
 		int num = 0;

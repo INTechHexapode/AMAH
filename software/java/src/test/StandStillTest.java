@@ -9,37 +9,69 @@ import hexapode.markov.Markov;
 
 public class StandStillTest extends Test {
 
-	Scanner scanner = new Scanner(System.in);
+	private Scanner scanner = new Scanner(System.in);
+	private boolean last_good = false;
 	
 	public StandStillTest(Hexapode hexapode, int nbIteration,
-			double consecutiveLearnTime, double pauseTime, boolean restartMarkov)
+			double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
 	{
-		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov);
+		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
 	}
 
 	@Override
 	public void onStart()
 	{
+		if(last_good)
+		{
+			for(int i = 0; i < 6; i++)
+				hexapode.baisserPatte(i);
+			Sleep.sleep(500);
+		}
+		else
 		hexapode.stand_up();
 	}
 
 	@Override
 	public void onExit()
 	{
-		hexapode.lay_down();
-		Sleep.sleep(1000);
-		sauvegarde_matrice(false);
+		super.onExit();
+		if(!last_good)
+		{
+			hexapode.lay_down();
+			Sleep.sleep(100);
+		}
+	}
+	
+	@Override
+	public void validTest()
+	{
+		EtatHexa etat_suivant;
+		do {
+		etat_suivant = markov.next();
+		} while(markov.getMat(etat_suivant) < 2.);
+		
+		hexapode.goto_etat(etat_suivant);
+		last_good = true;
+		Sleep.sleep(500);		
 	}
 
 	@Override
 	public void proceedTest()
 	{
 		EtatHexa etat_suivant = markov.next();
+		
 		hexapode.goto_etat(etat_suivant);
-		Sleep.sleep(500);
+		Sleep.sleep(1000);
 		System.out.println("Veuillez entrer le résultat: 0 (tombé) ou 1 (debout)");
-		int result = Integer.parseInt(scanner.nextLine());		
-		markov.updateMatrix(result, etat_suivant);
+		try {
+			int result = Integer.parseInt(scanner.nextLine());		
+			last_good = (result == 1);
+			markov.updateMatrix(result, etat_suivant);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Erreur: itération ignorée");
+		}
 	}
 
 	@Override

@@ -28,7 +28,10 @@ public class TestEngine {
 			if(!((currentTime - lastPauseTime) / 1000 > test.getConsecutiveLearnTime()))
 			{
 				test.onStart();
-				test.proceedTest();
+				if(test.isValidation())
+					test.validTest();
+				else
+					test.proceedTest();
 				test.onExit();
 			}
 			else
