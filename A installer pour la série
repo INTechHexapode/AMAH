@@ -1,0 +1,10 @@
+Pour linux:
+
+sudo apt-get install librxtx-java
+
+Pour windows:
+
+Je n'ai pas une manière "automatique" de le faire, il faut récupérer le .dll (32 ou 64 bits en fonction de la jvm utilisée).
+Et le mettre dans <JAVA_HOME>\jre\bin (pour connaître la jvm utilisée par eclipse, il suffit de regarder dans Windows->Preferences->Java->Installed JREs, ici vous avez la liste des jre)
+
+http://jlog.org/rxtx-win.html
