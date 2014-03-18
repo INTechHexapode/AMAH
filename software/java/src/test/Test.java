@@ -41,7 +41,7 @@ public abstract class Test {
 	
 	public void terminate()
 	{
-		sauvegarde_matrice();
+		sauvegarde_matrice(true);
 	}
 	
 	public int getNbIteration()
@@ -59,17 +59,24 @@ public abstract class Test {
 		return pauseTime;
 	}
 	
-	protected void sauvegarde_matrice()
+	protected void sauvegarde_matrice(boolean sauvegarde_intermediaire)
 	{
 		try {
-			long date = System.currentTimeMillis();
-			java.io.File fichier_creation = new java.io.File("logs/markov-"+date+"dat");
-			fichier_creation.createNewFile();
-			FileOutputStream fichier = new FileOutputStream("logs/markov-"+date+"dat");
-			ObjectOutputStream oos = new ObjectOutputStream(fichier);
-			oos.writeObject(markov);
-			oos.flush();
-			oos.close();
+			java.io.File fichier_creation;
+			FileOutputStream fichier;
+			ObjectOutputStream oos;
+			if(sauvegarde_intermediaire)
+			{
+				long date = System.currentTimeMillis();
+				fichier_creation = new java.io.File("logs/markov-"+date+".dat");
+				fichier_creation.createNewFile();
+				fichier = new FileOutputStream("logs/markov-"+date+".dat");
+				oos = new ObjectOutputStream(fichier);
+				oos.writeObject(markov);
+				oos.flush();
+				oos.close();
+			}
+
 			fichier_creation = new java.io.File("markov.dat");
 			fichier_creation.createNewFile();
 			fichier = new FileOutputStream("markov.dat");
@@ -80,6 +87,7 @@ public abstract class Test {
 		}
 		catch(Exception e)
 		{
+			System.out.println("Veuillez créer un dossier logs dans le dossier hexapode/software/java");
 			e.printStackTrace();
 		}
 	}

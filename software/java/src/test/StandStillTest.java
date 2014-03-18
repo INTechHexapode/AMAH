@@ -28,7 +28,7 @@ public class StandStillTest extends Test {
 	{
 		hexapode.lay_down();
 		Sleep.sleep(1000);
-		sauvegarde_matrice();
+		sauvegarde_matrice(false);
 	}
 
 	@Override
@@ -53,6 +53,7 @@ public class StandStillTest extends Test {
 	@Override
 	public void terminate() {
 		super.terminate();	// sauvegarde
+		hexapode.desasserv();
 	}
 
 	@Override
