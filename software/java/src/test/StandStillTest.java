@@ -91,6 +91,7 @@ public class StandStillTest extends Test {
 	@Override
 	public void onBreak() {
 		hexapode.desasserv();
+		last_good = false;		// afin qu'il se relève après la pause
 	}
 
 }

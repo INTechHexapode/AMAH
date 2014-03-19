@@ -53,7 +53,25 @@ public class EtatPatte {
 			em[1] = new EtatMoteur(1200);
 		em[2] = new EtatMoteur(1200);
 	}
-	
+
+	public EtatPatte(EtatPatteTest2 etat)
+	{
+		if(etat == EtatPatteTest2.LEVE || etat == EtatPatteTest2.BAISSE)
+			em[0] = new EtatMoteur(1500);
+		else if(etat == EtatPatteTest2.ARRIERE)
+			em[0] = new EtatMoteur(1200);
+		else if(etat == EtatPatteTest2.AVANT)
+			em[0] = new EtatMoteur(1800);
+		if(etat == EtatPatteTest2.LEVE)
+			em[1] = new EtatMoteur(2000);
+		else
+			em[1] = new EtatMoteur(1200);
+		if(etat == EtatPatteTest2.LEVE)
+			em[2] = new EtatMoteur(1800);
+		else
+			em[2] = new EtatMoteur(1200);
+	}
+
 	/**
 	 * La patte est-elle levée?
 	 * @return true si c'est le cas, false sinon

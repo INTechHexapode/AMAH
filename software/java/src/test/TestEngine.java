@@ -27,6 +27,7 @@ public class TestEngine {
 			long currentTime = System.currentTimeMillis();
 			if(!((currentTime - lastPauseTime) / 1000 > test.getConsecutiveLearnTime()))
 			{
+				System.out.println("Test "+(index+1)+" sur "+test.getNbIteration());
 				test.onStart();
 				if(test.isValidation())
 					test.validTest();

@@ -4,6 +4,5 @@
 software/build/
 software/bin/
 logs/*
-markov.dat
 *.classpath
 *.project
