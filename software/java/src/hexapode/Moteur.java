@@ -45,12 +45,15 @@ class Moteur {
 	{	
 		if(e.angle >= 1000 && e.angle <= 2000)
 			try {
-				serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle));
+				if(serie != null)
+					serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle));
 				desasservi = false;
 				etat = e;
 			} catch (SerialException e1) {
 				e1.printStackTrace();
 			}
+		else
+			System.out.println("Ordre ignoré: "+e.angle);
 	}
 
 	/**
@@ -59,7 +62,8 @@ class Moteur {
 	public void desasserv()
 	{
 		try {
-			serie.communiquer("#"+Integer.toString(id)+"L");
+			if(serie != null)
+				serie.communiquer("#"+Integer.toString(id)+"L");
 			desasservi = true;
 		} catch (SerialException e1) {
 			e1.printStackTrace();
