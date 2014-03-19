@@ -33,8 +33,8 @@ public class Markov implements java.io.Serializable {
 	
 	public EtatHexa next()
 	{
-		nb_total++;
-		EtatPatte[] ep;
+		EtatPatte[] ep = new EtatPatte[6];
+/*		nb_total++;
 		int nb_debout;
 		do {
 			nb_debout = 0;
@@ -46,7 +46,19 @@ public class Markov implements java.io.Serializable {
 				if(debout)
 					nb_debout++;
 			}
-		} while(nb_debout > 3);
+		} while(nb_debout > 3);*/
+		for(int j = 0; j < 6; j++)
+		{
+		int i = randomgenerator.nextInt()%4;
+		if(i == 0)
+			ep[j] = new EtatPatte(EtatPatteTest2.ARRIERE);
+		else if(i == 1)
+			ep[j] = new EtatPatte(EtatPatteTest2.AVANT);
+		else if(i == 2)
+			ep[j] = new EtatPatte(EtatPatteTest2.LEVE);
+		else
+			ep[j] = new EtatPatte(EtatPatteTest2.BAISSE);
+		}
 		return new EtatHexa(ep);
 	}
 	
