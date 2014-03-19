@@ -31,6 +31,28 @@ public class Markov implements java.io.Serializable {
 			matrice[i] = 0;
 	}
 	
+	public EtatHexa next(double matrice[])
+	{
+		EtatPatte[] ep = new EtatPatte[6];
+		EtatHexa etatHexa;		
+		do {
+			for(int j = 0; j < 6; j++)
+			{
+			int i = randomgenerator.nextInt()%4;
+			if(i == 0)
+				ep[j] = new EtatPatte(EtatPatteTest2.ARRIERE);
+			else if(i == 1)
+				ep[j] = new EtatPatte(EtatPatteTest2.AVANT);
+			else if(i == 2)
+				ep[j] = new EtatPatte(EtatPatteTest2.LEVE);
+			else
+				ep[j] = new EtatPatte(EtatPatteTest2.BAISSE);
+			}
+			etatHexa = new EtatHexa(ep);
+		} while(getMat(etatHexa) < 2.);
+		return etatHexa;
+	}
+	
 	public EtatHexa next()
 	{
 		EtatPatte[] ep = new EtatPatte[6];
