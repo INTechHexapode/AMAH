@@ -54,6 +54,27 @@ public class EtatPatte {
 		em[2] = new EtatMoteur(1200);
 	}
 
+	public EtatPatte(double angle, double x, double y)
+	{
+		int a = 60, b = 120;
+		em[0] = new EtatMoteur((int)(angle*12.5)+1500); // TODO
+		double sinc = (carre(x*x+y*y-a*a-b*b)-4*a*a*b*b)/(4*a*a*b*b);
+		double c = Math.asin(sinc)/2*180/Math.PI;
+		double alpha = Math.atan2(y-b*sinc, b*Math.cos(c)-x)*180/Math.PI;
+		System.out.println(alpha);
+		System.out.println(c+alpha);
+		em[1] = new EtatMoteur((int)((-alpha+210)*12.5));
+		em[2] = new EtatMoteur((int)((-c-alpha+210)*12.5));
+		System.out.println("moteur 0: "+em[0].angle);
+		System.out.println("moteur 1: "+em[1].angle);
+		System.out.println("moteur 2: "+em[2].angle);
+	}
+		
+	private double carre(double x)
+	{
+		return x*x;
+	}
+	
 	public EtatPatte(EtatPatteTest2 etat)
 	{
 		if(etat == EtatPatteTest2.LEVE || etat == EtatPatteTest2.BAISSE)
