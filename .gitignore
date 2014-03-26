@@ -6,3 +6,4 @@ software/bin/
 logs/*
 *.classpath
 *.project
+/bin

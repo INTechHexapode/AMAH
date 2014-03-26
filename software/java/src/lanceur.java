@@ -1,3 +1,5 @@
+import hexapode.Hexapode;
+
 import java.util.Scanner;
 
 import serial.Serial;
@@ -5,7 +7,6 @@ import serial.SerialManager;
 import serial.SerialManagerException;
 import test.StandStillTest;
 import test.TestEngine;
-import hexapode.Hexapode;
 
 public class lanceur {
 
@@ -18,7 +19,7 @@ public class lanceur {
 			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
-			StandStillTest standstilltest = new StandStillTest(hexa, 100, 600., 0., false, true);
+			StandStillTest standstilltest = new StandStillTest(hexa, 100, 600., 0., true, true);
 			TestEngine testengine = new TestEngine(standstilltest);
 			testengine.start();
 			scanner.close();

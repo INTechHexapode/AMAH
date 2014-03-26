@@ -1,10 +1,6 @@
 package test;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
+import util.DataSaver;
 import hexapode.Hexapode;
 import hexapode.markov.Markov;
 
@@ -75,35 +71,7 @@ public abstract class Test {
 	
 	protected void sauvegarde_matrice(boolean sauvegarde_intermediaire)
 	{
-		try {
-			java.io.File fichier_creation;
-			FileOutputStream fichier;
-			ObjectOutputStream oos;
-			if(sauvegarde_intermediaire)
-			{
-				long date = System.currentTimeMillis();
-				fichier_creation = new java.io.File("logs/markov-"+date+".dat");
-				fichier_creation.createNewFile();
-				fichier = new FileOutputStream("logs/markov-"+date+".dat");
-				oos = new ObjectOutputStream(fichier);
-				oos.writeObject(markov);
-				oos.flush();
-				oos.close();
-			}
-
-			fichier_creation = new java.io.File("markov.dat");
-			fichier_creation.createNewFile();
-			fichier = new FileOutputStream("markov.dat");
-			oos = new ObjectOutputStream(fichier);
-			oos.writeObject(markov);
-			oos.flush();
-			oos.close();
-		}
-		catch(Exception e)
-		{
-			System.out.println("Veuillez créer un dossier logs dans le dossier hexapode/software/java");
-			e.printStackTrace();
-		}
+		DataSaver.sauvegarder_matrice(markov, sauvegarde_intermediaire);
 	}
 	
 	protected Markov chargement_matrice()
@@ -113,18 +81,6 @@ public abstract class Test {
 	
 	protected Markov chargement_matrice(String filename)
 	{
-		try {
-			FileInputStream fichier = new FileInputStream(filename);
-			ObjectInputStream ois = new ObjectInputStream(fichier);
-			Markov markov = (Markov) ois.readObject();
-			ois.close();
-			return markov;
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+		return DataSaver.charger_matrice(filename);
 	}
-	
 }
