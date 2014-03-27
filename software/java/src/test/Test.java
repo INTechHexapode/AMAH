@@ -2,6 +2,7 @@ package test;
 
 import util.DataSaver;
 import hexapode.Hexapode;
+import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 /**
@@ -20,6 +21,10 @@ public abstract class Test {
 	protected Markov markov;
 	protected boolean restartMarkov;
 	private boolean validation;
+	protected EtatHexa etat_suivant;
+	
+	//variables utilisées pour la sauvegarde
+	protected int result;
 	
 	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
 	{
@@ -41,6 +46,7 @@ public abstract class Test {
 	{
 		if(!validation)
 			sauvegarde_matrice(false);
+		DataSaver.sauvegarder_test(etat_suivant, result);
 	}
 
 	public void terminate()
