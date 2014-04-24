@@ -87,6 +87,19 @@ public class DataSaver {
 		return null;
 	}
     
+    public static double[] charger_matrice_equilibre(String filename)
+	{
+		try {
+			double[] markov = (double[]) charger(filename);
+			return markov;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+    
     private static Object charger(String filename)
     {
 		try {

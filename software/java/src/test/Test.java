@@ -22,6 +22,7 @@ public abstract class Test {
 	protected boolean restartMarkov;
 	private boolean validation;
 	protected EtatHexa etat_suivant;
+	protected int note;
 	
 	//variables utilisées pour la sauvegarde
 	protected int result;
@@ -36,36 +37,36 @@ public abstract class Test {
 		this.validation = validation;
 	}
 
-	public abstract void onStart();
-	public abstract void onBreak();
-	public abstract void proceedTest();
-	public abstract void validTest();
-	public abstract void init();
+	public abstract void onStart();		//Au départ de chaque test
+	public abstract void onBreak();		//Pendant la pause
+	public abstract void proceedTest();	//Lancement de chaque test
+	public abstract void validTest();	//Routine de validation des tests (sert à refaire les tests sans apprentissage, pour valider les résultats)
+	public abstract void init();		//Au lancement de tous les tests
 	
-	public void onExit()
+	public void onExit()				//A la fin de chaque test
 	{
 		if(!validation)
 			sauvegarde_matrice(false);
 		DataSaver.sauvegarder_test(etat_suivant, result);
 	}
 
-	public void terminate()
+	public void terminate()				//Fin de tous les tests
 	{
 		if(!validation)
 			sauvegarde_matrice(true);
 	}
 	
-	public int getNbIteration()
+	public int getNbIteration()			//Nombre d'itérations à effectuer
 	{
 		return nbIteration;
 	}
 
-	public boolean isValidation()
+	public boolean isValidation()		//En routine de validation ou non
 	{
 		return validation;
 	}
 	
-	public double getConsecutiveLearnTime()
+	public double getConsecutiveLearnTime()	//Temps depuis la dernière pause
 	{
 		return consecutiveLearnTime;
 	}
