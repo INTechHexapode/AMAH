@@ -12,6 +12,7 @@ import serial.Serial;
 public class Patte {
 
 	public Moteur[] moteurs = new Moteur[3];
+	public EtatPatte etat;
 
 	/**
 	 * Constructeur d'une patte
@@ -19,10 +20,11 @@ public class Patte {
 	 * @param id
 	 * @param etat
 	 */
-	public Patte(Serial serie, int id, EtatPatte etat)
+	public Patte(Serial serie, int id, EtatPatte e)
 	{
 		for(int i = 0; i < 3; i++)
 			moteurs[i] = new Moteur(serie, 5*id+i+1, etat.em[i]);
+		this.etat = e;
 	}
 	
 	/**
@@ -33,6 +35,7 @@ public class Patte {
 	{
 		for(int i = 0; i < 3; i++)
 			moteurs[i].goto_etat(e.em[i]);
+        this.etat = e;
 	}
 
 	/**
@@ -70,4 +73,5 @@ public class Patte {
 	{
 		goto_etat(new EtatPatte(false));
 	}
+	
 }

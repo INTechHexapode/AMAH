@@ -3,6 +3,7 @@ package hexapode;
 import hexapode.markov.EtatHexa;
 import hexapode.markov.EtatMoteur;
 import hexapode.markov.EtatPatte;
+import hexapode.markov.EtatPatteTest2;
 import serial.Serial;
 import util.Sleep;
 
@@ -15,12 +16,12 @@ import util.Sleep;
 public class Hexapode {
 	
 	public Patte[][] pattes;
-	private EtatHexa etat_actuel;
 	private int direction = 0;
+	private EtatHexa etat_actuel;
 	
 	public Hexapode(Serial serie)
 	{
-		etat_actuel = new EtatHexa(new EtatPatte(true));
+	    etat_actuel = new EtatHexa("000000");
         pattes = new Patte[6][6];
 
         for(int i = 0; i < 6; i++)
@@ -63,6 +64,37 @@ public class Hexapode {
 
 		desasserv();
 	}
+	
+	/**
+	 * L'hexapode fait l'action donnée par une chaîne binaire.
+	 * @param e
+	 */
+	public void goto_etat(String e)
+	{
+	    // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les pattes intéressées, puis on les abaisse en même temps
+       // On ramène en arrière et on lève
+       for(int i = 0; i < 6; i++)
+           if(e.charAt(i) == '1' && pattes[direction][i].etat.etat == EtatPatteTest2.ARRIERE)
+               pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.DEBOUT));
+           else if(e.charAt(i) == '0' && pattes[direction][i].etat.etat == EtatPatteTest2.AVANT)
+               pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.ARRIERE));
+
+       Sleep.sleep(200);
+
+       boolean attendre = false;
+
+       for(int i = 0; i < 6; i++) // on baisse
+           if(e.charAt(i) == '1' && pattes[direction][i].etat.etat == EtatPatteTest2.DEBOUT)
+           {
+               pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.AVANT));
+               attendre = true;
+           }
+
+       // On n'attend que si on a des pattes à baisser
+       if(attendre)
+           Sleep.sleep(200);
+
+	}
 
 	/**
 	 * Change l'état de l'hexapode
@@ -73,7 +105,7 @@ public class Hexapode {
 		for(int i = 0; i < 6; i++)
 			pattes[direction][i].goto_etat(e.epattes[i]);
 	}
-
+	
 	/**
 	 * Désasservit l'hexapode
 	 */

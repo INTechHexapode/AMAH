@@ -29,6 +29,19 @@ public class EtatHexa {
 	}
 	
 	/**
+	 * On lève les pattes qu'il faut, puis on les abaisse.
+	 * @param e
+	 */
+	public EtatHexa(String e)
+	{
+	    for(int i = 0; i < 6; i++)
+	        if(e.charAt(i) == '1')
+	            epattes[i] = new EtatPatte(i, EtatPatteTest2.AVANT);
+	        else
+                epattes[i] = new EtatPatte(i, EtatPatteTest2.ARRIERE);
+	}
+	
+	/**
 	 * Constructeur si toutes les pattes sont au même état
 	 */
 	public EtatHexa(EtatPatte e)
