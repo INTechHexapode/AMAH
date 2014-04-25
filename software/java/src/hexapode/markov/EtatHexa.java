@@ -61,4 +61,15 @@ public class EtatHexa {
 		epattes[nbPatte].em[nbMoteur].angle = angle;
 	}
 	
+	@Override
+	public String toString()
+	{
+		String out = new String();
+		for(EtatPatte pate: epattes)
+		{
+			out += pate.toString();
+		}
+		return out;
+	}
+	
 }
