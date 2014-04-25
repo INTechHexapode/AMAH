@@ -10,6 +10,11 @@ public class EtatPatte {
 	public EtatPatteTest2 etat;
 	public EtatMoteur[] em = new EtatMoteur[3];
 
+	// Longueur des pattes
+    private static final double a = 60, b = 120;
+    private static final double r = 100;    // rayon d'une patte en position arrière
+    private static final double avancee = 50; // avancée en millimètres
+
 	/**
 	 * Constructeur classique
 	 * @param em
@@ -56,35 +61,64 @@ public class EtatPatte {
 	}
 
 	
-	public EtatPatte(double angle, double x, double y)
+	public EtatPatte(int nb, EtatPatteTest2 etat)
 	{
-		double a = 60, b = 120;
-		em[0] = new EtatMoteur((int)(angle*12.5)+1500);
+	    this.etat = etat;
+	    double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
+	    double angle = angles[nb];
+	    // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
+	    // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
+	    // (ici, c'est vu du dessus; dans setEtaMoteurs, c'est vu de côté)
+	    double x = r*Math.sin(angle);
+	    double y;
+        if(etat == EtatPatteTest2.ARRIERE)
+            y = r*Math.cos(angle) - avancee;
+        else // DEBOUT ou AVANT
+            y = r*Math.cos(angle) + avancee;
 
-		double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
-		double beta = Math.PI-Math.acos((b*b-x*x-y*y-a*a)/(2*a*Math.sqrt(x*x+y*y)));
-		double gamma = Math.asin(y/Math.sqrt(x*x+y*y))+Math.PI/2;
-		
+	    double new_r = Math.sqrt(x*x+y*y);
+	    double new_angle = Math.atan2(x, y)-angle; // on cherche l'angle relatif pour la patte
+	    
+	    if(etat == EtatPatteTest2.DEBOUT)
+	        setEtatMoteurs(new_angle, new_r, -10);
+	    else if(etat == EtatPatteTest2.AVANT)
+            setEtatMoteurs(new_r, -100);
+        else if(etat == EtatPatteTest2.ARRIERE)
+            setEtatMoteurs(new_angle); // et pousser un peu sur les pattes?
+	}
+
+	// TODO recalculer
+	// TODO vérifier le sens (angle positif = sens horaire ou trigo?)
+    public void setEtatMoteurs(double angle)
+    {
+         em[0] = new EtatMoteur((int)(angle*12.5)+1500);
+    }
+   
+    public void setEtatMoteurs(double angle, double x, double y)
+    {
+        setEtatMoteurs(angle);
+        setEtatMoteurs(x,y);
+    }
+   
+	public void setEtatMoteurs(double x, double y)
+	{
+        double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
+        double beta = Math.PI-Math.acos((b*b-x*x-y*y-a*a)/(2*a*Math.sqrt(x*x+y*y)));
+        double gamma = Math.asin(y/Math.sqrt(x*x+y*y))+Math.PI/2;
+        
         double ordre1 = 300./25.*180./Math.PI*(beta+gamma)+(1500.-300./25.*90.);
         double ordre2 = -400./40.*180./Math.PI*alpha+(1600.+400./40.*90.);
         
         em[1] = new EtatMoteur((int)ordre1);
-        em[2] = new EtatMoteur((int)ordre2);
-        
-        /*		
-		double sinc = (carre(x*x+y*y-a*a-b*b)-4*a*a*b*b)/(4*a*a*b*b);
-		double c = Math.asin(sinc)/2*180/Math.PI;
-		double alpha = Math.atan2(y-b*sinc, b*Math.cos(c)-x)*180/Math.PI;
-		System.out.println(alpha);
-		System.out.println(c+alpha);
-		em[1] = new EtatMoteur((int)((-alpha+210)*12.5));
-		em[2] = new EtatMoteur((int)((-c-alpha+210)*12.5));
-		System.out.println("moteur 0: "+em[0].angle);
-		System.out.println("moteur 1: "+em[1].angle);
-		System.out.println("moteur 2: "+em[2].angle);*/
+        em[2] = new EtatMoteur((int)ordre2);	    
 	}
 	
-	public EtatPatte(EtatPatteTest2 nEtat)
+	public EtatPatte(double angle, double x, double y)
+	{
+	    setEtatMoteurs(angle, x, y);
+	}
+	
+/*	public EtatPatte(EtatPatteTest2 nEtat)
 	{
 		etat = nEtat;
 		if(nEtat == EtatPatteTest2.LEVE || nEtat == EtatPatteTest2.BAISSE)
@@ -101,7 +135,7 @@ public class EtatPatte {
 			em[2] = new EtatMoteur(1800);
 		else
 			em[2] = new EtatMoteur(1200);
-	}
+	}*/
 
 	/**
 	 * La patte est-elle levée?
