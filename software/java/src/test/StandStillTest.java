@@ -45,33 +45,33 @@ public class StandStillTest extends Test {
 	@Override
 	public void validTest()
 	{
-		EtatHexa etat_suivant;
+		/*etat_suivant = markov.next();
 		do {
 		etat_suivant = markov.next();
 		} while(markov.getMat(etat_suivant) < 2.);
 		
 		hexapode.goto_etat(etat_suivant);
 		last_good = true;
-		Sleep.sleep(500);		
+		Sleep.sleep(500);		*/
 	}
 
 	@Override
 	public void proceedTest()
 	{
-		EtatHexa etat_suivant = markov.next();
+		/*EtatHexa etat_suivant = markov.next();
 		
 		hexapode.goto_etat(etat_suivant);
 		Sleep.sleep(1000);
 		System.out.println("Veuillez entrer le résultat: 0 (tombé) ou 1 (debout)");
 		try {
-			int result = Integer.parseInt(scanner.nextLine());		
+			result = Integer.parseInt(scanner.nextLine());		
 			last_good = (result == 1);
 			markov.updateMatrix(result, etat_suivant);
 		}
 		catch(Exception e)
 		{
 			System.out.println("Erreur: itération ignorée");
-		}
+		}*/
 	}
 
 	@Override

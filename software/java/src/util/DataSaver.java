@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import test.TestStep;
 import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
@@ -21,9 +22,11 @@ public class DataSaver {
     	
     }
     
-    public static <T> void sauvegarder_etat(EtatHexa etat, T resultat)
+    public static <T> void sauvegarder_test(EtatHexa etat, int resultat)
     {
-    	
+    	TestStep stored = (TestStep)charger("steps.dat");
+    	stored.addStep(etat, resultat);
+    	sauvegarder(stored, "steps.dat");
     }
 
     public static void sauvegarder_matrice(Markov markov, boolean sauvegarde_intermediaire)
@@ -75,6 +78,19 @@ public class DataSaver {
 	{
 		try {
 			Markov markov = (Markov) charger(filename);
+			return markov;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+    
+    public static double[] charger_matrice_equilibre(String filename)
+	{
+		try {
+			double[] markov = (double[]) charger(filename);
 			return markov;
 		}
 		catch(Exception e)

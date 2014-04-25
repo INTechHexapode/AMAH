@@ -7,6 +7,7 @@ package hexapode.markov;
  */
 public class EtatPatte {
 
+	public EtatPatteTest2 etat;
 	public EtatMoteur[] em = new EtatMoteur[3];
 
 	/**
@@ -83,19 +84,20 @@ public class EtatPatte {
 		System.out.println("moteur 2: "+em[2].angle);*/
 	}
 	
-	public EtatPatte(EtatPatteTest2 etat)
+	public EtatPatte(EtatPatteTest2 nEtat)
 	{
-		if(etat == EtatPatteTest2.LEVE || etat == EtatPatteTest2.BAISSE)
+		etat = nEtat;
+		if(nEtat == EtatPatteTest2.LEVE || nEtat == EtatPatteTest2.BAISSE)
 			em[0] = new EtatMoteur(1500);
-		else if(etat == EtatPatteTest2.ARRIERE)
+		else if(nEtat == EtatPatteTest2.ARRIERE)
 			em[0] = new EtatMoteur(1200);
-		else if(etat == EtatPatteTest2.AVANT)
+		else if(nEtat == EtatPatteTest2.AVANT)
 			em[0] = new EtatMoteur(1800);
-		if(etat == EtatPatteTest2.LEVE)
+		if(nEtat == EtatPatteTest2.LEVE)
 			em[1] = new EtatMoteur(2000);
 		else
 			em[1] = new EtatMoteur(1200);
-		if(etat == EtatPatteTest2.LEVE)
+		if(nEtat == EtatPatteTest2.LEVE)
 			em[2] = new EtatMoteur(1800);
 		else
 			em[2] = new EtatMoteur(1200);
