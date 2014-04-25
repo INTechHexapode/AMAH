@@ -2,7 +2,6 @@ package test;
 
 import hexapode.Hexapode;
 import hexapode.markov.EtatHexa;
-import hexapode.markov.EtatPatteTest2;
 import hexapode.markov.Markov;
 
 public class TestCoordinationPattes extends Test {
@@ -15,8 +14,16 @@ public class TestCoordinationPattes extends Test {
 	@Override
 	public void onStart() {
 		note = 0;
-
+		etat_actuel = etat_suivant;
 	}
+	
+	@Override
+	public void onExit()
+	{
+		super.onExit();
+		markov.updateMatrix(note, etat_actuel, etat_suivant);
+	}
+	
 
 	@Override
 	public void onBreak() {
@@ -25,10 +32,15 @@ public class TestCoordinationPattes extends Test {
 
 	@Override
 	public void proceedTest() {
-		EtatHexa nEtatSuivant = markov.next();
+		//On récupère l'état suivant à tester
+		char[] nEtatSuivant = markov.next();
+		etat_suivant = new EtatHexa(String.valueOf(nEtatSuivant));
 		
-		calcNote(nEtatSuivant);
-
+		//On demande à l'hexapode de se mettre en position
+		hexapode.goto_etat((String.valueOf(nEtatSuivant)));
+		
+		//On calcule la note en fonction de la transition 
+		calcNote();
 	}
 
 	@Override
@@ -49,14 +61,16 @@ public class TestCoordinationPattes extends Test {
 		markov = new Markov(2);
 	}
 	
-	private void calcNote(EtatHexa nEtatSuivant)
+	private void calcNote()
 	{
 		int nbRetourArriere = 0;
+		char[] cEtatSuivant = etat_suivant.toString().toCharArray();
+		char[] cEtatActuel = etat_actuel.toString().toCharArray();
 		for(int i = 0; i < 6; i++)
 		{
-			if(etat_suivant.epattes[i].etat == EtatPatteTest2.AVANT)
+			if(cEtatActuel[i] == '0')
 			{
-				if(nEtatSuivant.epattes[i].etat == EtatPatteTest2.AVANT)
+				if(cEtatSuivant[i] == '1')
 				{
 					note += 5;
 				}
@@ -67,7 +81,7 @@ public class TestCoordinationPattes extends Test {
 			}
 			else
 			{
-				if(nEtatSuivant.epattes[i].etat == EtatPatteTest2.AVANT)
+				if(cEtatSuivant[i] == '1')
 				{
 					note += 5;
 				}
