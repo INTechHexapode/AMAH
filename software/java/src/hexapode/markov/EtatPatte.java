@@ -54,10 +54,23 @@ public class EtatPatte {
 		em[2] = new EtatMoteur(1200);
 	}
 
+	
 	public EtatPatte(double angle, double x, double y)
 	{
-		int a = 60, b = 120;
-		em[0] = new EtatMoteur((int)(angle*12.5)+1500); // TODO
+		double a = 60, b = 120;
+		em[0] = new EtatMoteur((int)(angle*12.5)+1500);
+
+		double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
+		double beta = Math.PI-Math.acos((b*b-x*x-y*y-a*a)/(2*a*Math.sqrt(x*x+y*y)));
+		double gamma = Math.asin(y/Math.sqrt(x*x+y*y))+Math.PI/2;
+		
+        double ordre1 = 300./25.*180./Math.PI*(beta+gamma)+(1500.+-300./25.*90.);
+        double ordre2 = -400./40.*180./Math.PI*alpha+(1600.+400./40.*90.);
+        
+        em[1] = new EtatMoteur((int)ordre1);
+        em[2] = new EtatMoteur((int)ordre2);
+        
+        /*		
 		double sinc = (carre(x*x+y*y-a*a-b*b)-4*a*a*b*b)/(4*a*a*b*b);
 		double c = Math.asin(sinc)/2*180/Math.PI;
 		double alpha = Math.atan2(y-b*sinc, b*Math.cos(c)-x)*180/Math.PI;
@@ -67,12 +80,7 @@ public class EtatPatte {
 		em[2] = new EtatMoteur((int)((-c-alpha+210)*12.5));
 		System.out.println("moteur 0: "+em[0].angle);
 		System.out.println("moteur 1: "+em[1].angle);
-		System.out.println("moteur 2: "+em[2].angle);
-	}
-		
-	private double carre(double x)
-	{
-		return x*x;
+		System.out.println("moteur 2: "+em[2].angle);*/
 	}
 	
 	public EtatPatte(EtatPatteTest2 etat)

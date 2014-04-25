@@ -9,7 +9,7 @@ import serial.Serial;
 	 *
 	 */
 
-class Patte {
+public class Patte {
 
 	public Moteur[] moteurs = new Moteur[3];
 
