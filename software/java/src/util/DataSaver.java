@@ -11,7 +11,7 @@ import hexapode.markov.Markov;
 
 /**
  * Classe statique qui gere les sauvegardes et chargements.
- * @author Stud
+ * @author Stud, pf
  *
  */
 
@@ -22,6 +22,18 @@ public class DataSaver {
     	
     }
     
+    public static void supprimer(String filename)
+    {
+        // System.out.println("Suppression de " + filename);
+        try
+        {
+            (new java.io.File(filename)).delete();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static <T> void sauvegarder_test(EtatHexa etat, int resultat)
     {
     	TestStep stored = (TestStep)charger("steps.dat");
