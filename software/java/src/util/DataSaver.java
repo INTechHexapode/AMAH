@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import test.TestStep;
-import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 /**
@@ -34,7 +33,7 @@ public class DataSaver {
         }
     }
 
-    public static <T> void sauvegarder_test(EtatHexa etat, int resultat)
+    public static <T> void sauvegarder_test(String etat, int resultat)
     {
     	TestStep stored = (TestStep)charger("steps.dat");
     	stored.addStep(etat, resultat);

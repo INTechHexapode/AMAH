@@ -1,15 +1,13 @@
 package test;
 
-import java.util.Scanner;
-
 import util.Sleep;
+import hexapode.GoToException;
 import hexapode.Hexapode;
-import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 public class StandStillTest extends Test {
 
-	private Scanner scanner = new Scanner(System.in);
+//	private Scanner scanner = new Scanner(System.in);
 	private boolean last_good = false;
 	
 	public StandStillTest(Hexapode hexapode, int nbIteration,
@@ -24,7 +22,13 @@ public class StandStillTest extends Test {
 		if(last_good)
 		{
 			for(int i = 0; i < 6; i++)
-				hexapode.baisserPatte(i);
+                try
+                {
+                    hexapode.pattes[0][i].baisser();
+                } catch (GoToException e)
+                {
+                    e.printStackTrace();
+                }
 			Sleep.sleep(500);
 		}
 		else

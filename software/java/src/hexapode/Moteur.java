@@ -1,6 +1,5 @@
 package hexapode;
 
-import hexapode.markov.EtatMoteur;
 import serial.Serial;
 import serial.SerialException;
 
@@ -15,45 +14,43 @@ class Moteur {
 
 	private Serial serie;
 	private int id;
-	private boolean desasservi;
+	private int angle_min;
+	private int angle_max;
 
-	@SuppressWarnings("unused")
-	private EtatMoteur etat;		// la modification de cet état n'est pas utilisée ici, mais par hexapode (dans EtatHexa)
-
-	public Moteur(Serial serie, int id, EtatMoteur etat)
+	/**
+	 * Construit un moteur, désasservi.
+	 * @param serie
+	 * @param id
+	 * @param etat
+	 * @param angle_min
+	 * @param angle_max
+	 */
+	public Moteur(Serial serie, int id, int angle_min, int angle_max)
 	{
-		this.etat = etat;
 		this.serie = serie;
 		this.id = id;
+		this.angle_min = angle_min;
+        this.angle_max = angle_max;
 		desasserv();
 	}
-	
+
 	/**
-	 * Asservit le moteur à une nouvelle position (user-friendly) 
-	 * @param angle, entre 1000 et 2000
+	 * Asservit le moteur à une nouvelle position.
+	 * Lève une exception si l'angle ne satisfait pas les bornes.
+	 * @param e
+	 * @throws GoToException 
 	 */
-	public void goto_etat(int angle)
-	{
-		goto_etat(new EtatMoteur(angle));
-	}
-	
-	/**
-	 * Asservit le moteur à une nouvelle position
-	 * @param e, avec un angle entre 1000 et 2000
-	 */
-	public void goto_etat(EtatMoteur e)
+	public void goto_etat(int angle) throws GoToException
 	{	
-		if(e.angle >= 1000 && e.angle <= 2000)
+		if(angle >= angle_min && angle <= angle_max)
 			try {
 				if(serie != null)
-					serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(e.angle));
-				desasservi = false;
-				etat = e;
+					serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(angle));
 			} catch (SerialException e1) {
 				e1.printStackTrace();
 			}
 		else
-			System.out.println("Ordre ignoré: "+e.angle);
+			throw new GoToException();
 	}
 
 	/**
@@ -64,19 +61,9 @@ class Moteur {
 		try {
 			if(serie != null)
 				serie.communiquer("#"+Integer.toString(id)+"L");
-			desasservi = true;
 		} catch (SerialException e1) {
 			e1.printStackTrace();
 		}		
-	}
-	
-	/**
-	 * Getter de desasservi
-	 * @return true si le moteur est desasservi, false sinon
-	 */
-	public boolean isDesasservi()
-	{
-		return desasservi;
 	}
 	
 }

@@ -2,7 +2,6 @@ package test;
 
 import util.DataSaver;
 import hexapode.Hexapode;
-import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 /**
@@ -21,10 +20,10 @@ public abstract class Test {
 	protected Markov markov;
 	protected boolean restartMarkov;
 	private boolean validation;
-	protected EtatHexa etat_suivant;
+	protected String etat_suivant;
 	protected int note;
 	
-	//variables utilisées pour la sauvegarde
+	//variables utilisï¿½es pour la sauvegarde
 	protected int result;
 	
 	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
@@ -37,10 +36,10 @@ public abstract class Test {
 		this.validation = validation;
 	}
 
-	public abstract void onStart();		//Au départ de chaque test
+	public abstract void onStart();		//Au dï¿½part de chaque test
 	public abstract void onBreak();		//Pendant la pause
 	public abstract void proceedTest();	//Lancement de chaque test
-	public abstract void validTest();	//Routine de validation des tests (sert à refaire les tests sans apprentissage, pour valider les résultats)
+	public abstract void validTest();	//Routine de validation des tests (sert ï¿½ refaire les tests sans apprentissage, pour valider les rï¿½sultats)
 	public abstract void init();		//Au lancement de tous les tests
 	
 	public void onExit()				//A la fin de chaque test
@@ -56,7 +55,7 @@ public abstract class Test {
 			sauvegarde_matrice(true);
 	}
 	
-	public int getNbIteration()			//Nombre d'itérations à effectuer
+	public int getNbIteration()			//Nombre d'itï¿½rations ï¿½ effectuer
 	{
 		return nbIteration;
 	}
@@ -66,7 +65,7 @@ public abstract class Test {
 		return validation;
 	}
 	
-	public double getConsecutiveLearnTime()	//Temps depuis la dernière pause
+	public double getConsecutiveLearnTime()	//Temps depuis la derniï¿½re pause
 	{
 		return consecutiveLearnTime;
 	}
