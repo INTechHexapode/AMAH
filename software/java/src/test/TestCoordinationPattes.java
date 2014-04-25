@@ -64,8 +64,8 @@ public class TestCoordinationPattes extends Test {
 	private void calcNote()
 	{
 		int nbRetourArriere = 0;
-		char[] cEtatSuivant = etat_suivant.toString().toCharArray();
-		char[] cEtatActuel = etat_actuel.toString().toCharArray();
+		char[] cEtatSuivant = etat_suivant.etatString();
+		char[] cEtatActuel = etat_actuel.etatString();
 		for(int i = 0; i < 6; i++)
 		{
 			if(cEtatActuel[i] == '0')

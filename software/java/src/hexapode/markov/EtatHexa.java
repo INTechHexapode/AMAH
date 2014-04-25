@@ -22,6 +22,7 @@ public class EtatHexa {
 	/**
 	 * Constructeur aleatoire
 	 */
+    @Deprecated
 	public EtatHexa()
 	{
 		for(int i = 0; i < 6; i++)
@@ -32,13 +33,24 @@ public class EtatHexa {
 	 * On lève les pattes qu'il faut, puis on les abaisse.
 	 * @param e
 	 */
-	public EtatHexa(String e)
+    @Deprecated
+	public EtatHexa(char[] e)
 	{
 	    for(int i = 0; i < 6; i++)
-	        if(e.charAt(i) == '1')
+	        if(e[i] == '1')
 	            epattes[i] = new EtatPatte(i, EtatPatteTest2.AVANT);
 	        else
                 epattes[i] = new EtatPatte(i, EtatPatteTest2.ARRIERE);
+	}
+	
+	public EtatHexa(String e)
+	{
+        for(int i = 0; i < 6; i++)
+            if(e.charAt(i) == '1')
+                epattes[i] = new EtatPatte(i, EtatPatteTest2.AVANT);
+            else
+                epattes[i] = new EtatPatte(i, EtatPatteTest2.ARRIERE);
+	    
 	}
 	
 	/**
@@ -61,14 +73,28 @@ public class EtatHexa {
 		epattes[nbPatte].em[nbMoteur].angle = angle;
 	}
 	
-	@Override
+@Override
 	public String toString()
 	{
-		String out = new String();
-		for(EtatPatte pate: epattes)
-		{
-			out += pate.toString();
-		}
+	    String s = new String();
+        for(int i = 0; i < 6; i++)
+        {
+            if(i > 0)
+                s += '\n';
+            s += epattes[i].toString();
+        }
+        return s;
+	}
+	
+
+	public char[] etatString()
+	{
+		char[] out = new char[6];
+
+        for(int i = 0; i < 6; i++)
+        {
+        	out[i] = epattes[i].etat();
+        }
 		return out;
 	}
 	
