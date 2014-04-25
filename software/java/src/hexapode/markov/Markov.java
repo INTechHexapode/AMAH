@@ -58,37 +58,10 @@ public class Markov implements java.io.Serializable {
 		return (char[]) positionsViables.get(r);//Chope l'�tat de l'hexapode associ�
 	}
 	
-	public EtatHexa next()
+	public char[] next()
 	{
-		EtatPatte[] ep = new EtatPatte[6];
-/*		nb_total++;
-		int nb_debout;
-		do {
-			nb_debout = 0;
-			ep = new EtatPatte[6];
-			for(int i = 0; i < 6; i++)
-			{
-				boolean debout = randomgenerator.nextBoolean();
-				ep[i] = new EtatPatte(debout);
-				if(debout)
-					nb_debout++;
-			}
-		} while(nb_debout > 3);*/
-		for(int j = 0; j < 6; j++)
-		{
-		int i = randomgenerator.nextInt()%4;
-		if(i == 0)
-			ep[j] = new EtatPatte(EtatPatteTest2.ARRIERE);
-		else if(i == 1)
-			ep[j] = new EtatPatte(EtatPatteTest2.AVANT);
-		else if(i == 2)
-			ep[j] = new EtatPatte(EtatPatteTest2.LEVE);
-		else
-			ep[j] = new EtatPatte(EtatPatteTest2.BAISSE);
-		}
-		return new EtatHexa(ep);
+		return getRandomPositionViable();
 	}
-	
 	
 	public void updateMatrix(int resultat, EtatHexa etatPrecedent, EtatHexa etatSuivant)
 	{
