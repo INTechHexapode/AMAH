@@ -14,6 +14,8 @@ public class EtatPatte {
     private static final double a = 60, b = 120;
     private static final double r = 100;    // rayon d'une patte en position arrière
     private static final double avancee = 50; // avancée en millimètres
+    private static final double hauteur_debout = -10;
+    private static final double hauteur_baisse = -100;
 
 	/**
 	 * Constructeur classique

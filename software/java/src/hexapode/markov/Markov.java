@@ -51,31 +51,11 @@ public class Markov implements java.io.Serializable {
 		}
 	}
 	
-	public EtatHexa next(EtatHexa etatActuel)
+	public char[] getRandomPositionViable()
 	{
-		EtatPatte[] ep = new EtatPatte[6];
-		EtatHexa nEtatHexa;		
-
-		/* Ce bloc permet de piocher une transition parmis les états d'équilibres */
+		/* Ce bloc permet de piocher une transition parmis les ï¿½tats d'ï¿½quilibres */
 		int r = randomgenerator.nextInt(positionsViables.size());//Pioche un int entre 0 et 63
-		char[] binaryString =  (char[]) positionsViables.get(r);//Chope l'état de l'hexapode associé
-		for(int i = 0; i < 6; ++i)
-		{
-			if(binaryString[i] == '1' && i < binaryString.length)//On met la patte en avant si il y a un 1
-			{
-				ep[i] = new EtatPatte(EtatPatteTest2.AVANT);
-			}
-			else
-			{
-				ep[i] = new EtatPatte(EtatPatteTest2.ARRIERE);//On laise la patte en place si il y a un 0 ou si le string a moins de 6 char
-			}
-		}
-		
-		/* Ici on compare l'état actuel avec l'état objectif pour déplacer seulement les pattes qui en ont besoin */
-		
-
-		nEtatHexa = new EtatHexa(ep);
-		return nEtatHexa;
+		return (char[]) positionsViables.get(r);//Chope l'ï¿½tat de l'hexapode associï¿½
 	}
 	
 	public EtatHexa next()

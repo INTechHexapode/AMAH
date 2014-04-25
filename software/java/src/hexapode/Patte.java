@@ -22,9 +22,9 @@ public class Patte {
 	 */
 	public Patte(Serial serie, int id, EtatPatte e)
 	{
+        this.etat = e;
 		for(int i = 0; i < 3; i++)
 			moteurs[i] = new Moteur(serie, 5*id+i+1, etat.em[i]);
-		this.etat = e;
 	}
 	
 	/**
