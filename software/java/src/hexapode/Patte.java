@@ -33,9 +33,9 @@ public class Patte {
 	 */
 	public void goto_etat(EtatPatte e)
 	{
-		for(int i = 0; i < 3; i++)
-			moteurs[i].goto_etat(e.em[i]);
         this.etat = e;
+		for(int i = 0; i < 3; i++)
+			moteurs[i].goto_etat(etat.em[i]);
 	}
 
 	/**

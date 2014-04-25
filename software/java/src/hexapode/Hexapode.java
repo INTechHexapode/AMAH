@@ -17,17 +17,16 @@ public class Hexapode {
 	
 	public Patte[][] pattes;
 	private int direction = 0;
-	private EtatHexa etat_actuel;
 	
 	public Hexapode(Serial serie)
 	{
-	    etat_actuel = new EtatHexa("000000");
+	    int[] etat_initial = {0,0,0,0,0,0};
         pattes = new Patte[6][6];
 
         for(int i = 0; i < 6; i++)
-		    pattes[0][i] = new Patte(serie, i, etat_actuel.epattes[i]);
+		    pattes[0][i] = new Patte(serie, i, new EtatPatte(i, etat_initial[i]));
 
-		pattes[1][0] = pattes[0][3];
+        pattes[1][0] = pattes[0][3];
         pattes[1][1] = pattes[0][0];
         pattes[1][2] = pattes[0][1];
         pattes[1][3] = pattes[0][4];
@@ -66,29 +65,55 @@ public class Hexapode {
 	}
 	
 	/**
+	 * Modifie la direction.
+	 * @param direction
+	 */
+	public void setDirectionAbsolue(int direction)
+	{
+	    // TODO Met à jour l'état
+	    this.direction = direction;
+	}
+
+	/**
+	 * "Tourne" vers la gauche (si différence < 0) ou vers la droite (si différence > 0)
+	 * @param difference
+	 */
+    public void setDirectioneRelatif(int difference)
+    {
+        setDirectionAbsolue((direction + difference + 6)%6);
+    }
+
+    public void goto_etat(String e)
+    {
+        goto_etat(e.getBytes());
+    }
+    
+    /**
 	 * L'hexapode fait l'action donnée par une chaîne binaire.
 	 * @param e
 	 */
-	public void goto_etat(String e)
+	public void goto_etat(byte[] e)
 	{
 	    // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les pattes intéressées, puis on les abaisse en même temps
        // On ramène en arrière et on lève
        for(int i = 0; i < 6; i++)
-           if(e.charAt(i) == '1' && pattes[direction][i].etat.etat == EtatPatteTest2.ARRIERE)
+           if(e[i] == '1' && pattes[direction][i].etat.etat == EtatPatteTest2.ARRIERE)
                pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.DEBOUT));
-           else if(e.charAt(i) == '0' && pattes[direction][i].etat.etat == EtatPatteTest2.AVANT)
-               pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.ARRIERE));
+           else if(e[i] == '0' && pattes[direction][i].etat.etat == EtatPatteTest2.AVANT)
+           {
+               System.out.println(i);
+               pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.POUSSE));
+           }
 
        Sleep.sleep(200);
 
        boolean attendre = false;
 
-       for(int i = 0; i < 6; i++) // on baisse
-           if(e.charAt(i) == '1' && pattes[direction][i].etat.etat == EtatPatteTest2.DEBOUT)
-           {
+       for(int i = 0; i < 6; i++) // on baisse       
+           if(attendre |= (pattes[direction][i].etat.etat == EtatPatteTest2.DEBOUT))
                pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.AVANT));
-               attendre = true;
-           }
+           else if(attendre |= (pattes[direction][i].etat.etat == EtatPatteTest2.POUSSE))
+               pattes[direction][i].goto_etat(new EtatPatte(i, EtatPatteTest2.ARRIERE));
 
        // On n'attend que si on a des pattes à baisser
        if(attendre)
@@ -100,6 +125,7 @@ public class Hexapode {
 	 * Change l'état de l'hexapode
 	 * @param e
 	 */
+    @Deprecated
 	public void goto_etat(EtatHexa e)
 	{
 		for(int i = 0; i < 6; i++)
@@ -119,6 +145,7 @@ public class Hexapode {
 	/**
 	 * Lève l'hexapode (en piétinant)
 	 */
+    @Deprecated
 	public void stand_up()
 	{
 		System.out.println("L'hexapode se lève");
@@ -156,6 +183,7 @@ public class Hexapode {
 	/**
 	 * Dépose délicatement l'hexapode à terre, couché
 	 */
+	@Deprecated
 	public void lay_down()
 	{
 		System.out.println("L'hexapode se couche");
@@ -165,15 +193,6 @@ public class Hexapode {
 		Sleep.sleep(1000);
 		for(int i = 0; i < 6; i++)
 			pattes[direction][i].goto_etat(ep);
-	}
-
-	/**
-	 * Getter de etat_actuel
-	 * @return
-	 */
-	public EtatHexa getEtat_actuel()
-	{
-		return etat_actuel;
 	}
 	
 /*	Normalement, on n'en a pas besoin. Pour bouger l'hexapode, on passe par goto_etat
@@ -186,6 +205,7 @@ public class Hexapode {
 	 * Lève la patte i
 	 * @param i
 	 */
+    @Deprecated
 	public void leverPatte(int i)
 	{
 		pattes[direction][i].lever();
@@ -195,6 +215,7 @@ public class Hexapode {
 	 * Baisse la patte i
 	 * @param i
 	 */
+	@Deprecated
 	public void baisserPatte(int i)
 	{
 		pattes[direction][i].baisser();
@@ -209,6 +230,18 @@ public class Hexapode {
 	public void change_moteur(int nbPatte, int nbMoteur, int angle)
 	{
 		pattes[direction][nbPatte].moteurs[nbMoteur].goto_etat(angle);
+	}
+	
+	public String toString()
+	{
+	    String s = new String();
+	    for(int i = 0; i < 6; i++)
+	    {
+	        if(i > 0)
+	            s += "\n";
+	        s += pattes[direction][i].etat.etat.toString();
+        }
+	    return s;
 	}
 
 }
