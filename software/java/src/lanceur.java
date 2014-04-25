@@ -28,13 +28,13 @@ public class lanceur {
 			for(int i = 0; i < 10; i++)
 			{
 			    System.out.println("+ "+i);
-			    hexa.pattes[0].goto_etat(new EtatPatte(0., 100.-5*i, -100.));
+			    hexa.pattes[0][0].goto_etat(new EtatPatte(0., 100.-5*i, -100.));
 			    Thread.sleep(60);
 			}
             for(int i = 10; i > 0; i--)
             {
                 System.out.println("- "+i);
-                hexa.pattes[0].goto_etat(new EtatPatte(0., 100.-5*i, -100.));
+                hexa.pattes[0][0].goto_etat(new EtatPatte(0., 100.-5*i, -100.));
                 Thread.sleep(60);
             }
 			}
@@ -43,13 +43,13 @@ public class lanceur {
             for(int i = 0; i < 10; i++)
             {
                 System.out.println("+ "+i);
-                hexa.pattes[0].goto_etat(new EtatPatte(0., 100., -120.+5*i));
+                hexa.pattes[0][0].goto_etat(new EtatPatte(0., 100., -120.+5*i));
                 Thread.sleep(60);
             }
             for(int i = 10; i > 0; i--)
             {
                 System.out.println("- "+i);
-                hexa.pattes[0].goto_etat(new EtatPatte(0., 100., -120.+5*i));
+                hexa.pattes[0][0].goto_etat(new EtatPatte(0., 100., -120.+5*i));
                 Thread.sleep(60);
             }
             }

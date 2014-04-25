@@ -14,15 +14,53 @@ import util.Sleep;
 
 public class Hexapode {
 	
-	public Patte[] pattes;
+	public Patte[][] pattes;
 	private EtatHexa etat_actuel;
+	private int direction = 0;
 	
 	public Hexapode(Serial serie)
 	{
 		etat_actuel = new EtatHexa(new EtatPatte(true));
-		pattes = new Patte[6];
-		for(int i = 0; i < 6; i++)
-			pattes[i] = new Patte(serie, i, etat_actuel.epattes[i]);
+        pattes = new Patte[6][6];
+
+        for(int i = 0; i < 6; i++)
+		    pattes[0][i] = new Patte(serie, i, etat_actuel.epattes[i]);
+
+		pattes[1][0] = pattes[0][3];
+        pattes[1][1] = pattes[0][0];
+        pattes[1][2] = pattes[0][1];
+        pattes[1][3] = pattes[0][4];
+        pattes[1][4] = pattes[0][5];
+        pattes[1][5] = pattes[0][2];
+
+        pattes[2][0] = pattes[0][4];
+        pattes[2][1] = pattes[0][3];
+        pattes[2][2] = pattes[0][0];
+        pattes[2][3] = pattes[0][5];
+        pattes[2][4] = pattes[0][2];
+        pattes[2][5] = pattes[0][1];
+
+        pattes[3][0] = pattes[0][5];
+        pattes[3][1] = pattes[0][4];
+        pattes[3][2] = pattes[0][3];
+        pattes[3][3] = pattes[0][2];
+        pattes[3][4] = pattes[0][1];
+        pattes[3][5] = pattes[0][0];
+
+        pattes[4][0] = pattes[0][2];
+        pattes[4][1] = pattes[0][5];
+        pattes[4][2] = pattes[0][4];
+        pattes[4][3] = pattes[0][1];
+        pattes[4][4] = pattes[0][0];
+        pattes[4][5] = pattes[0][3];
+
+        pattes[5][0] = pattes[0][1];
+        pattes[5][1] = pattes[0][2];
+        pattes[5][2] = pattes[0][5];
+        pattes[5][3] = pattes[0][0];
+        pattes[5][4] = pattes[0][3];
+        pattes[5][5] = pattes[0][4];
+
 		desasserv();
 	}
 
@@ -33,7 +71,7 @@ public class Hexapode {
 	public void goto_etat(EtatHexa e)
 	{
 		for(int i = 0; i < 6; i++)
-			pattes[i].goto_etat(e.epattes[i]);
+			pattes[direction][i].goto_etat(e.epattes[i]);
 	}
 
 	/**
@@ -43,7 +81,7 @@ public class Hexapode {
 	{
 		System.out.println("Desasservissement de l'hexapode");
 		for(int i = 0; i < 6; i++)
-			pattes[i].desasserv();
+			pattes[direction][i].desasserv();
 	}
 	
 	/**
@@ -60,11 +98,11 @@ public class Hexapode {
 		}
 		// On baisse toutes les pattes
 		for(int i = 0; i < 6; i++)
-			pattes[i].baisser();
+			pattes[direction][i].baisser();
 		Sleep.sleep(500);
 		// On abaisse un peu l'hexapode
 		for(int i = 0; i < 6; i++)
-			pattes[i].goto_etat(new EtatPatte(1500, 1800, 1800));
+			pattes[direction][i].goto_etat(new EtatPatte(1500, 1800, 1800));
 		
 	}
 
@@ -77,9 +115,9 @@ public class Hexapode {
 	 */
 	private void pietine(int num, int angle0, int angle1, int angle2)
 	{
-		pattes[num].goto_etat(new EtatPatte(angle0, angle1, angle2-400));
+		pattes[direction][num].goto_etat(new EtatPatte(angle0, angle1, angle2-400));
 		Sleep.sleep(100);
-		pattes[num].goto_etat(new EtatPatte(angle0, angle1, angle2));
+		pattes[direction][num].goto_etat(new EtatPatte(angle0, angle1, angle2));
 		Sleep.sleep(100);
 	}
 	
@@ -91,10 +129,10 @@ public class Hexapode {
 		System.out.println("L'hexapode se couche");
 		EtatPatte ep = new EtatPatte(1500, 1900, 1000);
 		for(int i = 0; i < 6; i++)
-			pattes[i].moteurs[1].goto_etat(new EtatMoteur(2000));
+			pattes[direction][i].moteurs[1].goto_etat(new EtatMoteur(2000));
 		Sleep.sleep(1000);
 		for(int i = 0; i < 6; i++)
-			pattes[i].goto_etat(ep);
+			pattes[direction][i].goto_etat(ep);
 	}
 
 	/**
@@ -118,7 +156,7 @@ public class Hexapode {
 	 */
 	public void leverPatte(int i)
 	{
-		pattes[i].lever();
+		pattes[direction][i].lever();
 	}
 
 	/**
@@ -127,7 +165,7 @@ public class Hexapode {
 	 */
 	public void baisserPatte(int i)
 	{
-		pattes[i].baisser();
+		pattes[direction][i].baisser();
 	}
 	
 	/**
@@ -138,7 +176,7 @@ public class Hexapode {
 	 */
 	public void change_moteur(int nbPatte, int nbMoteur, int angle)
 	{
-		pattes[nbPatte].moteurs[nbMoteur].goto_etat(angle);
+		pattes[direction][nbPatte].moteurs[nbMoteur].goto_etat(angle);
 	}
 
 }

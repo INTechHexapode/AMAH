@@ -65,7 +65,7 @@ public class EtatPatte {
 		double beta = Math.PI-Math.acos((b*b-x*x-y*y-a*a)/(2*a*Math.sqrt(x*x+y*y)));
 		double gamma = Math.asin(y/Math.sqrt(x*x+y*y))+Math.PI/2;
 		
-        double ordre1 = 300./25.*180./Math.PI*(beta+gamma)+(1500.+-300./25.*90.);
+        double ordre1 = 300./25.*180./Math.PI*(beta+gamma)+(1500.-300./25.*90.);
         double ordre2 = -400./40.*180./Math.PI*alpha+(1600.+400./40.*90.);
         
         em[1] = new EtatMoteur((int)ordre1);
