@@ -19,7 +19,7 @@ public abstract class Test {
 	protected Hexapode hexapode;
 	protected Markov markov;
 	protected boolean restartMarkov;
-	private boolean validation;
+	protected boolean validation;
 	protected String etat_actuel;
 	protected String etat_suivant;
 	protected int note;

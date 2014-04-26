@@ -61,7 +61,14 @@ public class TestCoordinationPattesSimulation extends Test {
 		@Override
 		public void init() 
 		{
-			markov = new Markov(2);
+			if(validation)
+			{
+				markov=chargement_matrice();
+			}
+			else
+			{
+				markov = new Markov(2);
+			}
 			etat_actuel = new String("000000");
 			etat_suivant = new String("000000");
 		}
