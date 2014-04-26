@@ -288,7 +288,7 @@ public class Hexapode {
 	public void suit_chemin(Vec2[] points)
 	{
 	    for(Vec2 point: points)
-	        va_au_point(point);
+	        va_au_point(point, true);
 	}
 	
 	/**
@@ -296,7 +296,7 @@ public class Hexapode {
 	 * @param x
 	 * @param y
 	 */
-	public void va_au_point(Vec2 point)
+	public void va_au_point(Vec2 point, boolean trajectoire_horaire)
 	{
 	    // On décompose le vecteur (x,y) sur la base formée par les deux vecteurs direction les plus proches de (x,y).
 	    // Cette base n'étant pas orthogonale, la formule est peu plus complexe qu'un produit scalaire.
@@ -315,10 +315,19 @@ public class Hexapode {
         double longueur1 = 2*(orthogonal[4*((direction1+6)%6)]*relatif.x+orthogonal[4*((direction1+6)%6)+1]*relatif.y)/racinede3;
         double longueur2 = 2*(orthogonal[4*((direction1+6)%6)+2]*relatif.x+orthogonal[4*((direction1+6)%6)+3]*relatif.y)/racinede3;
 
-        setDirection(direction1);
-        avancer((int)longueur1);
+        if(trajectoire_horaire)
+        {
+            setDirection(direction1);
+            avancer((int)longueur1);
+        }
         setDirection(direction2);
         avancer((int)longueur2);
+        if(!trajectoire_horaire)
+        {
+            setDirection(direction1);
+            avancer((int)longueur1);
+        }
+        
 	}
 	
 	/**
