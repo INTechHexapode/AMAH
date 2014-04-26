@@ -13,15 +13,15 @@ public class lanceur {
 	public static void main(String[] args) {
 		SerialManager serialmanager;
 		try {
-		    /*serialmanager = new SerialManager();
-			Serial serie = serialmanager.getSerial("serieAsservissement");*/
-			Hexapode hexa = new Hexapode(null);
-			System.out.println("Attente");
+		    serialmanager = new SerialManager();
+			Serial serie = serialmanager.getSerial("serieAsservissement");
+			Hexapode hexa = new Hexapode(serie);
+ 			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
-			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 1000, 50, 1, true, false);
-			TestEngine testEngine = new TestEngine(test);
-			testEngine.start();
+//			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 1000, 50, 1, true, false);
+//			TestEngine testEngine = new TestEngine(test);
+//			testEngine.start();
 
 			/*for(int i = -100; i < 100; i++)
 			{
@@ -30,25 +30,28 @@ public class lanceur {
                 Sleep.sleep(100);
 			}*/
 			
-			hexa.desasserv();
+			hexa.arret();
 			
+			Sleep.sleep(1000);
 //			StandStillTest standstilltest = new StandStillTest(hexa, 100, 600., 0., true, true);
 //			TestEngine testengine = new TestEngine(standstilltest);
 //			testengine.start();
 //			hexa.stand_up();
 
-			
-			for(int i = 0; i < 10; i++)
+						
+			for(int i = 0; i < 30; i++)
 			{
-    			hexa.goto_etat("000000");
-                Sleep.sleep(1000);
-                hexa.goto_etat("101101");
-                Sleep.sleep(1000);
+			    if(i % 5 == 0)
+			        hexa.setDirectioneRelatif(1);
+    			hexa.goto_etat("101010");
+                Sleep.sleep(300);
+                hexa.goto_etat("010101");
+                Sleep.sleep(300);
 			}
 			hexa.desasserv();
 
 			scanner.close();
-			//serie.close();
+			serie.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

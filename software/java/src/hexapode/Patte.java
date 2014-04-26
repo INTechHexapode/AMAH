@@ -63,10 +63,7 @@ public class Patte {
     
         double new_r = Math.sqrt(x*x+y*y);
         double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
-    
-        if(role == 5)
-          System.out.println("new_angle: "+new_angle*180./Math.PI);
-    
+        
         if(etat == EnumEtatPatte.DEBOUT)
             setEtatMoteurs(new_angle, new_r, hauteur_debout);
         else if(etat == EnumEtatPatte.AVANT)
