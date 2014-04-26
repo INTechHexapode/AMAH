@@ -79,7 +79,7 @@ public class Markov implements java.io.Serializable {
 			lineSum += matrice[numeroEtatActuel][j];
 		}
 		
-		int r = randomgenerator.nextInt(lineSum);
+		int r = randomgenerator.nextInt(lineSum+1);
 		
 		lineSum = 0;
 		for(int j = 0; j < matrice.length; ++j)
@@ -91,6 +91,10 @@ public class Markov implements java.io.Serializable {
 				break;
 			}
 		}
+        while(out.length() < 6)
+        {
+            out = "0" + out;
+        }
 		
 		return out;
 	}
