@@ -5,7 +5,6 @@ import serial.SerialException;
 
 	/**
 	 * Classe des moteurs. Visibilité en "friendly".
-	 * Retient toujours son état
 	 * @author pf
 	 *
 	 */

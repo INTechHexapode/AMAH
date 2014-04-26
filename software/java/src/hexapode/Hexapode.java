@@ -12,6 +12,7 @@ import util.Sleep;
 
 public class Hexapode {
 	
+    private Vec2 position; // position à laquelle l'hexapode se croit
 	private Patte[][] pattes;
 //	private Serial serie; // TODO
 	private int direction = 0;
@@ -34,7 +35,9 @@ public class Hexapode {
 	 */
 	public Hexapode(Serial serie, boolean inverser)
 	{
-//	    this.serie = serie; // TODO
+//      this.serie = serie; // TODO
+
+	    position = new Vec2(0,0); // TODO
 	    
 	    marche = new String[2];
 	    marche[0] = new String("101010");
@@ -93,7 +96,7 @@ public class Hexapode {
             {
         	    EnumEtatPatte[] sauv = new EnumEtatPatte[6];
         	    for(int i = 0; i < 6; i++)
-        	        sauv[i] = pattes[direction][i].etat;
+        	        sauv[i] = pattes[direction][i].getEtat();
         	    this.direction = direction;
                 for(int i = 0; i < 6; i++)
                     if(sauv[i] != EnumEtatPatte.OTHER)
@@ -139,12 +142,12 @@ public class Hexapode {
        // On ramène en arrière et on lève
 	    try {
            for(int i = 0; i < 6; i++)
-               if(e.charAt(i) == '1' && pattes[direction][i].etat != EnumEtatPatte.AVANT)
+               if(e.charAt(i) == '1' && pattes[direction][i].getEtat() != EnumEtatPatte.AVANT)
                {
                    mouvement = true;
                    pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
                }
-               else if(e.charAt(i) == '0' && pattes[direction][i].etat != EnumEtatPatte.ARRIERE)
+               else if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.ARRIERE)
                {
                    mouvement = true;
                    pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
@@ -156,9 +159,9 @@ public class Hexapode {
                Sleep.sleep(Sleep.temps_defaut);
     
                for(int i = 0; i < 6; i++) // on baisse
-                   if(pattes[direction][i].etat == EnumEtatPatte.DEBOUT)
+                   if(pattes[direction][i].getEtat() == EnumEtatPatte.DEBOUT)
                        pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT, Sleep.temps_defaut/4);
-                   else if(pattes[direction][i].etat == EnumEtatPatte.POUSSE)
+                   else if(pattes[direction][i].getEtat() == EnumEtatPatte.POUSSE)
                        pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
         
                Sleep.sleep(Sleep.temps_defaut/4);
@@ -262,7 +265,7 @@ public class Hexapode {
 	    {
 	        if(i > 0)
 	            s += "\n";
-	        s += pattes[direction][i].etat.toString();
+	        s += pattes[direction][i].getEtat().toString();
         }
 	    return s;
 	}
@@ -271,7 +274,7 @@ public class Hexapode {
 	 * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
 	 * @param distance
 	 */
-	public void avancer(int distance)
+	private void avancer(int distance)
 	{
 	    int nb_iteration = distance / ((int) Patte.avancee);
 	    for(int i = 0; i < nb_iteration; i++)
@@ -279,13 +282,21 @@ public class Hexapode {
 	}
 
 	/**
-	 * Va au point de coordonnées RELATIVES
-	 * (en l'absence d'odométrie, on ne sait pas où on est,
-	 * donc pas de coordonnées absolues possibles)
+     * Suit un itinéraire
+	 * @param points
+	 */
+	public void suit_chemin(Vec2[] points)
+	{
+	    for(Vec2 point: points)
+	        va_au_point(point);
+	}
+	
+	/**
+	 * Va au point (coordonnées absolues)
 	 * @param x
 	 * @param y
 	 */
-	public void va_au_point(int x, int y)
+	public void va_au_point(Vec2 point)
 	{
 	    // On décompose le vecteur (x,y) sur la base formée par les deux vecteurs direction les plus proches de (x,y).
 	    // Cette base n'étant pas orthogonale, la formule est peu plus complexe qu'un produit scalaire.
@@ -294,32 +305,33 @@ public class Hexapode {
 	    // Alors (x,y).c = C*cos(PI/6) soit C = (x.y).c*2/racine(3).
 	    // On recommence avec un c' ortogonal à a.
 	    // Le tableau "orthogonal" contient ces c et c'
-	    double angle_consigne = Math.atan2(x,y);
+	    Vec2 relatif = new Vec2(point);
+	    relatif.sub(position);
+	    point.copy(position);
+	    
+	    double angle_consigne = Math.atan2(relatif.x,relatif.y);
 	    int direction1 = (int)(Math.floor((3*angle_consigne/Math.PI)));
 	    int direction2 = direction1+1;
-        double longueur1 = 2*(orthogonal[4*((direction1+6)%6)]*x+orthogonal[4*((direction1+6)%6)+1]*y)/racinede3;
-        double longueur2 = 2*(orthogonal[4*((direction1+6)%6)+2]*x+orthogonal[4*((direction1+6)%6)+3]*y)/racinede3;
+        double longueur1 = 2*(orthogonal[4*((direction1+6)%6)]*relatif.x+orthogonal[4*((direction1+6)%6)+1]*relatif.y)/racinede3;
+        double longueur2 = 2*(orthogonal[4*((direction1+6)%6)+2]*relatif.x+orthogonal[4*((direction1+6)%6)+3]*relatif.y)/racinede3;
 
         setDirection(direction1);
         avancer((int)longueur1);
         setDirection(direction2);
         avancer((int)longueur2);
-        
-//        System.out.println("x = "+(longueur1*Math.cos(direction1*Math.PI/3)+longueur2*Math.cos(direction2*Math.PI/3)));
-//        System.out.println("y = "+(longueur1*Math.sin(direction1*Math.PI/3)+longueur2*Math.sin(direction2*Math.PI/3)));
 	}
 	
 	/**
 	 * Avance de "Patte.avancee" millimètres dans la direction actuelle
 	 */
-	public void avancer_elementaire()
+	private void avancer_elementaire()
 	{
         goto_etat(marche[pas]);
 	    pas++;
 	    pas %= marche.length;
 	}
 	
-	public boolean detecter_ennemi()
+	private boolean detecter_ennemi()
 	{
 	    if(!capteur_active)
 	        return false;
@@ -376,7 +388,7 @@ public class Hexapode {
             
             // On repose la patte 3
             goto_etat("010101");
-
+            // TODO mise à jour position
             setDirection(Direction.BAS);
             capteur_active = true;
         } catch (GoToException e)

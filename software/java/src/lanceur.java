@@ -1,5 +1,6 @@
 import hexapode.GoToException;
 import hexapode.Hexapode;
+import hexapode.Vec2;
 
 import java.util.Scanner;
 
@@ -101,6 +102,14 @@ public class lanceur {
         TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 10000, 50, 1, true, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
+	}
+	
+	public static void script(Hexapode hexa)
+	{
+	    Vec2[] itineraire = {   new Vec2(1100, 1400),
+	                           new Vec2(1100, 600),
+	                           new Vec2(700, 400)};
+	    hexa.suit_chemin(itineraire);
 	}
 	
 }

@@ -6,14 +6,15 @@ import util.Sleep;
 
 	/**
 	 * Classe des pattes, qui contiennent chacune 3 moteurs. Visibilité en "friendly"
+	 * Retient son état, il faut donc toujours veiller à le mettre à jour.
 	 * @author pf
 	 *
 	 */
 
 class Patte {
 
-	public TriMoteur moteurs;
-	public EnumEtatPatte etat;
+	private TriMoteur moteurs;
+	private EnumEtatPatte etat;
 
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
@@ -22,6 +23,8 @@ class Patte {
     private static final double hauteur_debout = -80;
     private static final double hauteur_baisse = -110;
     private static final double hauteur_pousse = -120;
+    
+    // TODO Si on soulève suffisamment les pattes, peut-on passer sur les foyers?
     
 	/**
 	 * Constructeur d'une patte
@@ -157,5 +160,14 @@ class Patte {
 	{
         etat = EnumEtatPatte.OTHER;
 	    moteurs.desasserv();
+	}
+	
+	/**
+	 * Retourne l'état de la patte
+	 * @return
+	 */
+	public EnumEtatPatte getEtat()
+	{
+	    return etat;
 	}
 }
