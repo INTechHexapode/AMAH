@@ -41,7 +41,7 @@ public class StandStillTest extends Test {
 		super.onExit();
 		if(!last_good)
 		{
-			hexapode.lay_down();
+			//hexapode.lay_down();
 			Sleep.sleep(100);
 		}
 	}

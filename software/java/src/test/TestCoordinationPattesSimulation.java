@@ -35,9 +35,8 @@ public class TestCoordinationPattesSimulation extends Test {
 		@Override
 		public void proceedTest() {
 			//On récupère l'état suivant à tester
-			char[] nEtatSuivant = markov.next();
+			etat_suivant = markov.next();
 
-			etat_suivant = new String(String.valueOf(nEtatSuivant));
 		}
 
 		@Override
@@ -63,6 +62,7 @@ public class TestCoordinationPattesSimulation extends Test {
 		private void calcNote()
 		{
 			int nbRetourArriere = 0;
+			System.out.println(etat_actuel + " " + etat_suivant);
 			for(int i = 0; i < 6; i++)
 			{
 				if(etat_actuel.charAt(i) == '0')

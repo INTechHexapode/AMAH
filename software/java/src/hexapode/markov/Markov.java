@@ -51,14 +51,20 @@ public class Markov implements java.io.Serializable {
 		}
 	}
 	
-	public char[] getRandomPositionViable()
+	public String getRandomPositionViable()
 	{
 		/* Ce bloc permet de piocher une transition parmis les �tats d'�quilibres */
 		int r = randomgenerator.nextInt(positionsViables.size());//Pioche un int entre 0 et 63
-		return (char[]) positionsViables.get(r);//Chope l'�tat de l'hexapode associ�
+		String out = String.valueOf(positionsViables.get(r));
+
+		while(out.length() < 6)
+		{
+			out = "0" + out;
+		}
+		return out;
 	}
 	
-	public char[] next()
+	public String next()
 	{
 		return getRandomPositionViable();
 	}

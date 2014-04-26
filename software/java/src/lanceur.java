@@ -12,17 +12,17 @@ import util.Sleep;
 public class lanceur {
 
 	public static void main(String[] args) {
-		SerialManager serialmanager;
+		//SerialManager serialmanager;
 		try {
-		    serialmanager = new SerialManager();
-			Serial serie = serialmanager.getSerial("serieAsservissement");
-			Hexapode hexa = new Hexapode(serie);
+		    //serialmanager = new SerialManager();
+			//Serial serie = serialmanager.getSerial("serieAsservissement");
+			Hexapode hexa = new Hexapode(null);
  			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
-//			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 1000, 50, 1, true, false);
-//			TestEngine testEngine = new TestEngine(test);
-//			testEngine.start();
+			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 1000, 50, 1, true, false);
+			TestEngine testEngine = new TestEngine(test);
+			testEngine.start();
 
 			/*for(int i = -100; i < 100; i++)
 			{
@@ -43,7 +43,7 @@ public class lanceur {
 			hexa.desasserv();
 
 			scanner.close();
-			serie.close();
+			//serie.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

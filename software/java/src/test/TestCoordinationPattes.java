@@ -32,8 +32,8 @@ public class TestCoordinationPattes extends Test {
 	@Override
 	public void proceedTest() {
 		//On récupère l'état suivant à tester
-		char[] nEtatSuivant = markov.next();
-		etat_suivant = new String(String.valueOf(nEtatSuivant));
+		String nEtatSuivant = markov.next();
+		etat_suivant = new String(nEtatSuivant);
 		
 		//On demande à l'hexapode de se mettre en position
 		try {
