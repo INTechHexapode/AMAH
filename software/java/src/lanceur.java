@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 import serial.Serial;
 import serial.SerialManager;
+import test.TestCoordinationPattesSimulation;
+import test.TestEngine;
 import util.Sleep;
 
 public class lanceur {
@@ -19,6 +21,9 @@ public class lanceur {
 			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
+			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 1000, 50, 1, true, false);
+			TestEngine testEngine = new TestEngine(test);
+			//testEngine.start();
 
 			for(int i = -100; i < 100; i++)
 			{

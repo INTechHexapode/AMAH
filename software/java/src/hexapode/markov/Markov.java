@@ -39,7 +39,7 @@ public class Markov implements java.io.Serializable {
 	
 	private void getPositionsViables()
 	{
-		double pos[] = DataSaver.charger_matrice_equilibre("C:\\Users\\Stud\\Documents\\Workspace\\hexapode\\software\\java\\markov_equilibre.dat");
+		double pos[] = DataSaver.charger_matrice_equilibre("markov_equilibre.dat");
 		positionsViables = new LinkedList<char[]>();
 		for(int i=0; i< pos.length; i++)
 		{

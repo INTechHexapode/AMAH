@@ -45,12 +45,13 @@ public class EtatHexa {
 	
 	public EtatHexa(String e)
 	{
-        for(int i = 0; i < 6; i++)
-            if(e.charAt(i) == '1')
-                epattes[i] = new EtatPatte(i, EtatPatteTest2.AVANT);
-            else
+	    for(int i = 0; i < 6; ++i)
+	    {
+	        if(i < e.length() && e.charAt(i) == '1')
+	            epattes[i] = new EtatPatte(i, EtatPatteTest2.AVANT);
+	        else
                 epattes[i] = new EtatPatte(i, EtatPatteTest2.ARRIERE);
-	    
+	    }
 	}
 	
 	/**
