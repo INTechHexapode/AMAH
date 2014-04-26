@@ -15,8 +15,8 @@ class TriMoteur {
 	private Serial serie;
 	private int id;
 
-    private static final int[] angle_min = {1000, 500, 1000};  // sécurité des moteurs
-    private static final int[] angle_max = {1600, 2000, 2000}; // sécurité des moteurs
+    private static final int[] angle_min = {900, 500, 1000};  // sécurité des moteurs
+    private static final int[] angle_max = {1500, 2000, 2000}; // sécurité des moteurs
     
 	/**
 	 * Construit un moteur, désasservi.
@@ -44,18 +44,18 @@ class TriMoteur {
 	{	
 	    for(int i = 0; i < 2; i++)
 	        if(angles[i] < angle_min[i] || angles[i] > angle_max[i])
-	            throw new GoToException();
+	            throw new GoToException(i);
         if(serie != null)
-    		try {
-    		    String ordre = new String();
-    		    // S500 pour régler la vitesse maximale
-    		    for(int i = 0; i < 3; i++)
-    				ordre += "#"+Integer.toString(id+i)+"P"+Integer.toString(angles[i])+" ";
-    			ordre += "T"+Integer.toString(temps);
-    			serie.communiquer(ordre);
-    		} catch (SerialException e1) {
-    			e1.printStackTrace();
-    		}
+            try {
+                String ordre = new String();
+                // S500 pour régler la vitesse maximale
+                for(int i = 0; i < 3; i++)
+                    ordre += "#"+Integer.toString(id+i)+"P"+Integer.toString(angles[i])+" ";
+                ordre += "T"+Integer.toString(temps);
+                serie.communiquer(ordre);
+            } catch (SerialException e1) {
+                e1.printStackTrace();
+            }
 	}
 
 	/**
