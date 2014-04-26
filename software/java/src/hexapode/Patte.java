@@ -49,7 +49,6 @@ class Patte {
 	    if(etat == EnumEtatPatte.OTHER)
 	        throw new GoToException();
 
-	    this.etat = etat;
         double angle = angles[role];
         // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
         // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
@@ -72,6 +71,8 @@ class Patte {
             setEtatMoteurs(new_angle, new_r, hauteur_pousse, temps); // et on pousse un peu sur les pattes
         else if(etat == EnumEtatPatte.ARRIERE)
             setEtatMoteurs(new_angle, new_r, hauteur_baisse, temps);
+
+        this.etat = etat; // le faire après setEtatMoteur qui met l'état à OTHER
     }
     
     /**
@@ -81,8 +82,22 @@ class Patte {
      * @param y en mm
      * @throws GoToException 
      */    
-    private void setEtatMoteurs(double angle, double x, double y, int temps) throws GoToException
+	public void setEtatMoteurs(double angle, double x, double y) throws GoToException
+	{
+	    setEtatMoteurs(angle, x, y, Sleep.temps_defaut);
+	}
+	
+    /**
+     * Angle positif: sens horaire.
+     * @param angle en radians
+     * @param x en mm
+     * @param y en mm
+     * @param temps en ms
+     * @throws GoToException 
+     */    
+    public void setEtatMoteurs(double angle, double x, double y, int temps) throws GoToException
     {
+        etat = EnumEtatPatte.OTHER;
         int[] ordres = new int[3];
         double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
         double beta = Math.PI-Math.acos((b*b-x*x-y*y-a*a)/(2*a*Math.sqrt(x*x+y*y)));
@@ -101,7 +116,7 @@ class Patte {
     */
     public void baisser() throws GoToException
     {
-        goto_etat(1600, 1200, 1200);
+        goto_etat(1500, 1200, 1200);
     }
 
     /**

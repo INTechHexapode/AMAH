@@ -1,7 +1,6 @@
 package test;
 
 import util.Sleep;
-import hexapode.GoToException;
 import hexapode.Hexapode;
 import hexapode.markov.Markov;
 
@@ -19,7 +18,9 @@ public class StandStillTest extends Test {
 	@Override
 	public void onStart()
 	{
-		if(last_good)
+	    // Passage commenté car génère une erreur
+
+/*		if(last_good)
 		{
 			for(int i = 0; i < 6; i++)
                 try
@@ -32,7 +33,7 @@ public class StandStillTest extends Test {
 			Sleep.sleep(500);
 		}
 		else
-		hexapode.stand_up();
+		hexapode.stand_up();*/
 	}
 
 	@Override
