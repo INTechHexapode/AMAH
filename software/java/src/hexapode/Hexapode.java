@@ -14,7 +14,7 @@ public class Hexapode {
 	
 	public Patte[][] pattes;
 	private int direction = 0;
-	
+	 
 	public Hexapode(Serial serie)
 	{
         pattes = new Patte[6][6];
@@ -63,7 +63,7 @@ public class Hexapode {
         pattes[5][4] = pattes[0][3];
         pattes[5][5] = pattes[0][4];
 
-		desasserv();
+		arret();
 	}
 	
 	/**
@@ -80,7 +80,8 @@ public class Hexapode {
         	        sauv[i] = pattes[direction][i].etat;
         	    this.direction = direction;
                 for(int i = 0; i < 6; i++)
-                        pattes[direction][i].goto_etat(i, sauv[i]);
+                        pattes[direction][i].goto_etat(i, sauv[i], Sleep.temps_defaut);
+                Sleep.sleep(Sleep.temps_defaut);
             } catch (GoToException e)
             {
                 e.printStackTrace();
@@ -111,12 +112,12 @@ public class Hexapode {
            if(e.charAt(i) == '1' && pattes[direction][i].etat != EnumEtatPatte.AVANT)
            {
                mouvement = true;
-               pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT);
+               pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
            }
            else if(e.charAt(i) == '0' && pattes[direction][i].etat != EnumEtatPatte.ARRIERE)
            {
                mouvement = true;
-               pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE);
+               pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
            }
 
        // On continue le mouvement que s'il y a un mouvement à continuer
@@ -126,11 +127,11 @@ public class Hexapode {
 
            for(int i = 0; i < 6; i++) // on baisse
                if(pattes[direction][i].etat == EnumEtatPatte.DEBOUT)
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT);
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT, Sleep.temps_defaut/4);
                else if(pattes[direction][i].etat == EnumEtatPatte.POUSSE)
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE);
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
     
-           Sleep.sleep(Sleep.temps_defaut);
+           Sleep.sleep(Sleep.temps_defaut/4);
        }
 
 	}
@@ -222,7 +223,8 @@ public class Hexapode {
             e.printStackTrace();
         }
         Sleep.sleep(Sleep.temps_defaut);
-	}
+        desasserv();
+    }
 	
 	@Override
 	public String toString()

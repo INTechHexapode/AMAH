@@ -2,7 +2,6 @@ package hexapode;
 
 import serial.Serial;
 import serial.SerialException;
-import util.Sleep;
 
 	/**
 	 * Classe des moteurs. Visibilité en "friendly".
@@ -34,16 +33,6 @@ class TriMoteur {
 		desasserv();
 	}
 
-	/**
-	 * Surcouche de goto_etat, avec pour valeur de temps par défaut
-	 * @param angles
-	 * @throws GoToException
-	 */
-    public void goto_etat(int[] angles) throws GoToException
-    {
-        goto_etat(angles, Sleep.temps_defaut);
-    }
-
     /**
      * Deplacement groupé des trois moteurs
      * Lève une exception si un angle ne satisfait pas les bornes.
@@ -59,6 +48,7 @@ class TriMoteur {
         if(serie != null)
     		try {
     		    String ordre = new String();
+    		    // S500 pour régler la vitesse maximale
     		    for(int i = 0; i < 3; i++)
     				ordre += "#"+Integer.toString(id+i)+"P"+Integer.toString(angles[i])+" ";
     			ordre += "T"+Integer.toString(temps);

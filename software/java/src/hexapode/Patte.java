@@ -2,6 +2,7 @@ package hexapode;
 
 import hexapode.markov.EnumEtatPatte;
 import serial.Serial;
+import util.Sleep;
 
 	/**
 	 * Classe des pattes, qui contiennent chacune 3 moteurs. Visibilité en "friendly"
@@ -42,7 +43,7 @@ public class Patte {
 	 * @param etat: l'état souhaité
 	 * @throws GoToException 
 	 */
-	public void goto_etat(int role, EnumEtatPatte etat) throws GoToException
+	public void goto_etat(int role, EnumEtatPatte etat, int temps) throws GoToException
 	{
 	    // On n'a pas le droit de demander à aller à OTHER
 	    if(etat == EnumEtatPatte.OTHER)
@@ -64,13 +65,13 @@ public class Patte {
         double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
         
         if(etat == EnumEtatPatte.DEBOUT)
-            setEtatMoteurs(new_angle, new_r, hauteur_debout);
+            setEtatMoteurs(new_angle, new_r, hauteur_debout, temps);
         else if(etat == EnumEtatPatte.AVANT)
-            setEtatMoteurs(new_angle, new_r, hauteur_baisse);
+            setEtatMoteurs(new_angle, new_r, hauteur_baisse, temps);
         else if(etat == EnumEtatPatte.POUSSE)
-            setEtatMoteurs(new_angle, new_r, hauteur_pousse); // et on pousse un peu sur les pattes
+            setEtatMoteurs(new_angle, new_r, hauteur_pousse, temps); // et on pousse un peu sur les pattes
         else if(etat == EnumEtatPatte.ARRIERE)
-            setEtatMoteurs(new_angle, new_r, hauteur_baisse);
+            setEtatMoteurs(new_angle, new_r, hauteur_baisse, temps);
     }
     
     /**
@@ -80,7 +81,7 @@ public class Patte {
      * @param y en mm
      * @throws GoToException 
      */    
-    private void setEtatMoteurs(double angle, double x, double y) throws GoToException
+    private void setEtatMoteurs(double angle, double x, double y, int temps) throws GoToException
     {
         int[] ordres = new int[3];
         double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
@@ -91,7 +92,7 @@ public class Patte {
         ordres[2] = (int)(-400./40.*180./Math.PI*alpha+(1600.+400./40.*90.));        
         ordres[0] = (int)(-300./30.*(angle*180./Math.PI+90.)+1500.+300./30.*60.);
         
-        moteurs.goto_etat(ordres);
+        moteurs.goto_etat(ordres, temps);
     }
     
 	/**
@@ -102,7 +103,7 @@ public class Patte {
     {
         goto_etat(1600, 1200, 1200);
     }
-    
+
     /**
      * Affecte aux moteurs les angles données.
      * @param m0
@@ -112,9 +113,22 @@ public class Patte {
      */
     public void goto_etat(int m0, int m1, int m2) throws GoToException
     {
+        goto_etat(m0, m1, m2, Sleep.temps_defaut);
+    }
+
+    /**
+     * Affecte aux moteurs les angles données en un certain temps.
+     * @param m0
+     * @param m1
+     * @param m2
+     * @param temps
+     * @throws GoToException
+     */
+    public void goto_etat(int m0, int m1, int m2, int temps) throws GoToException
+    {
         etat = EnumEtatPatte.OTHER;
         int[] ordres = {m0, m1, m2};
-        moteurs.goto_etat(ordres);
+        moteurs.goto_etat(ordres, temps);
     }
 	
 	/**
