@@ -23,8 +23,6 @@ class Patte {
     private static final double hauteur_baisse = -110;
     private static final double hauteur_pousse = -120;
     
-    private static final double[] angles = {-Math.PI/6., -Math.PI/2., -5.*Math.PI/6., Math.PI/6., Math.PI/2., 5.*Math.PI/6.};
-
 	/**
 	 * Constructeur d'une patte
 	 * @param serie
@@ -33,7 +31,7 @@ class Patte {
 	 */
 	public Patte(Serial serie, int id)
 	{
-        this.etat = EnumEtatPatte.OTHER;        
+        this.etat = EnumEtatPatte.OTHER;
         moteurs = new TriMoteur(serie, 5*id+1);
 	}
 	
@@ -49,7 +47,7 @@ class Patte {
 	    if(etat == EnumEtatPatte.OTHER)
 	        throw new GoToException();
 
-        double angle = angles[role];
+        double angle = -Math.PI/3*role-Math.PI/6;
         // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
         // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
         // (ici, c'est vu du dessus; dans setEtaMoteurs, c'est vu de côté)
@@ -107,16 +105,22 @@ class Patte {
         ordres[2] = (int)(-400./40.*180./Math.PI*alpha+(1600.+400./40.*90.));        
         ordres[0] = (int)(-300./30.*(angle*180./Math.PI+90.)+1500.+300./30.*60.);
         
+        System.out.println(ordres[0]+" "+ordres[1]+" "+ordres[2]);
         moteurs.goto_etat(ordres, temps);
     }
     
 	/**
     * Baisse la patte
-	 * @throws GoToException 
     */
-    public void baisser() throws GoToException
+    public void baisser()
     {
-        goto_etat(1500, 1200, 1200);
+        try {
+            goto_etat(1500, 1200, 1200);
+        }
+        catch(GoToException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**

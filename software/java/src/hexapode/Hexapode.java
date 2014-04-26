@@ -16,8 +16,11 @@ public class Hexapode {
 //	private Serial serie; // TODO
 	private int direction = 0;
 	private int pas = 0; // indice pour la marche
-    private static final int[] pattes_rotation = {3,0,1,4,5,2,4,3,0,5,2,1,5,4,3,2,1,0,2,5,4,1,0,3,1,2,5,0,3,4};
-	
+    private static final int[] pattes_rotation = {  3,0,1,4,5,2,
+                                                    4,3,0,5,2,1,
+                                                    5,4,3,2,1,0,
+                                                    2,5,4,1,0,3,
+                                                    1,2,5,0,3,4};
     private boolean capteur_active = true;
 	private String[] marche;
 //	private long date_debut = -1; // TODO
@@ -60,49 +63,9 @@ public class Hexapode {
                     pattes[6-i][j] = pattes[0][pattes_rotation[(i-1)*6+j]];
                 else
                     pattes[i][j] = pattes[0][pattes_rotation[(i-1)*6+j]];
-/*
-        // Pattes pour la direction 1
-        pattes[0][1] = pattes[0][3];
-        pattes[1][1] = pattes[0][0];
-        pattes[1][2] = pattes[0][1];
-        pattes[1][3] = pattes[0][4];
-        pattes[1][4] = pattes[0][5];
-        pattes[1][5] = pattes[0][2];
 
-        // Pattes pour la direction 2
-        pattes[2][0] = pattes[0][4];
-        pattes[2][1] = pattes[0][3];
-        pattes[2][2] = pattes[0][0];
-        pattes[2][3] = pattes[0][5];
-        pattes[2][4] = pattes[0][2];
-        pattes[2][5] = pattes[0][1];
-
-        
-        // Pattes pour la direction 3
-        pattes[3][0] = pattes[0][5];
-        pattes[3][1] = pattes[0][4];
-        pattes[3][2] = pattes[0][3];
-        pattes[3][3] = pattes[0][2];
-        pattes[3][4] = pattes[0][1];
-        pattes[3][5] = pattes[0][0];
-
-        // Pattes pour la direction 4
-        pattes[4][0] = pattes[0][2];
-        pattes[4][1] = pattes[0][5];
-        pattes[4][2] = pattes[0][4];
-        pattes[4][3] = pattes[0][1];
-        pattes[4][4] = pattes[0][0];
-        pattes[4][5] = pattes[0][3];
-
-        // Pattes pour la direction 5
-        pattes[5][0] = pattes[0][1];
-        pattes[5][1] = pattes[0][2];
-        pattes[5][2] = pattes[0][5];
-        pattes[5][3] = pattes[0][0];
-        pattes[5][4] = pattes[0][3];
-        pattes[5][5] = pattes[0][4];
-  */      
         arret();
+        desasserv();
 	}
 	
 	/**
@@ -163,8 +126,12 @@ public class Hexapode {
             Sleep.sleep(1000);
 
         // TODO: quand on aura un jumper
-//        if(System.currentTimeMillis() - date_debut > 90000)
-//            serie.close();
+/*        if(System.currentTimeMillis() - date_debut > 90000)
+        {
+            arret();
+            desasserv();
+            serie.close();
+        }*/
 
         boolean mouvement = false;
 
@@ -282,14 +249,8 @@ public class Hexapode {
 	 */
 	public void arret()
 	{
-        try
-        {
-            for(int i = 0; i < 6; i++)
-                pattes[direction][i].baisser();
-        } catch (GoToException e)
-        {
-            e.printStackTrace();
-        }
+        for(int i = 0; i < 6; i++)
+            pattes[direction][i].baisser();
         Sleep.sleep();
     }
 	
