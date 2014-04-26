@@ -12,7 +12,7 @@ import util.Sleep;
 
 public class Hexapode {
 	
-	public Patte[][] pattes;
+	private Patte[][] pattes;
 	private int direction = 0;
 	private boolean pas = false; // bascule pour alterner les deux pas
 	

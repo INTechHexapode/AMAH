@@ -10,7 +10,7 @@ import util.Sleep;
 	 *
 	 */
 
-public class Patte {
+class Patte {
 
 	public TriMoteur moteurs;
 	public EnumEtatPatte etat;
