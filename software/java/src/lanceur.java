@@ -1,3 +1,4 @@
+import hexapode.GoToException;
 import hexapode.Hexapode;
 
 import java.util.Scanner;
@@ -32,22 +33,13 @@ public class lanceur {
 			
 			hexa.arret();
 			
-			Sleep.sleep(1000);
 //			StandStillTest standstilltest = new StandStillTest(hexa, 100, 600., 0., true, true);
 //			TestEngine testengine = new TestEngine(standstilltest);
 //			testengine.start();
 //			hexa.stand_up();
 
-						
-			for(int i = 0; i < 30; i++)
-			{
-			    if(i % 5 == 0)
-			        hexa.setDirectioneRelatif(1);
-    			hexa.goto_etat("101010");
-                Sleep.sleep(300);
-                hexa.goto_etat("010101");
-                Sleep.sleep(300);
-			}
+			cercle(hexa);
+			hexa.arret();
 			hexa.desasserv();
 
 			scanner.close();
@@ -56,6 +48,48 @@ public class lanceur {
 			e.printStackTrace();
 		}
 				
+	}
+	public static void cercle(Hexapode hexa)
+	{
+        try
+        {
+            Sleep.temps_defaut = 300;
+            for(int i = 0; i < 18; i++)
+            {
+                hexa.goto_etat("101010");
+                hexa.goto_etat("010101");
+                if(i % 3 == 2)
+                    hexa.setDirectioneRelatif(1);
+            }
+        } catch (GoToException e)
+        {
+            e.printStackTrace();
+        }
+	    
+	}
+	
+	public static void acceleration(Hexapode hexa)
+	{
+        try
+        {
+            Sleep.temps_defaut = 500;
+    	    for(int i = 0; i < 10; i++)
+            {
+                hexa.goto_etat("101010");
+                Sleep.temps_defaut -= 20;
+                hexa.goto_etat("010101");
+                Sleep.temps_defaut -= 20;
+            }
+            for(int i = 0; i < 5; i++)
+            {
+                hexa.goto_etat("101010");
+                hexa.goto_etat("010101");
+            }
+        } catch (GoToException e)
+        {
+            e.printStackTrace();
+        }
+	    
 	}
 
 }

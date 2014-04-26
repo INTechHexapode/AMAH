@@ -2,6 +2,7 @@ package hexapode;
 
 import serial.Serial;
 import serial.SerialException;
+import util.Sleep;
 
 	/**
 	 * Classe des moteurs. Visibilité en "friendly".
@@ -10,13 +11,14 @@ import serial.SerialException;
 	 *
 	 */
 
-class Moteur {
+class TriMoteur {
 
 	private Serial serie;
 	private int id;
-	private int angle_min;
-	private int angle_max;
 
+    private static final int[] angle_min = {1000, 500, 1000};  // sécurité des moteurs
+    private static final int[] angle_max = {1600, 2000, 2000}; // sécurité des moteurs
+    
 	/**
 	 * Construit un moteur, désasservi.
 	 * @param serie
@@ -25,32 +27,45 @@ class Moteur {
 	 * @param angle_min
 	 * @param angle_max
 	 */
-	public Moteur(Serial serie, int id, int angle_min, int angle_max)
+	public TriMoteur(Serial serie, int id)
 	{
 		this.serie = serie;
 		this.id = id;
-		this.angle_min = angle_min;
-        this.angle_max = angle_max;
 		desasserv();
 	}
 
 	/**
-	 * Asservit le moteur à une nouvelle position.
-	 * Lève une exception si l'angle ne satisfait pas les bornes.
-	 * @param e
-	 * @throws GoToException 
+	 * Surcouche de goto_etat, avec pour valeur de temps par défaut
+	 * @param angles
+	 * @throws GoToException
 	 */
-	public void goto_etat(int angle) throws GoToException
+    public void goto_etat(int[] angles) throws GoToException
+    {
+        goto_etat(angles, Sleep.temps_defaut);
+    }
+
+    /**
+     * Deplacement groupé des trois moteurs
+     * Lève une exception si un angle ne satisfait pas les bornes.
+     * @param angles
+     * @param temps de déplaceme,t en ms
+     * @throws GoToException
+     */
+    public void goto_etat(int[] angles, int temps) throws GoToException
 	{	
-		if(angle >= angle_min && angle <= angle_max)
-			try {
-				if(serie != null)
-					serie.communiquer("#"+Integer.toString(id)+"P"+Integer.toString(angle));
-			} catch (SerialException e1) {
-				e1.printStackTrace();
-			}
-		else
-			throw new GoToException(id);
+	    for(int i = 0; i < 2; i++)
+	        if(angles[i] < angle_min[i] || angles[i] > angle_max[i])
+	            throw new GoToException();
+        if(serie != null)
+    		try {
+    		    String ordre = new String();
+    		    for(int i = 0; i < 3; i++)
+    				ordre += "#"+Integer.toString(id+i)+"P"+Integer.toString(angles[i])+" ";
+    			ordre += "T"+Integer.toString(temps);
+    			serie.communiquer(ordre);
+    		} catch (SerialException e1) {
+    			e1.printStackTrace();
+    		}
 	}
 
 	/**
@@ -58,12 +73,13 @@ class Moteur {
 	 */
 	public void desasserv()
 	{
-		try {
-			if(serie != null)
-				serie.communiquer("#"+Integer.toString(id)+"L");
-		} catch (SerialException e1) {
-			e1.printStackTrace();
-		}		
+        if(serie != null)
+    		try {
+                for(int i = 0; i < 3; i++)
+                    serie.communiquer("#"+Integer.toString(id+i)+"L");
+    		} catch (SerialException e1) {
+    			e1.printStackTrace();
+    		}		
 	}
 	
 }

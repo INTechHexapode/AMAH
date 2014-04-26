@@ -11,17 +11,17 @@ import serial.Serial;
 
 public class Patte {
 
-	public Moteur[] moteurs = new Moteur[3];
+	public TriMoteur moteurs;
 	public EnumEtatPatte etat;
 
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
-    private static final double r = 70;    // rayon d'une patte posée
-    private static final double avancee = 20; // avancée en millimètres
-    private static final double hauteur_debout = -100;
-    private static final double hauteur_baisse = -120;
-    private static final int[] angle_min = {1000, 500, 1000}; 
-    private static final int[] angle_max = {1600, 2000, 2000}; 
+    private static final double r = 80;    // rayon d'une patte posée
+    private static final double avancee = 25; // avancée en millimètres
+    private static final double hauteur_debout = -80;
+    private static final double hauteur_baisse = -110;
+    private static final double hauteur_pousse = -120;
+    
     private static final double[] angles = {-Math.PI/6., -Math.PI/2., -5.*Math.PI/6., Math.PI/6., Math.PI/2., 5.*Math.PI/6.};
 
 	/**
@@ -32,9 +32,8 @@ public class Patte {
 	 */
 	public Patte(Serial serie, int id)
 	{
-        this.etat = EnumEtatPatte.OTHER;
-		for(int i = 0; i < 3; i++)
-			moteurs[i] = new Moteur(serie, 5*id+i+1, angle_min[i], angle_max[i]);
+        this.etat = EnumEtatPatte.OTHER;        
+        moteurs = new TriMoteur(serie, 5*id+1);
 	}
 	
 	/**
@@ -69,7 +68,7 @@ public class Patte {
         else if(etat == EnumEtatPatte.AVANT)
             setEtatMoteurs(new_angle, new_r, hauteur_baisse);
         else if(etat == EnumEtatPatte.POUSSE)
-            setEtatMoteurs(new_angle, new_r, hauteur_baisse-10); // et on pousse un peu sur les pattes
+            setEtatMoteurs(new_angle, new_r, hauteur_pousse); // et on pousse un peu sur les pattes
         else if(etat == EnumEtatPatte.ARRIERE)
             setEtatMoteurs(new_angle, new_r, hauteur_baisse);
     }
@@ -77,32 +76,22 @@ public class Patte {
     /**
      * Angle positif: sens horaire.
      * @param angle en radians
+     * @param x en mm
+     * @param y en mm
      * @throws GoToException 
-     */
-    private void setEtatMoteurs(double angle) throws GoToException
-    {
-        angle = angle*180./Math.PI;
-        double alpha = -300./30.*(angle+90.)+1500.+300./30.*60.;
-        moteurs[0].goto_etat((int)alpha);
-    }
-    
+     */    
     private void setEtatMoteurs(double angle, double x, double y) throws GoToException
     {
-        setEtatMoteurs(angle);
-        setEtatMoteurs(x,y);
-    }
-    
-    private void setEtatMoteurs(double x, double y) throws GoToException
-    {
+        int[] ordres = new int[3];
         double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
         double beta = Math.PI-Math.acos((b*b-x*x-y*y-a*a)/(2*a*Math.sqrt(x*x+y*y)));
         double gamma = Math.asin(y/Math.sqrt(x*x+y*y))+Math.PI/2;
         
-        double ordre1 = 300./25.*180./Math.PI*(beta+gamma)+(1500.-300./25.*90.);
-        double ordre2 = -400./40.*180./Math.PI*alpha+(1600.+400./40.*90.);
+        ordres[1] = (int)(300./25.*180./Math.PI*(beta+gamma)+(1500.-300./25.*90.));
+        ordres[2] = (int)(-400./40.*180./Math.PI*alpha+(1600.+400./40.*90.));        
+        ordres[0] = (int)(-300./30.*(angle*180./Math.PI+90.)+1500.+300./30.*60.);
         
-        moteurs[1].goto_etat((int)ordre1);
-        moteurs[2].goto_etat((int)ordre2);
+        moteurs.goto_etat(ordres);
     }
     
 	/**
@@ -111,16 +100,21 @@ public class Patte {
     */
     public void baisser() throws GoToException
     {
-        etat = EnumEtatPatte.OTHER;
-        goto_etat(1500, 1200, 1200);
+        goto_etat(1600, 1200, 1200);
     }
     
+    /**
+     * Affecte aux moteurs les angles données.
+     * @param m0
+     * @param m1
+     * @param m2
+     * @throws GoToException
+     */
     public void goto_etat(int m0, int m1, int m2) throws GoToException
     {
         etat = EnumEtatPatte.OTHER;
-        moteurs[0].goto_etat(m0);
-        moteurs[1].goto_etat(m1);
-        moteurs[2].goto_etat(m2);
+        int[] ordres = {m0, m1, m2};
+        moteurs.goto_etat(ordres);
     }
 	
 	/**
@@ -129,7 +123,6 @@ public class Patte {
 	public void desasserv()
 	{
         etat = EnumEtatPatte.OTHER;
-		for(int i = 0; i < 3; i++)
-			moteurs[i].desasserv();	
+	    moteurs.desasserv();
 	}
 }

@@ -122,7 +122,7 @@ public class Hexapode {
        // On continue le mouvement que s'il y a un mouvement à continuer
        if(mouvement)
        {
-           Sleep.sleep(50);
+           Sleep.sleep(Sleep.temps_defaut);
 
            for(int i = 0; i < 6; i++) // on baisse
                if(pattes[direction][i].etat == EnumEtatPatte.DEBOUT)
@@ -130,7 +130,7 @@ public class Hexapode {
                else if(pattes[direction][i].etat == EnumEtatPatte.POUSSE)
                    pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE);
     
-           Sleep.sleep(50);
+           Sleep.sleep(Sleep.temps_defaut);
        }
 
 	}
@@ -192,7 +192,7 @@ public class Hexapode {
 	/**
 	 * Dépose délicatement l'hexapode à terre, couché
 	 */
-	public void lay_down()
+/*	public void lay_down()
 	{
 	    try {
     		System.out.println("L'hexapode se couche");
@@ -206,7 +206,7 @@ public class Hexapode {
 	    {
 	        e.printStackTrace();
 	    }
-	}
+	}*/
 	
 	/**
 	 * Met l'hexapode en position "normale" (toute patte baissée).
@@ -221,6 +221,7 @@ public class Hexapode {
         {
             e.printStackTrace();
         }
+        Sleep.sleep(Sleep.temps_defaut);
 	}
 	
 	@Override

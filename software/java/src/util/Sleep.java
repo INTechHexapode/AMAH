@@ -2,6 +2,8 @@ package util;
 
 public class Sleep {
 
+    public static int temps_defaut = 300;
+    
 	public static void sleep(long millis)
 	{
 		try {
