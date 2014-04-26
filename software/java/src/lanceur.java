@@ -9,6 +9,15 @@ import test.TestCoordinationPattesSimulation;
 import test.TestEngine;
 import util.Sleep;
 
+/*
+ * TODO list
+ * Cartes électroniques (alim/capteurs)
+ * Capteur ultrason + servo (on tourne le capteur dans la direction où on va)
+ * Jumper
+ * Un ou deux boutons de manière à pouvoir le configurer sans pc?...
+ * (un commutateur pour la couleur, un bouton poussoir pour le recalage)
+ */
+
 public class lanceur {
 
 	public static void main(String[] args) {
@@ -16,13 +25,13 @@ public class lanceur {
 		try {
 //		    serialmanager = new SerialManager();
 //			Serial serie = serialmanager.getSerial("serieAsservissement");
-			Hexapode hexa = new Hexapode(null);
+			Hexapode hexa = new Hexapode(null, false);
  			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
 
-			hexa.va_au_point(0, 0);
-			
+			hexa.recaler();
+
 			scanner.close();
 //			serie.close();
 		} catch (Exception e) {
@@ -44,7 +53,7 @@ public class lanceur {
 	
 	public static void marche_scriptee(Hexapode hexa) throws GoToException
 	{
-        Sleep.temps_defaut = 1000;
+        Sleep.temps_defaut = 200;
         for(int i = 0; i < 30; i++)
         {
             hexa.goto_etat("101010");
@@ -53,10 +62,11 @@ public class lanceur {
         hexa.arret();
 	}
 
-	// TODO: tester
+	// TODO: comparer la précision avec la première marche scriptée
+	// par contre, celle-là est 3 fois plus lente
 	   public static void autre_marche_scriptee(Hexapode hexa) throws GoToException
 	    {
-	        Sleep.temps_defaut = 1000;
+	        Sleep.temps_defaut = 200;
 	        for(int i = 0; i < 30; i++)
 	        {
 	            if(i % 2 == 0)
