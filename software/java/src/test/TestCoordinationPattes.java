@@ -1,7 +1,7 @@
 package test;
 
+import hexapode.GoToException;
 import hexapode.Hexapode;
-import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 public class TestCoordinationPattes extends Test {
@@ -33,10 +33,14 @@ public class TestCoordinationPattes extends Test {
 	public void proceedTest() {
 		//On récupère l'état suivant à tester
 		char[] nEtatSuivant = markov.next();
-		etat_suivant = new EtatHexa(String.valueOf(nEtatSuivant));
+		etat_suivant = new String(String.valueOf(nEtatSuivant));
 		
 		//On demande à l'hexapode de se mettre en position
-		hexapode.goto_etat((String.valueOf(nEtatSuivant)));
+		try {
+			hexapode.goto_etat((String.valueOf(nEtatSuivant)));
+		} catch (GoToException e) {
+			e.printStackTrace();
+		}
 		
 		//On calcule la note en fonction de la transition 
 		calcNote();
@@ -64,8 +68,8 @@ public class TestCoordinationPattes extends Test {
 	{
 		note = 0;
 		int nbRetourArriere = 0;
-		char[] cEtatSuivant = etat_suivant.etatString().toCharArray();
-		char[] cEtatActuel = etat_actuel.etatString().toCharArray();
+		char[] cEtatSuivant = etat_suivant.toCharArray();
+		char[] cEtatActuel = etat_actuel.toCharArray();
 		for(int i = 0; i < 6; i++)
 		{
 			if(cEtatActuel[i] == '0')

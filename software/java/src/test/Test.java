@@ -20,8 +20,8 @@ public abstract class Test {
 	protected Markov markov;
 	protected boolean restartMarkov;
 	private boolean validation;
-	protected EtatHexa etat_actuel;
-	protected EtatHexa etat_suivant;
+	protected String etat_actuel;
+	protected String etat_suivant;
 	protected int note;
 	
 	//variables utilis�es pour la sauvegarde

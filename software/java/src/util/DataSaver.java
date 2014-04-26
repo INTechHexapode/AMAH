@@ -38,7 +38,7 @@ public class DataSaver {
     	try {
     		TestStep stored = (TestStep)charger("steps.dat");
         	System.out.println(stored.toString());
-        	stored.addStep(etat.etatString().toCharArray(), resultat);
+        	stored.addStep(etat, resultat);
         	sauvegarder(stored, "steps.dat");
     	}
     	catch(Exception e)

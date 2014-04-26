@@ -1,7 +1,6 @@
 package test;
 
 import hexapode.Hexapode;
-import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 public class TestCoordinationPattesSimulation extends Test {
@@ -38,7 +37,7 @@ public class TestCoordinationPattesSimulation extends Test {
 			//On récupère l'état suivant à tester
 			char[] nEtatSuivant = markov.next();
 
-			etat_suivant = new EtatHexa(String.valueOf(nEtatSuivant));
+			etat_suivant = new String(String.valueOf(nEtatSuivant));
 		}
 
 		@Override
@@ -57,20 +56,18 @@ public class TestCoordinationPattesSimulation extends Test {
 		public void init() 
 		{
 			markov = new Markov(2);
-			etat_actuel = new EtatHexa("000000");
-			etat_suivant = new EtatHexa("000000");
+			etat_actuel = new String("000000");
+			etat_suivant = new String("000000");
 		}
 		
 		private void calcNote()
 		{
 			int nbRetourArriere = 0;
-			String cEtatSuivant = etat_suivant.etatString();
-			String cEtatActuel = etat_actuel.etatString();
 			for(int i = 0; i < 6; i++)
 			{
-				if(cEtatActuel.charAt(i) == '0')
+				if(etat_actuel.charAt(i) == '0')
 				{
-					if(cEtatSuivant.charAt(i) == '1')
+					if(etat_suivant.charAt(i) == '1')
 					{
 						note += 5;
 					}
@@ -81,7 +78,7 @@ public class TestCoordinationPattesSimulation extends Test {
 				}
 				else
 				{
-					if(cEtatSuivant.charAt(i) == '1')
+					if(etat_suivant.charAt(i) == '1')
 					{
 						note += 5;
 					}
