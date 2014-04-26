@@ -18,7 +18,7 @@ public class Patte {
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
     private static final double r = 80;    // rayon d'une patte posée
-    private static final double avancee = 25; // avancée en millimètres
+    public static final double avancee = 25; // avancée en millimètres
     private static final double hauteur_debout = -80;
     private static final double hauteur_baisse = -110;
     private static final double hauteur_pousse = -120;
