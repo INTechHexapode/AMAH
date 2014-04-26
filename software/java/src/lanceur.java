@@ -20,7 +20,7 @@ public class lanceur {
  			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
-			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 1000, 50, 1, true, false);
+			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 10000, 50, 1, true, false);
 			TestEngine testEngine = new TestEngine(test);
 			testEngine.start();
 

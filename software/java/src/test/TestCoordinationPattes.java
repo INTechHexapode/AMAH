@@ -66,7 +66,7 @@ public class TestCoordinationPattes extends Test {
 	private void calcNote()
 	{
 		int nbRetourArriere = 0;
-		System.out.println(etat_actuel + " " + etat_suivant);
+
 		for(int i = 0; i < 6; i++)
 		{
 			if(etat_actuel.charAt(i) == '0')
