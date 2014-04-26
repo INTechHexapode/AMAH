@@ -20,7 +20,8 @@ public abstract class Test {
 	protected Markov markov;
 	protected boolean restartMarkov;
 	private boolean validation;
-	protected String etat_suivant;
+	protected EtatHexa etat_actuel;
+	protected EtatHexa etat_suivant;
 	protected int note;
 	
 	//variables utilis�es pour la sauvegarde
@@ -46,13 +47,14 @@ public abstract class Test {
 	{
 		if(!validation)
 			sauvegarde_matrice(false);
-		DataSaver.sauvegarder_test(etat_suivant, result);
+		//DataSaver.sauvegarder_test(etat_suivant, result);
 	}
 
 	public void terminate()				//Fin de tous les tests
 	{
 		if(!validation)
 			sauvegarde_matrice(true);
+		System.out.println(markov.toString());
 	}
 	
 	public int getNbIteration()			//Nombre d'it�rations � effectuer

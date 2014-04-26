@@ -39,7 +39,7 @@ public class Markov implements java.io.Serializable {
 	
 	private void getPositionsViables()
 	{
-		double pos[] = DataSaver.charger_matrice_equilibre("C:\\Users\\Stud\\Documents\\Workspace\\hexapode\\software\\java\\markov_equilibre.dat");
+		double pos[] = DataSaver.charger_matrice_equilibre("markov_equilibre.dat");
 		positionsViables = new LinkedList<char[]>();
 		for(int i=0; i< pos.length; i++)
 		{
@@ -58,44 +58,17 @@ public class Markov implements java.io.Serializable {
 		return (char[]) positionsViables.get(r);//Chope l'�tat de l'hexapode associ�
 	}
 	
-	public String next()
+	public char[] next()
 	{
-/*		nb_total++;
-		int nb_debout;
-		do {
-			nb_debout = 0;
-			ep = new EtatPatte[6];
-			for(int i = 0; i < 6; i++)
-			{
-				boolean debout = randomgenerator.nextBoolean();
-				ep[i] = new EtatPatte(debout);
-				if(debout)
-					nb_debout++;
-			}
-		} while(nb_debout > 3);*/
-/*		for(int j = 0; j < 6; j++)
-		{
-		int i = randomgenerator.nextInt()%4;
-		if(i == 0)
-			ep[j] = new EtatPatte(EtatPatteTest2.ARRIERE);
-		else if(i == 1)
-			ep[j] = new EtatPatte(EtatPatteTest2.AVANT);
-		else if(i == 2)
-			ep[j] = new EtatPatte(EtatPatteTest2.LEVE);
-		else
-			ep[j] = new EtatPatte(EtatPatteTest2.BAISSE);
-		}
-		return new EtatHexa(ep);*/
-	    return null;
+		return getRandomPositionViable();
 	}
 	
-	
-	public void updateMatrix(int resultat, String etatPrecedent, String etatSuivant)
+	public void updateMatrix(int resultat, EtatHexa etatPrecedent, EtatHexa etatSuivant)
 	{
 		matrice[getNum(etatPrecedent)][getNum(etatSuivant)]+=resultat;
-		affiche_matrice();
 	}
 	
+	@Deprecated
 	public void affiche_matrice()
 	{
 		String s = "";
@@ -119,11 +92,25 @@ public class Markov implements java.io.Serializable {
 		for(int i = 0; i < 6; i++)
 		{
 			num *= 2;
-			if(e.epattes[i].isLeve())
+			if(e.epattes[i].etat() == '1')
 				num++;
 		}
 		return num;*/
 	    return 0;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String s = "";
+		for(int i = 0; i < matrice.length; i++)
+		{
+			for(int j = 0; j < matrice.length; j++)
+				s += Double.toString(matrice[i][j])+" ";
+			s += "\n";
+		}
+		System.out.println(s);
+		return s;
 	}
 	
 }
