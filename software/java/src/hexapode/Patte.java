@@ -14,8 +14,8 @@ public class Patte {
 	public Moteur[] moteurs = new Moteur[3];
 	public EnumEtatPatte etat;
 
-    // Longueur des pattes
-    private static final double a = 60, b = 120;
+    // Constantes
+    private static final double a = 60, b = 120; // longueur des pattes
     private static final double r = 70;    // rayon d'une patte posée
     private static final double avancee = 40; // avancée en millimètres
     private static final double hauteur_debout = -90;
@@ -62,7 +62,7 @@ public class Patte {
             y = r*Math.cos(angle) + avancee;
     
         double new_r = Math.sqrt(x*x+y*y);
-        double new_angle = -Math.atan2(x, y)+angle; // on cherche l'angle relatif pour la patte
+        double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
     
         if(role == 5)
           System.out.println("new_angle: "+new_angle*180./Math.PI);
@@ -78,8 +78,8 @@ public class Patte {
     }
     
     /**
-     * Angle positif: sens horaire. Doit être compris entre -60° et 10°
-     * @param angle en degré
+     * Angle positif: sens horaire.
+     * @param angle en radians
      * @throws GoToException 
      */
     private void setEtatMoteurs(double angle) throws GoToException
@@ -120,6 +120,7 @@ public class Patte {
     
     public void goto_etat(int m0, int m1, int m2) throws GoToException
     {
+        etat = EnumEtatPatte.OTHER;
         moteurs[0].goto_etat(m0);
         moteurs[1].goto_etat(m1);
         moteurs[2].goto_etat(m2);
@@ -130,6 +131,7 @@ public class Patte {
 	 */
 	public void desasserv()
 	{
+        etat = EnumEtatPatte.OTHER;
 		for(int i = 0; i < 3; i++)
 			moteurs[i].desasserv();	
 	}

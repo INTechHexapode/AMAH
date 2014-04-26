@@ -19,9 +19,11 @@ public class Hexapode {
 	{
         pattes = new Patte[6][6];
 
+        // Pattes pour la direction 0
         for(int i = 0; i < 6; i++)
 		    pattes[0][i] = new Patte(serie, i);
 
+        // Pattes pour la direction 1
         pattes[1][0] = pattes[0][3];
         pattes[1][1] = pattes[0][0];
         pattes[1][2] = pattes[0][1];
@@ -29,6 +31,7 @@ public class Hexapode {
         pattes[1][4] = pattes[0][5];
         pattes[1][5] = pattes[0][2];
 
+        // Pattes pour la direction 2
         pattes[2][0] = pattes[0][4];
         pattes[2][1] = pattes[0][3];
         pattes[2][2] = pattes[0][0];
@@ -36,6 +39,7 @@ public class Hexapode {
         pattes[2][4] = pattes[0][2];
         pattes[2][5] = pattes[0][1];
 
+        // Pattes pour la direction 3
         pattes[3][0] = pattes[0][5];
         pattes[3][1] = pattes[0][4];
         pattes[3][2] = pattes[0][3];
@@ -43,6 +47,7 @@ public class Hexapode {
         pattes[3][4] = pattes[0][1];
         pattes[3][5] = pattes[0][0];
 
+        // Pattes pour la direction 4
         pattes[4][0] = pattes[0][2];
         pattes[4][1] = pattes[0][5];
         pattes[4][2] = pattes[0][4];
@@ -50,6 +55,7 @@ public class Hexapode {
         pattes[4][4] = pattes[0][0];
         pattes[4][5] = pattes[0][3];
 
+        // Pattes pour la direction 5
         pattes[5][0] = pattes[0][1];
         pattes[5][1] = pattes[0][2];
         pattes[5][2] = pattes[0][5];
@@ -62,12 +68,23 @@ public class Hexapode {
 	
 	/**
 	 * Modifie la direction.
-	 * @param direction
+	 * @param direction, entre 0 et 5
 	 */
 	public void setDirectionAbsolue(int direction)
 	{
-	    // TODO Met à jour l'état
-	    this.direction = direction;
+	    if(direction !=  this.direction)
+            try
+            {
+        	    EnumEtatPatte[] sauv = new EnumEtatPatte[6];
+        	    for(int i = 0; i < 6; i++)
+        	        sauv[i] = pattes[direction][i].etat;
+        	    this.direction = direction;
+                for(int i = 0; i < 6; i++)
+                        pattes[direction][i].goto_etat(i, sauv[i]);
+            } catch (GoToException e)
+            {
+                e.printStackTrace();
+            }
 	}
 
 	/**
@@ -190,12 +207,6 @@ public class Hexapode {
 	        e.printStackTrace();
 	    }
 	}
-	
-/*	Normalement, on n'en a pas besoin. Pour bouger l'hexapode, on passe par goto_etat
-	public void setEtat_actuel(EtatHexa etat)
-	{
-		etat_actuel = etat;
-	}*/
 	
 	public String toString()
 	{
