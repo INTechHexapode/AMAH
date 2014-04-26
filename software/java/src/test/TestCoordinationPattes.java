@@ -32,12 +32,11 @@ public class TestCoordinationPattes extends Test {
 	@Override
 	public void proceedTest() {
 		//On récupère l'état suivant à tester
-		String nEtatSuivant = markov.next();
-		etat_suivant = new String(nEtatSuivant);
+		etat_suivant = markov.next();
 		
 		//On demande à l'hexapode de se mettre en position
 		try {
-			hexapode.goto_etat((String.valueOf(nEtatSuivant)));
+			hexapode.goto_etat(etat_suivant);
 		} catch (GoToException e) {
 			e.printStackTrace();
 		}
@@ -66,15 +65,13 @@ public class TestCoordinationPattes extends Test {
 	
 	private void calcNote()
 	{
-		note = 0;
 		int nbRetourArriere = 0;
-		char[] cEtatSuivant = etat_suivant.toCharArray();
-		char[] cEtatActuel = etat_actuel.toCharArray();
+		System.out.println(etat_actuel + " " + etat_suivant);
 		for(int i = 0; i < 6; i++)
 		{
-			if(cEtatActuel[i] == '0')
+			if(etat_actuel.charAt(i) == '0')
 			{
-				if(cEtatSuivant[i] == '1')
+				if(etat_suivant.charAt(i) == '1')
 				{
 					note += 5;
 				}
@@ -85,7 +82,7 @@ public class TestCoordinationPattes extends Test {
 			}
 			else
 			{
-				if(cEtatSuivant[i] == '1')
+				if(etat_suivant.charAt(i) == '1')
 				{
 					note += 5;
 				}
@@ -101,5 +98,6 @@ public class TestCoordinationPattes extends Test {
 			note -=  -40;
 		}
 	}
+
 
 }
