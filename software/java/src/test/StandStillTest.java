@@ -56,7 +56,7 @@ public class StandStillTest extends Test {
 		
 		hexapode.goto_etat(etat_suivant);
 		last_good = true;
-		Sleep.sleep(500);		*/
+		Sleep.sleep(500);*/
 	}
 
 	@Override

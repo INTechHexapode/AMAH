@@ -1,5 +1,6 @@
 package test;
 
+import hexapode.GoToException;
 import hexapode.Hexapode;
 import hexapode.markov.Markov;
 
@@ -41,8 +42,14 @@ public class TestCoordinationPattesSimulation extends Test {
 
 		@Override
 		public void validTest() {
-			// TODO Auto-generated method stub
+			etat_suivant = markov.nextValidation(markov.getNum(etat_actuel));
 
+			//On demande à l'hexapode de se mettre en position
+			try {
+				hexapode.goto_etat(etat_suivant);
+			} catch (GoToException e) {
+				e.printStackTrace();
+			}
 		}
 
 		@Override

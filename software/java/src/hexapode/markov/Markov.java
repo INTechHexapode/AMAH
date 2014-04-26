@@ -69,6 +69,32 @@ public class Markov implements java.io.Serializable {
 		return getRandomPositionViable();
 	}
 	
+	public String nextValidation(int numeroEtatActuel)
+	{
+		String out = new String();
+		
+		int lineSum = 0;
+		for(int j = 0; j < matrice.length; ++j)
+		{
+			lineSum += matrice[numeroEtatActuel][j];
+		}
+		
+		int r = randomgenerator.nextInt(lineSum);
+		
+		lineSum = 0;
+		for(int j = 0; j < matrice.length; ++j)
+		{
+			lineSum += matrice[numeroEtatActuel][j];
+			if(lineSum > r)
+			{
+				out = Integer.toBinaryString((int) matrice[numeroEtatActuel][j]);
+				break;
+			}
+		}
+		
+		return out;
+	}
+	
 	public void updateMatrix(int resultat, String etatPrecedent, String etatSuivant)
 	{
 		matrice[getNum(etatPrecedent)][getNum(etatSuivant)]+=resultat;
