@@ -63,7 +63,7 @@ public class Markov implements java.io.Serializable {
 		return getRandomPositionViable();
 	}
 	
-	public void updateMatrix(int resultat, EtatHexa etatPrecedent, EtatHexa etatSuivant)
+	public void updateMatrix(int resultat, String etatPrecedent, String etatSuivant)
 	{
 		matrice[getNum(etatPrecedent)][getNum(etatSuivant)]+=resultat;
 	}
@@ -88,15 +88,14 @@ public class Markov implements java.io.Serializable {
 	
 	public int getNum(String e)
 	{
-/*		int num = 0;
+		int num = 0;
 		for(int i = 0; i < 6; i++)
 		{
 			num *= 2;
-			if(e.epattes[i].etat() == '1')
+			if(e.charAt(i) == '1')
 				num++;
 		}
-		return num;*/
-	    return 0;
+		return num;
 	}
 	
 	@Override

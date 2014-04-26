@@ -9,16 +9,16 @@ public class TestStep implements Serializable {
 	 * @author : Stud
 	 */
 	private static final long serialVersionUID = 350894876388230279L;
-	public List<char[]> etats;
+	public List<String> etats;
 	public List<Integer> resultats;
 	
 	public TestStep()
 	{
 		resultats = new LinkedList<Integer>();
-		etats = new LinkedList<char[]>();
+		etats = new LinkedList<String>();
 	}
 	
-	public void addStep(char[] etat, int resultat)
+	public void addStep(String etat, int resultat)
 	{
 		resultats.add(resultat);
 		etats.add(etat);
