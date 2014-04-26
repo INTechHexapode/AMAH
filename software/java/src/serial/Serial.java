@@ -1,6 +1,5 @@
 package serial;
 
-import serial.SerialException;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;

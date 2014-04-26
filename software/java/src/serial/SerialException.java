@@ -7,10 +7,7 @@ package serial;
  */
 public class SerialException extends Exception
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1826278884421114631L;
+	private static final long serialVersionUID = 0L;
 
 	public SerialException()
 	{

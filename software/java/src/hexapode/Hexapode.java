@@ -14,9 +14,22 @@ public class Hexapode {
 	
 	public Patte[][] pattes;
 	private int direction = 0;
-	 
+	private boolean pas = false; // bascule pour alterner les deux pas
+	
+	private double[] orthogonal = {};
+	private static final double racinede3 = Math.sqrt(3);
+	
 	public Hexapode(Serial serie)
 	{
+	    orthogonal = new double[4*6];
+	    for(int i = 0; i < 6; i++)
+	    {
+	        orthogonal[4*i] = Math.cos(i*Math.PI/3-Math.PI/6);
+            orthogonal[4*i+1] = Math.sin(i*Math.PI/3-Math.PI/6);
+            orthogonal[4*i+2] = Math.cos((i+1)*Math.PI/3+Math.PI/6);
+            orthogonal[4*i+3] = Math.sin((i+1)*Math.PI/3+Math.PI/6);
+	    }
+	    
         pattes = new Patte[6][6];
 
         // Pattes pour la direction 0
@@ -68,10 +81,14 @@ public class Hexapode {
 	
 	/**
 	 * Modifie la direction.
-	 * @param direction, entre 0 et 5
+	 * @param direction, entre -6 et 6
 	 */
 	public void setDirectionAbsolue(int direction)
 	{
+	    // Afin d'avoir direction entre 0 et 5
+	    direction += 6;
+	    direction %= 6;
+	    // TODO: tourner le capteur
 	    if(direction !=  this.direction)
             try
             {
@@ -80,6 +97,7 @@ public class Hexapode {
         	        sauv[i] = pattes[direction][i].etat;
         	    this.direction = direction;
                 for(int i = 0; i < 6; i++)
+                    if(sauv[i] != EnumEtatPatte.OTHER)
                         pattes[direction][i].goto_etat(i, sauv[i], Sleep.temps_defaut);
                 Sleep.sleep(Sleep.temps_defaut);
             } catch (GoToException e)
@@ -94,45 +112,52 @@ public class Hexapode {
 	 */
     public void setDirectioneRelatif(int difference)
     {
-        setDirectionAbsolue((direction + difference + 6)%6);
+        setDirectionAbsolue(direction + difference);
     }
 
     /**
 	 * L'hexapode fait l'action donnée par une chaîne binaire.
 	 * @param e
-     * @throws GoToException 
 	 */
-	public void goto_etat(String e) throws GoToException
+	public void goto_etat(String e)
 	{
-	   boolean mouvement = false;
+        while(detecter_ennemi())
+            Sleep.sleep(1000);
+	    boolean mouvement = false;
 
        // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les pattes intéressées, puis on les abaisse en même temps
        // On ramène en arrière et on lève
-       for(int i = 0; i < 6; i++)
-           if(e.charAt(i) == '1' && pattes[direction][i].etat != EnumEtatPatte.AVANT)
+	    try {
+           for(int i = 0; i < 6; i++)
+               if(e.charAt(i) == '1' && pattes[direction][i].etat != EnumEtatPatte.AVANT)
+               {
+                   mouvement = true;
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
+               }
+               else if(e.charAt(i) == '0' && pattes[direction][i].etat != EnumEtatPatte.ARRIERE)
+               {
+                   mouvement = true;
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
+               }
+           
+           // On continue le mouvement que s'il y a un mouvement à continuer
+           if(mouvement)
            {
-               mouvement = true;
-               pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
-           }
-           else if(e.charAt(i) == '0' && pattes[direction][i].etat != EnumEtatPatte.ARRIERE)
-           {
-               mouvement = true;
-               pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
-           }
-
-       // On continue le mouvement que s'il y a un mouvement à continuer
-       if(mouvement)
-       {
-           Sleep.sleep(Sleep.temps_defaut);
-
-           for(int i = 0; i < 6; i++) // on baisse
-               if(pattes[direction][i].etat == EnumEtatPatte.DEBOUT)
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT, Sleep.temps_defaut/4);
-               else if(pattes[direction][i].etat == EnumEtatPatte.POUSSE)
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
+               Sleep.sleep(Sleep.temps_defaut);
     
-           Sleep.sleep(Sleep.temps_defaut/4);
-       }
+               for(int i = 0; i < 6; i++) // on baisse
+                   if(pattes[direction][i].etat == EnumEtatPatte.DEBOUT)
+                       pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT, Sleep.temps_defaut/4);
+                   else if(pattes[direction][i].etat == EnumEtatPatte.POUSSE)
+                       pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
+        
+               Sleep.sleep(Sleep.temps_defaut/4);
+           }
+	    }
+	    catch(GoToException exception)
+	    {
+	        exception.printStackTrace();
+	    }
 
 	}
 
@@ -237,6 +262,66 @@ public class Hexapode {
 	        s += pattes[direction][i].etat.toString();
         }
 	    return s;
+	}
+		
+	/**
+	 * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
+	 * @param distance
+	 */
+	public void avancer(int distance)
+	{
+	    int nb_iteration = distance / ((int) Patte.avancee);
+	    for(int i = 0; i < nb_iteration; i++)
+	        avancer_elementaire();
+	}
+
+	/**
+	 * Va au point de coordonnées RELATIVES
+	 * (en l'absence d'odométrie, on ne sait pas où on est,
+	 * donc pas de coordonnées absolues possibles)
+	 * @param x
+	 * @param y
+	 */
+	public void va_au_point(int x, int y)
+	{
+	    // On décompose le vecteur (x,y) sur la base formée par les deux vecteurs direction les plus proches de (x,y).
+	    // Cette base n'étant pas orthogonale, la formule est peu plus complexe qu'un produit scalaire.
+	    // En notant a et b ces deux vecteurs de base, on a (x,y) = C*a+D*b.
+	    // Soit c, un vecteur orthogonal à b, et distant de a d'un angle de PI/6.
+	    // Alors (x,y).c = C*cos(PI/6) soit C = (x.y).c*2/racine(3).
+	    // On recommence avec un c' ortogonal à a.
+	    // Le tableau "orthogonal" contient ces c et c'
+	    double angle_consigne = Math.atan2(x,y);
+	    int direction1 = (int)(Math.floor((3*angle_consigne/Math.PI)));
+	    int direction2 = direction1+1;
+        double longueur1 = 2*(orthogonal[4*((direction1+6)%6)]*x+orthogonal[4*((direction1+6)%6)+1]*y)/racinede3;
+        double longueur2 = 2*(orthogonal[4*((direction1+6)%6)+2]*x+orthogonal[4*((direction1+6)%6)+3]*y)/racinede3;
+
+        setDirectionAbsolue(direction1);
+        avancer((int)longueur1);
+        setDirectionAbsolue(direction2);
+        avancer((int)longueur2);
+        
+//        System.out.println("x = "+(longueur1*Math.cos(direction1*Math.PI/3)+longueur2*Math.cos(direction2*Math.PI/3)));
+//        System.out.println("y = "+(longueur1*Math.sin(direction1*Math.PI/3)+longueur2*Math.sin(direction2*Math.PI/3)));
+	}
+	
+	/**
+	 * Avance de "Patte.avancee" millimètres dans la direction actuelle
+	 */
+	public void avancer_elementaire()
+	{
+	    if(pas)
+            goto_etat("101010");
+	    else
+            goto_etat("010101");
+	    pas = !pas;
+	}
+	
+	public boolean detecter_ennemi()
+	{
+	    // TODO
+	    return false;
 	}
 
 }
