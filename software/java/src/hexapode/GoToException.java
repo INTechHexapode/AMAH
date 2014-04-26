@@ -19,6 +19,12 @@ public class GoToException extends Exception {
     {
         super(m);
     }
-    
+
+    public GoToException(int id)
+    {
+        super();
+        System.out.println("Moteur "+id);
+    }
+
 
 }

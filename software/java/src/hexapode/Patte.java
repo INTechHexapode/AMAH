@@ -17,9 +17,9 @@ public class Patte {
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
     private static final double r = 70;    // rayon d'une patte posée
-    private static final double avancee = 40; // avancée en millimètres
-    private static final double hauteur_debout = -90;
-    private static final double hauteur_baisse = -130;
+    private static final double avancee = 20; // avancée en millimètres
+    private static final double hauteur_debout = -100;
+    private static final double hauteur_baisse = -120;
     private static final int[] angle_min = {1000, 500, 1000}; 
     private static final int[] angle_max = {1600, 2000, 2000}; 
     private static final double[] angles = {-Math.PI/6., -Math.PI/2., -5.*Math.PI/6., Math.PI/6., Math.PI/2., 5.*Math.PI/6.};

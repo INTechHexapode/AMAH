@@ -50,7 +50,7 @@ class Moteur {
 				e1.printStackTrace();
 			}
 		else
-			throw new GoToException();
+			throw new GoToException(id);
 	}
 
 	/**

@@ -24,14 +24,11 @@ public class lanceur {
 //			hexa.stand_up();
 
 			
-			System.out.println(hexa);
 			for(int i = 0; i < 10; i++)
 			{
     			hexa.goto_etat("000000");
-                System.out.println(hexa);
                 Sleep.sleep(1000);
-                hexa.goto_etat("111111");
-                System.out.println(hexa);
+                hexa.goto_etat("101101");
                 Sleep.sleep(1000);
 			}
 			hexa.desasserv();
