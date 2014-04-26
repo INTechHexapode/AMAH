@@ -21,6 +21,9 @@ public class TestCoordinationPattesSimulation extends Test {
 		public void onExit()
 		{
 			super.onExit();
+
+			//On calcule la note en fonction de la transition 
+			calcNote();
 			markov.updateMatrix(note, etat_actuel, etat_suivant);
 		}
 		
@@ -36,9 +39,6 @@ public class TestCoordinationPattesSimulation extends Test {
 			char[] nEtatSuivant = markov.next();
 
 			etat_suivant = new EtatHexa(String.valueOf(nEtatSuivant));
-			
-			//On calcule la note en fonction de la transition 
-			calcNote();
 		}
 
 		@Override
@@ -58,18 +58,19 @@ public class TestCoordinationPattesSimulation extends Test {
 		{
 			markov = new Markov(2);
 			etat_actuel = new EtatHexa("000000");
+			etat_suivant = new EtatHexa("000000");
 		}
 		
 		private void calcNote()
 		{
 			int nbRetourArriere = 0;
-			char[] cEtatSuivant = etat_suivant.etatString();
-			char[] cEtatActuel = etat_actuel.etatString();
+			String cEtatSuivant = etat_suivant.etatString();
+			String cEtatActuel = etat_actuel.etatString();
 			for(int i = 0; i < 6; i++)
 			{
-				if(cEtatActuel[i] == '0')
+				if(cEtatActuel.charAt(i) == '0')
 				{
-					if(cEtatSuivant[i] == '1')
+					if(cEtatSuivant.charAt(i) == '1')
 					{
 						note += 5;
 					}
@@ -80,7 +81,7 @@ public class TestCoordinationPattesSimulation extends Test {
 				}
 				else
 				{
-					if(cEtatSuivant[i] == '1')
+					if(cEtatSuivant.charAt(i) == '1')
 					{
 						note += 5;
 					}

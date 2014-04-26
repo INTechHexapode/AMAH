@@ -36,9 +36,17 @@ public class DataSaver {
 
     public static <T> void sauvegarder_test(EtatHexa etat, int resultat)
     {
-    	TestStep stored = (TestStep)charger("steps.dat");
-    	stored.addStep(etat, resultat);
-    	sauvegarder(stored, "steps.dat");
+    	try {
+    		TestStep stored = (TestStep)charger("steps.dat");
+        	System.out.println(stored.toString());
+        	stored.addStep(etat.etatString().toCharArray(), resultat);
+        	sauvegarder(stored, "steps.dat");
+    	}
+    	catch(Exception e)
+		{
+    		System.out.println("Création d'une nouvelle sauvegarde dans steps.dat");
+			e.printStackTrace();
+		}
     }
 
     public static void sauvegarder_matrice(Markov markov, boolean sauvegarde_intermediaire)

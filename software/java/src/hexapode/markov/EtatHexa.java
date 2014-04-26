@@ -88,13 +88,13 @@ public class EtatHexa {
 	}
 	
 
-	public char[] etatString()
+	public String etatString()
 	{
-		char[] out = new char[6];
+		String out = new String();
 
         for(int i = 0; i < 6; i++)
         {
-        	out[i] = epattes[i].etat();
+        	out += epattes[i].etat();
         }
 		return out;
 	}

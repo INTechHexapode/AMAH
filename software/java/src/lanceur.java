@@ -15,22 +15,22 @@ public class lanceur {
 	public static void main(String[] args) {
 		SerialManager serialmanager;
 		try {
-		    serialmanager = new SerialManager();
-			Serial serie = serialmanager.getSerial("serieAsservissement");
-			Hexapode hexa = new Hexapode(serie);
+		    /*serialmanager = new SerialManager();
+			Serial serie = serialmanager.getSerial("serieAsservissement");*/
+			Hexapode hexa = new Hexapode(null);
 			System.out.println("Attente");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
 			TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 1000, 50, 1, true, false);
 			TestEngine testEngine = new TestEngine(test);
-			//testEngine.start();
+			testEngine.start();
 
-			for(int i = -100; i < 100; i++)
+			/*for(int i = -100; i < 100; i++)
 			{
 			    System.out.println(i);
     			hexa.pattes[0][0].goto_etat(new EtatPatte(i, 100., -100.));
                 Sleep.sleep(100);
-			}
+			}*/
 			
 			hexa.desasserv();
 			
@@ -153,7 +153,7 @@ public class lanceur {
             }
             }*/
 			scanner.close();
-			serie.close();
+			//serie.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

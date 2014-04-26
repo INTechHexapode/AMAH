@@ -48,13 +48,14 @@ public abstract class Test {
 	{
 		if(!validation)
 			sauvegarde_matrice(false);
-		DataSaver.sauvegarder_test(etat_suivant, result);
+		//DataSaver.sauvegarder_test(etat_suivant, result);
 	}
 
 	public void terminate()				//Fin de tous les tests
 	{
 		if(!validation)
 			sauvegarde_matrice(true);
+		System.out.println(markov.toString());
 	}
 	
 	public int getNbIteration()			//Nombre d'itérations à effectuer

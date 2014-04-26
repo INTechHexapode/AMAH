@@ -66,9 +66,9 @@ public class Markov implements java.io.Serializable {
 	public void updateMatrix(int resultat, EtatHexa etatPrecedent, EtatHexa etatSuivant)
 	{
 		matrice[getNum(etatPrecedent)][getNum(etatSuivant)]+=resultat;
-		affiche_matrice();
 	}
 	
+	@Deprecated
 	public void affiche_matrice()
 	{
 		String s = "";
@@ -92,10 +92,24 @@ public class Markov implements java.io.Serializable {
 		for(int i = 0; i < 6; i++)
 		{
 			num *= 2;
-			if(e.epattes[i].isLeve())
+			if(e.epattes[i].etat() == '1')
 				num++;
 		}
 		return num;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String s = "";
+		for(int i = 0; i < matrice.length; i++)
+		{
+			for(int j = 0; j < matrice.length; j++)
+				s += Double.toString(matrice[i][j])+" ";
+			s += "\n";
+		}
+		System.out.println(s);
+		return s;
 	}
 	
 }

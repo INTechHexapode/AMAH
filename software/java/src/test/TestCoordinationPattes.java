@@ -13,7 +13,6 @@ public class TestCoordinationPattes extends Test {
 
 	@Override
 	public void onStart() {
-		note = 0;
 		etat_actuel = etat_suivant;
 	}
 	
@@ -63,9 +62,10 @@ public class TestCoordinationPattes extends Test {
 	
 	private void calcNote()
 	{
+		note = 0;
 		int nbRetourArriere = 0;
-		char[] cEtatSuivant = etat_suivant.etatString();
-		char[] cEtatActuel = etat_actuel.etatString();
+		char[] cEtatSuivant = etat_suivant.etatString().toCharArray();
+		char[] cEtatActuel = etat_actuel.etatString().toCharArray();
 		for(int i = 0; i < 6; i++)
 		{
 			if(cEtatActuel[i] == '0')
