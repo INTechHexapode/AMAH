@@ -86,6 +86,7 @@ public class Hexapode {
 
         arret();
         desasserv();
+        position = new Vec2(0,0);
 	}
 	
 	/**
