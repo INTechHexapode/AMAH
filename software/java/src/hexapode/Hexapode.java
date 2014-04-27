@@ -355,15 +355,24 @@ public class Hexapode {
 	{
         try
         {
-            pattes[0][0].setEtatMoteurs(Math.PI/6, 70, -90);
-            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -90);
-            pattes[0][1].setEtatMoteurs(0, 70, -90);
-            pattes[0][4].setEtatMoteurs(0, 70, -90);
-            Sleep.sleep();
+            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -80);
+            pattes[0][4].setEtatMoteurs(0, 70, -80);
+            setDirection(Direction.DROITE_HAUT);
+            for(int i = 0; i < 4; i++)
+            {
+                goto_etat("101??0");
+                goto_etat("010??1");
+            }
+            arret();
+            setDirection(Direction.GAUCHE_BAS);
+            avancer(100);
+            setDirection(Direction.BAS);
+            avancer(100);
         } catch (GoToException e)
         {
             e.printStackTrace();
         }
+        // TODO: modifier position
 	}
 	
 	/**
