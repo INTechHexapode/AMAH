@@ -31,8 +31,6 @@ class Patte {
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
     public static double avancee_effective = 1; //avancee[profil_actuel]*130./50.; // mesurée
     
-    // TODO Si on soulève suffisamment les pattes, peut-on passer sur les foyers?
-    
 	/**
 	 * Constructeur d'une patte
 	 * @param serie
@@ -43,6 +41,17 @@ class Patte {
 	{
         this.etat = EnumEtatPatte.OTHER;
         moteurs = new TriMoteur(serie, 5*id+1);
+	}
+	
+	/**
+	 * Surcouche de goto_etat, avec temps de parcours par défaut.
+	 * @param role
+	 * @param etat
+	 * @throws GoToException
+	 */
+	public void goto_etat(int role, EnumEtatPatte etat) throws GoToException
+	{
+	    goto_etat(role, etat, Sleep.temps_defaut);
 	}
 	
 	/**

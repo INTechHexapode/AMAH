@@ -364,7 +364,7 @@ public class Hexapode {
     * @throws EnnemiException
     * @throws BordureException
     */
-   private void avancer_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, BordureException
+   public void avancer_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, BordureException
    {
        int nb_iteration = (int) Math.round(distance / Patte.avancee_effective);
        while(nb_iteration > 0)
@@ -456,19 +456,19 @@ public class Hexapode {
                if(e.charAt(i) == '1' && pattes[direction][i].getEtat() != EnumEtatPatte.AVANT)
                {
                    mouvement = true;
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT);
                }
                else if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.ARRIERE)
                {
                    avance = true; // si on ramène une patte en arrière, alors c'est que l'hexapode avance
                    mouvement = true;
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE);
                }
            
            // On continue le mouvement que s'il y a un mouvement à continuer
            if(mouvement)
            {
-               Sleep.sleep(Sleep.temps_defaut);
+               Sleep.sleep();
     
                for(int i = 0; i < 6; i++) // on baisse
                    if(pattes[direction][i].getEtat() == EnumEtatPatte.DEBOUT)
@@ -528,23 +528,23 @@ public class Hexapode {
                {
                    mouvement = true;
                    avance = true; // si on ramène une patte en arrière, alors c'est que l'hexapode avance
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE);
                }
                else if(e.charAt(i) == 'B' && pattes[direction][i].getEtat() != EnumEtatPatte.DEBOUT)
                {
                    mouvement = true;
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT);
                }
                else if(e.charAt(i) == 'C' && pattes[direction][i].getEtat() != EnumEtatPatte.AVANT)
                {
                    mouvement = true;
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT, Sleep.temps_defaut);
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT);
                }
            
            // On continue le mouvement que s'il y a un mouvement à continuer
            if(mouvement)
            {
-               Sleep.sleep(Sleep.temps_defaut);
+               Sleep.sleep();
                if(avance)
                    position.add(new Vec2((int) Math.round(Patte.avancee_effective*Math.cos(Math.PI/2-direction*Math.PI/3)),
                            (int) Math.round(Patte.avancee_effective*Math.sin(Math.PI/2-direction*Math.PI/3))));
@@ -612,8 +612,8 @@ public class Hexapode {
 
                 for(int i = 0; i < 6; i++)
                     if(sauv[i] != EnumEtatPatte.OTHER)
-                        pattes[direction][i].goto_etat(i, sauv[i], Sleep.temps_defaut);
-                Sleep.sleep(Sleep.temps_defaut);
+                        pattes[direction][i].goto_etat(i, sauv[i]);
+                Sleep.sleep();
             } catch (GoToException e)
             {
                 e.printStackTrace();
