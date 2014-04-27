@@ -39,6 +39,7 @@ public class Hexapode {
     private String[] marche;
 	private double[] orthogonal = {};
 	private static final double racinede3 = Math.sqrt(3);
+	private static final int ecart_bordure = 100;
 	
 	// FIN DE MATCH
     private long date_debut = -1;
@@ -440,7 +441,7 @@ public class Hexapode {
         goto_etat(marche[pas]);
 	    pas++;
 	    pas %= marche.length;
-	    if(position.x > 1400 || position.x < -1400 || position.y > 900 || position.y < 100)
+	    if(position.x > 1500-ecart_bordure || position.x < -1500+ecart_bordure || position.y > 1000-ecart_bordure || position.y < ecart_bordure)
 	        throw new BordureException();
 	}
 	
