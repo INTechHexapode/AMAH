@@ -246,19 +246,16 @@ public class Hexapode {
 	    int direction1 = (int)(Math.floor((3*angle_consigne/Math.PI)));
 	    int direction2 = direction1+1;
 	    
-        System.out.println("relatif: "+relatif);
-	    
-        System.out.println("direction1: "+direction1+", direction2: "+direction2);	    
-        
-        System.out.println("orthogonal1: "+orthogonal[1]);
         
         double longueur1 = 2*(Vec2.scalaire(relatif, orthogonal[2*((direction1+6)%6)]))/racinede3;
         double longueur2 = 2*(Vec2.scalaire(relatif, orthogonal[2*((direction1+6)%6)+1]))/racinede3;
 
+/*        System.out.println("relatif: "+relatif);        
+        System.out.println("direction1: "+direction1+", direction2: "+direction2);
+        System.out.println("orthogonal1: "+orthogonal[1]);
         System.out.println("longueur1: "+longueur1+", longueur2: "+longueur2);
-
         System.out.println("x: "+(longueur1*Math.cos(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.cos(Math.PI/2-direction2*Math.PI/3)));
-        System.out.println("y: "+(longueur1*Math.sin(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.sin(Math.PI/2-direction2*Math.PI/3)));
+        System.out.println("y: "+(longueur1*Math.sin(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.sin(Math.PI/2-direction2*Math.PI/3)));*/
 
         try {
             // Si trajectoire_horaire est vrai, on tourne à gauche avant de tourner à droite
