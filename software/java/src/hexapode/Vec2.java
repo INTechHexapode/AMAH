@@ -8,10 +8,10 @@ package hexapode;
 
 public class Vec2
 {
-    public int x;
-    public int y;
+    public double x;
+    public double y;
     
-    public Vec2(int x, int y)
+    public Vec2(double x, double y)
     {
         this.x = x;
         this.y = y;
@@ -39,5 +39,16 @@ public class Vec2
     {
         other.x = x;
         other.y = y;
+    }
+    
+    public static double scalaire(Vec2 a, Vec2 b)
+    {
+        return a.x*b.x+a.y*b.y;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "("+x+","+y+")";
     }
 }

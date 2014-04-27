@@ -40,8 +40,11 @@ public class Hexapode {
     private static final String[][] marche = {  {new String("101010"), new String("010101")},
                                                 {new String("100000"), new String("100001"), new String("100101"), new String("101101"), new String("000000")},
                                                 {new String("001000"), new String("001010"), new String("001011"), new String("011011"), new String("000000")}};
-    private int marche_actuelle = 0;
-	private double[] orthogonal = {};
+    private static final int marche_basique = 0;
+    private static final int marche_torche = 1;
+    private static final int marche_recalage = 2;
+    private int marche_actuelle = marche_basique;
+	private Vec2[] orthogonal = {};
 	private static final double racinede3 = Math.sqrt(3);
 	private static final int ecart_bordure = 400;
 	
@@ -58,13 +61,15 @@ public class Hexapode {
         this.serie = serie;
         capteur = new Capteur();
         
-	    orthogonal = new double[4*6];
+	    orthogonal = new Vec2[2*6];
 	    for(int i = 0; i < 6; i++)
 	    {
-	        orthogonal[4*i] = Math.cos(i*Math.PI/3-Math.PI/6);
-            orthogonal[4*i+1] = Math.sin(i*Math.PI/3-Math.PI/6);
-            orthogonal[4*i+2] = Math.cos((i+1)*Math.PI/3+Math.PI/6);
-            orthogonal[4*i+3] = Math.sin((i+1)*Math.PI/3+Math.PI/6);
+            // orthogonal à la direction de gauche
+            orthogonal[2*i] = new Vec2(Math.cos(Math.PI/2-i*Math.PI/3+Math.PI/6),
+                    Math.sin(Math.PI/2-i*Math.PI/3+Math.PI/6));
+            // orthogonal à la direction de droite
+            orthogonal[2*i+1] = new Vec2(Math.cos(Math.PI/2-(i+2)*Math.PI/3+Math.PI/6),
+                    Math.sin(Math.PI/2-(i+2)*Math.PI/3+Math.PI/6));
 	    }
 	    
         pattes = new Patte[6][6];
@@ -116,38 +121,25 @@ public class Hexapode {
     
     /**
      * Pose les fresques
+     * Les fresques sont accrochées aux pattes 0 et 3
      * @throws EnnemiException 
      */
     public void poser_fresques()
     {
+        marche_actuelle = marche_recalage;
         try
         {
             capteur_actif = false;
             setDirection(Direction.HAUT);
             
-            // On lève la patte 0
-            pattes[0][0].setEtatMoteurs(Math.PI/6, 70, -90);
+            // On lève les pattes 0 et 3
+            pattes[direction][0].lever_droite();
+            pattes[direction][3].lever_gauche();
 
-            // On se rapproche du mur qui est loin
-            for(int i = 0; i < 4; i++)
-            {
-                goto_etat("?01010");
-                goto_etat("?10101");
-            }
-            // On redescend la patte 0
-            goto_etat("010101");
-
-            // On lève la patte 3
-            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -90);
-            
-            // On se rapproche du mur qui est proche
-            goto_etat("101?10");
-            goto_etat("010?01");
-            
-            // On repose la patte 3
-            goto_etat("010101");
-            
-            recaler();
+            EnumPatte[] ignore = {EnumPatte.HAUT_DROITE, EnumPatte.HAUT_GAUCHE};
+            avancer_pres_bord_en_ignorant(1000, ignore);
+                        
+//            recaler();
             // TODO set position
             
             setDirection(Direction.BAS);
@@ -156,6 +148,7 @@ public class Hexapode {
         {
             e.printStackTrace();
         }
+        marche_actuelle = marche_basique;
 
     }
 
@@ -165,21 +158,15 @@ public class Hexapode {
      */
     public void recaler() throws EnnemiException
     {
-        marche_actuelle = 2;
+        marche_actuelle = marche_recalage;
         setDirection(Direction.DROITE_HAUT);
         pattes[direction][EnumPatte.HAUT_DROITE.ordinal()].lever();
-        try
-        {
-            pattes[direction][EnumPatte.HAUT_GAUCHE.ordinal()].goto_etat(1500, 2000, 2000);
-        } catch (GoToException e)
-        {
-            e.printStackTrace();
-        }
+        pattes[direction][EnumPatte.HAUT_GAUCHE.ordinal()].lever_gauche();
 
         EnumPatte[] ignore = {EnumPatte.HAUT_DROITE, EnumPatte.HAUT_GAUCHE};
         avancer_pres_bord_en_ignorant(1000, ignore);
         arret();
-        marche_actuelle = 0;
+        marche_actuelle = marche_basique;
     }
 
     /**
@@ -192,7 +179,7 @@ public class Hexapode {
      */
     public void avancer_tomber_feu(int distance, EnumPatte patteHorizontale) throws EnnemiException, BordureException
     {
-        marche_actuelle = 1;
+        marche_actuelle = marche_torche;
         EnumPatte patteDebout = EnumPatte.GAUCHE;
         try
         {
@@ -206,7 +193,7 @@ public class Hexapode {
         {
             e.printStackTrace();
         }
-        marche_actuelle = 0;
+        marche_actuelle = marche_basique;
     }
 
 	/**
@@ -254,13 +241,24 @@ public class Hexapode {
 	    // Le tableau "orthogonal" contient ces c et c'
 	    Vec2 relatif = new Vec2(point);
 	    relatif.sub(position);
-	    point.copy(position);
 	    
 	    double angle_consigne = Math.atan2(relatif.x,relatif.y);
 	    int direction1 = (int)(Math.floor((3*angle_consigne/Math.PI)));
 	    int direction2 = direction1+1;
-        double longueur1 = 2*(orthogonal[4*((direction1+6)%6)]*relatif.x+orthogonal[4*((direction1+6)%6)+1]*relatif.y)/racinede3;
-        double longueur2 = 2*(orthogonal[4*((direction1+6)%6)+2]*relatif.x+orthogonal[4*((direction1+6)%6)+3]*relatif.y)/racinede3;
+	    
+        System.out.println("relatif: "+relatif);
+	    
+        System.out.println("direction1: "+direction1+", direction2: "+direction2);	    
+        
+        System.out.println("orthogonal1: "+orthogonal[1]);
+        
+        double longueur1 = 2*(Vec2.scalaire(relatif, orthogonal[2*((direction1+6)%6)]))/racinede3;
+        double longueur2 = 2*(Vec2.scalaire(relatif, orthogonal[2*((direction1+6)%6)+1]))/racinede3;
+
+        System.out.println("longueur1: "+longueur1+", longueur2: "+longueur2);
+
+        System.out.println("x: "+(longueur1*Math.cos(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.cos(Math.PI/2-direction2*Math.PI/3)));
+        System.out.println("y: "+(longueur1*Math.sin(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.sin(Math.PI/2-direction2*Math.PI/3)));
 
         try {
             // Si trajectoire_horaire est vrai, on tourne à gauche avant de tourner à droite
@@ -459,9 +457,13 @@ public class Hexapode {
         
                Sleep.sleep(Sleep.temps_defaut/4);
 
+               System.out.println("Direction "+direction);
+               
                if(avance)
-                   position.add(new Vec2((int)(Patte.avancee*Math.cos(direction*Math.PI/3)),
-                           (int)(Patte.avancee*Math.sin(direction*Math.PI/3))));
+                   position.add(new Vec2((int)(Patte.avancee*Math.cos(Math.PI/2-direction*Math.PI/3)),
+                           (int)(Patte.avancee*Math.sin(Math.PI/2-direction*Math.PI/3))));
+               
+               System.out.println(position);
 
            }
         }
