@@ -37,10 +37,13 @@ public class Hexapode {
     private Capteur capteur;
 
     // DÉPLACEMENTS
-    private String[] marche;
+    private static final String[][] marche = {  {new String("101010"), new String("010101")},
+                                                {new String("100000"), new String("100001"), new String("100101"), new String("101101"), new String("000000")},
+                                                {new String("001000"), new String("001010"), new String("001011"), new String("011011"), new String("000000")}};
+    private int marche_actuelle = 0;
 	private double[] orthogonal = {};
 	private static final double racinede3 = Math.sqrt(3);
-	private static final int ecart_bordure = 100;
+	private static final int ecart_bordure = 400;
 	
 	// FIN DE MATCH
     private long date_debut = -1;
@@ -54,10 +57,6 @@ public class Hexapode {
 	{
         this.serie = serie;
         capteur = new Capteur();
-
-	    marche = new String[2];
-	    marche[0] = new String("101010");
-        marche[1] = new String("010101");
         
 	    orthogonal = new double[4*6];
 	    for(int i = 0; i < 6; i++)
@@ -108,7 +107,7 @@ public class Hexapode {
             // Exception impossible car le capteur est désactivé
             e.printStackTrace();
         }
-        // TODO set position
+        position = new Vec2(1300, 1800);
         while(!capteur.jumper())
             Sleep.sleep(100);
         date_debut = System.currentTimeMillis();
@@ -166,41 +165,48 @@ public class Hexapode {
      */
     public void recaler() throws EnnemiException
     {
+        marche_actuelle = 2;
+        setDirection(Direction.DROITE_HAUT);
+        pattes[direction][EnumPatte.HAUT_DROITE.ordinal()].lever();
         try
         {
-            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -80);
-            pattes[0][4].setEtatMoteurs(0, 70, -80);
-            setDirection(Direction.DROITE_HAUT);
-            for(int i = 0; i < 4; i++)
-            {
-                goto_etat("101??0");
-                goto_etat("010??1");
-            }
-            arret();
+            pattes[direction][EnumPatte.HAUT_GAUCHE.ordinal()].goto_etat(1500, 2000, 2000);
         } catch (GoToException e)
         {
             e.printStackTrace();
         }
+
+        EnumPatte[] ignore = {EnumPatte.HAUT_DROITE, EnumPatte.HAUT_GAUCHE};
+        avancer_pres_bord_en_ignorant(1000, ignore);
+        arret();
+        marche_actuelle = 0;
     }
 
     /**
      * Fait avancer l'hexapode et fait tomber un feu d'un certain côté
      * L'hexapode tend une patte et marche sans elle.
+     * NOTE: à utiliser pour la torche, pas pour les feux debout
      * @param distance
      * @throws BordureException 
      * @throws EnnemiException 
      */
-    public void avancer_tomber_feu(int distance, EnumPatte patte) throws EnnemiException, BordureException
+    public void avancer_tomber_feu(int distance, EnumPatte patteHorizontale) throws EnnemiException, BordureException
     {
+        marche_actuelle = 1;
+        EnumPatte patteDebout = EnumPatte.GAUCHE;
         try
         {
-            pattes[direction][patte.ordinal()].setEtatMoteurs(0, 160, 0);
-            EnumPatte[] ignore = {patte};
+            if(patteHorizontale == EnumPatte.GAUCHE)
+                patteDebout = EnumPatte.DROITE;
+            pattes[direction][patteHorizontale.ordinal()].setEtatMoteurs(0, 160, 0);
+            pattes[direction][patteDebout.ordinal()].lever();
+            EnumPatte[] ignore = {patteHorizontale, patteDebout};
             avancer_en_ignorant(distance, ignore);
         } catch (GoToException e)
         {
             e.printStackTrace();
         }
+        marche_actuelle = 0;
     }
 
 	/**
@@ -376,7 +382,7 @@ public class Hexapode {
 	 */
 	private void avancer_elementaire(EnumPatte[] ignore) throws EnnemiException, BordureException
 	{
-	    String prochain_pas = marche[pas];
+	    String prochain_pas = marche[marche_actuelle][pas];
 
 	    // On ignore certaines pattes dans le mouvement
 	    if(ignore != null)
@@ -385,8 +391,8 @@ public class Hexapode {
 
 	    goto_etat(prochain_pas);
 	    pas++;
-	    pas %= marche.length;
-	    if(position.x > 1500-ecart_bordure || position.x < -1500+ecart_bordure || position.y > 1000-ecart_bordure || position.y < ecart_bordure)
+	    pas %= marche[marche_actuelle].length;
+	    if(position.x > 1500-ecart_bordure || position.x < -1500+ecart_bordure || position.y > 2000-ecart_bordure || position.y < ecart_bordure)
 	        throw new BordureException();
 	}
 	
@@ -506,6 +512,7 @@ public class Hexapode {
         direction %= 6;
         if(direction != this.direction)
         {
+            // TODO: revoir correctement, il a tendance à tourner un peu sur lui-même
             capteur.tourner(direction);
             try
             {

@@ -129,6 +129,21 @@ class Patte {
         }
     }
 
+    
+    /**
+    * Lève la patte
+    */
+    public void lever()
+    {
+        try {
+            goto_etat(1200, 2000, 2000);
+        }
+        catch(GoToException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Affecte aux moteurs les angles données.
      * @param m0
