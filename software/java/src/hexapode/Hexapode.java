@@ -89,215 +89,7 @@ public class Hexapode {
         desasserv();
         position = new Vec2(0,0);
 	}
-	
-	/**
-	 * Surcouche user-friendly de setDirection
-	 * @param dir
-	 */
-	public void setDirection(Direction dir)
-	{
-	    setDirection(dir.ordinal());
-	}
-	
-	/**
-	 * Modifie la direction.
-	 * @param direction, entre -6 et 6
-	 */
-	public void setDirection(int direction)
-	{
-	    // Afin d'avoir direction entre 0 et 5
-	    direction += 6;
-	    direction %= 6;
-	    if(direction != this.direction)
-	    {
-	        capteur.tourner(direction);
-            try
-            {
-        	    EnumEtatPatte[] sauv = new EnumEtatPatte[6];
-        	    for(int i = 0; i < 6; i++)
-        	        sauv[i] = pattes[direction][i].getEtat();
-        	    this.direction = direction;
-                for(int i = 0; i < 6; i++)
-                    if(sauv[i] != EnumEtatPatte.OTHER)
-                        pattes[direction][i].goto_etat(i, sauv[i], Sleep.temps_defaut);
-                Sleep.sleep(Sleep.temps_defaut);
-            } catch (GoToException e)
-            {
-                e.printStackTrace();
-            }
-	    }
-	}
-
-	/**
-	 * "Tourne" vers la gauche (si différence < 0) ou vers la droite (si différence > 0)
-	 * @param difference, entre -5 et +5
-	 */
-    public void setDirectionRelatif(int difference)
-    {
-        setDirection(direction + difference);
-    }
-
-    /**
-	 * L'hexapode fait l'action donnée par une chaîne binaire.
-	 * Note: on peut ignorer une patte en mettant un autre caractère.
-	 * @param e
-     * @throws EnnemiException 
-	 */
-	public void goto_etat(String e) throws EnnemiException
-	{
-	    int attente = 0;
-        while(detecter_ennemi())
-        {
-            System.out.println("Ennemi détecté! Attente.");
-            Sleep.sleep(1000);
-            attente++;
-            if(attente == 5)
-                throw new EnnemiException();
-        }
-
-        if(date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
-            fin_match();
-
-        boolean mouvement = false, avance = false;
-
-       // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les pattes intéressées, puis on les abaisse en même temps
-       // On ramène en arrière et on lève
-	    try {
-           for(int i = 0; i < 6; i++)
-               if(e.charAt(i) == '1' && pattes[direction][i].getEtat() != EnumEtatPatte.AVANT)
-               {
-                   mouvement = true;
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
-               }
-               else if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.ARRIERE)
-               {
-                   avance = true; // si on ramène une patte en arrière, alors c'est que l'hexapode avance
-                   mouvement = true;
-                   pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
-               }
-           
-           // On continue le mouvement que s'il y a un mouvement à continuer
-           if(mouvement)
-           {
-               Sleep.sleep(Sleep.temps_defaut);
-    
-               for(int i = 0; i < 6; i++) // on baisse
-                   if(pattes[direction][i].getEtat() == EnumEtatPatte.DEBOUT)
-                       pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT, Sleep.temps_defaut/4);
-                   else if(pattes[direction][i].getEtat() == EnumEtatPatte.POUSSE)
-                       pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
-        
-               Sleep.sleep(Sleep.temps_defaut/4);
-
-               if(avance)
-                   position.add(new Vec2((int)(Patte.avancee*Math.cos(direction*Math.PI/3)),
-                           (int)(Patte.avancee*Math.sin(direction*Math.PI/3))));
-
-           }
-	    }
-	    catch(GoToException exception)
-	    {
-	        exception.printStackTrace();
-	    }
-
-	}
-
-	/**
-	 * Désasservit l'hexapode
-	 */
-	public void desasserv()
-	{
-		System.out.println("Desasservissement de l'hexapode");
-		for(int i = 0; i < 6; i++)
-			pattes[direction][i].desasserv();
-	}
-	
-	/**
-	 * Lève l'hexapode (en piétinant)
-	 */
-	public void stand_up()
-	{
-        try
-        {
-		System.out.println("L'hexapode se lève");
-		// On piétine pour monter
-		for(int i = 0; i < 9; i++)
-		{
-			pietine(i%3, 1500, 1800-25*i, 1600+25*i);
-			pietine(5-i%3, 1500, 1800-25*i, 1600+25*i);
-		}
-		// On baisse toutes les pattes
-		for(int i = 0; i < 6; i++)
-			pattes[direction][i].baisser();
-		Sleep.sleep(500);
-		// On abaisse un peu l'hexapode
-		for(int i = 0; i < 6; i++)
-			pattes[direction][i].goto_etat(1500, 1800, 1800);
-        } catch (GoToException e)
-        {
-            e.printStackTrace();
-        }
-		
-	}
-
-	/**
-	 * Utilisé pour piétiner
-	 * @param num
-	 * @param angle0
-	 * @param angle1
-	 * @param angle2
-	 * @throws GoToException 
-	 */
-	private void pietine(int num, int angle0, int angle1, int angle2) throws GoToException
-	{
-        pattes[direction][num].goto_etat(angle0, angle1, angle2-400);
-		Sleep.sleep(100);
-		pattes[direction][num].goto_etat(angle0, angle1, angle2);
-		Sleep.sleep(100);
-	}
-
-	/**
-	 * Dépose délicatement l'hexapode à terre, couché
-	 */
-/*	public void lay_down()
-	{
-	    try {
-    		System.out.println("L'hexapode se couche");
-    		for(int i = 0; i < 6; i++)
-    			pattes[direction][i].moteurs[1].goto_etat(2000);
-    		Sleep.sleep(1000);
-    		for(int i = 0; i < 6; i++)
-    			pattes[direction][i].goto_etat(1500, 1900, 1000);
-	    }
-	    catch(GoToException e)
-	    {
-	        e.printStackTrace();
-	    }
-	}*/
-	
-	/**
-	 * Met l'hexapode en position "normale" (toute patte baissée).
-	 */
-	public void arret()
-	{
-        for(int i = 0; i < 6; i++)
-            pattes[direction][i].baisser();
-        Sleep.sleep();
-    }
-	
-	@Override
-	public String toString()
-	{
-	    String s = new String();
-	    for(int i = 0; i < 6; i++)
-	    {
-	        if(i > 0)
-	            s += "\n";
-	        s += pattes[direction][i].getEtat().toString();
-        }
-	    return s;
-	}
-
+			
 	/**
      * Initialise l'hexapode en le recalant et attend le jumper
      */
@@ -323,6 +115,74 @@ public class Hexapode {
         capteur_actif = true;
     }
     
+    /**
+     * Pose les fresques
+     * @throws EnnemiException 
+     */
+    public void poser_fresques()
+    {
+        try
+        {
+            capteur_actif = false;
+            setDirection(Direction.HAUT);
+            
+            // On lève la patte 0
+            pattes[0][0].setEtatMoteurs(Math.PI/6, 70, -90);
+
+            // On se rapproche du mur qui est loin
+            for(int i = 0; i < 4; i++)
+            {
+                goto_etat("?01010");
+                goto_etat("?10101");
+            }
+            // On redescend la patte 0
+            goto_etat("010101");
+
+            // On lève la patte 3
+            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -90);
+            
+            // On se rapproche du mur qui est proche
+            goto_etat("101?10");
+            goto_etat("010?01");
+            
+            // On repose la patte 3
+            goto_etat("010101");
+            
+            recaler();
+            // TODO set position
+            
+            setDirection(Direction.BAS);
+            capteur_actif = true;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Se recale dans un coin supérieur gauche (si jaune)
+     * @throws EnnemiException 
+     */
+    public void recaler() throws EnnemiException
+    {
+        try
+        {
+            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -80);
+            pattes[0][4].setEtatMoteurs(0, 70, -80);
+            setDirection(Direction.DROITE_HAUT);
+            for(int i = 0; i < 4; i++)
+            {
+                goto_etat("101??0");
+                goto_etat("010??1");
+            }
+            arret();
+        } catch (GoToException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Fait avancer l'hexapode et fait tomber un feu d'un certain côté
      * L'hexapode tend une patte et marche sans elle.
@@ -397,6 +257,8 @@ public class Hexapode {
         double longueur2 = 2*(orthogonal[4*((direction1+6)%6)+2]*relatif.x+orthogonal[4*((direction1+6)%6)+3]*relatif.y)/racinede3;
 
         try {
+            // Si trajectoire_horaire est vrai, on tourne à gauche avant de tourner à droite
+            // Sinon, c'est le contraire            
             if(trajectoire_horaire)
             {
                 setDirection(direction1);
@@ -420,6 +282,7 @@ public class Hexapode {
                 // le coefficient 2 vient de 1/cos(PI/3).
                 if(trajectoire_horaire)
                 {
+                    // On évite par la gauche
                     setDirectionRelatif(-1);
                     avancer(distance_detection*2);
                     setDirectionRelatif(2);
@@ -427,6 +290,7 @@ public class Hexapode {
                 }
                 else
                 {
+                    // On évite par la droite
                     setDirectionRelatif(1);
                     avancer(distance_detection*2);
                     setDirectionRelatif(-2);
@@ -474,8 +338,7 @@ public class Hexapode {
                avancer_elementaire(ignore);
            }
            catch(BordureException e)
-           {                
-           }
+           {}
        }
    }
 
@@ -537,75 +400,72 @@ public class Hexapode {
 	        return false;
 	    return capteur.mesure() < distance_detection;
 	}
-	
-	/**
-	 * Se recale dans un coin supérieur gauche (si jaune)
-	 * @throws EnnemiException 
-	 */
-	public void recaler() throws EnnemiException
-	{
-        try
-        {
-            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -80);
-            pattes[0][4].setEtatMoteurs(0, 70, -80);
-            setDirection(Direction.DROITE_HAUT);
-            for(int i = 0; i < 4; i++)
-            {
-                goto_etat("101??0");
-                goto_etat("010??1");
-            }
-            arret();
-        } catch (GoToException e)
-        {
-            e.printStackTrace();
-        }
-	}
-	
-	/**
-	 * Pose les fresques
-	 * @throws EnnemiException 
-	 */
-	public void poser_fresques()
-	{
-        try
-        {
-    	    capteur_actif = false;
-    	    setDirection(Direction.HAUT);
-    	    
-    	    // On lève la patte 0
-            pattes[0][0].setEtatMoteurs(Math.PI/6, 70, -90);
 
-            // On se rapproche du mur qui est loin
-            for(int i = 0; i < 4; i++)
-            {
-                goto_etat("?01010");
-                goto_etat("?10101");
-            }
-            // On redescend la patte 0
-            goto_etat("010101");
-
-            // On lève la patte 3
-            pattes[0][3].setEtatMoteurs(-Math.PI/6, 70, -90);
-            
-            // On se rapproche du mur qui est proche
-            goto_etat("101?10");
-            goto_etat("010?01");
-            
-            // On repose la patte 3
-            goto_etat("010101");
-            
-            recaler();
-            // TODO set position
-            
-            setDirection(Direction.BAS);
-            capteur_actif = true;
-        } catch (Exception e)
+    /**
+     * L'hexapode fait l'action donnée par une chaîne binaire.
+     * Note: on peut ignorer une patte en mettant un autre caractère.
+     * @param e
+     * @throws EnnemiException 
+     */
+    public void goto_etat(String e) throws EnnemiException
+    {
+        int attente = 0;
+        while(detecter_ennemi())
         {
-            e.printStackTrace();
+            System.out.println("Ennemi détecté! Attente.");
+            Sleep.sleep(1000);
+            attente++;
+            if(attente == 5)
+                throw new EnnemiException();
         }
 
-	}
-	
+        if(date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
+            fin_match();
+
+        boolean mouvement = false, avance = false;
+
+       // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les pattes intéressées, puis on les abaisse en même temps
+       // On ramène en arrière et on lève
+        try {
+           for(int i = 0; i < 6; i++)
+               if(e.charAt(i) == '1' && pattes[direction][i].getEtat() != EnumEtatPatte.AVANT)
+               {
+                   mouvement = true;
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT, Sleep.temps_defaut);
+               }
+               else if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.ARRIERE)
+               {
+                   avance = true; // si on ramène une patte en arrière, alors c'est que l'hexapode avance
+                   mouvement = true;
+                   pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
+               }
+           
+           // On continue le mouvement que s'il y a un mouvement à continuer
+           if(mouvement)
+           {
+               Sleep.sleep(Sleep.temps_defaut);
+    
+               for(int i = 0; i < 6; i++) // on baisse
+                   if(pattes[direction][i].getEtat() == EnumEtatPatte.DEBOUT)
+                       pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT, Sleep.temps_defaut/4);
+                   else if(pattes[direction][i].getEtat() == EnumEtatPatte.POUSSE)
+                       pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
+        
+               Sleep.sleep(Sleep.temps_defaut/4);
+
+               if(avance)
+                   position.add(new Vec2((int)(Patte.avancee*Math.cos(direction*Math.PI/3)),
+                           (int)(Patte.avancee*Math.sin(direction*Math.PI/3))));
+
+           }
+        }
+        catch(GoToException exception)
+        {
+            exception.printStackTrace();
+        }
+
+    }
+
 	/**
 	 * Méthode exécutée au bout de 90s
 	 */
@@ -615,5 +475,130 @@ public class Hexapode {
         desasserv();
         serie.close();
     }
-		
+
+	   /**
+     * Surcouche user-friendly de setDirection
+     * @param dir
+     */
+    public void setDirection(Direction dir)
+    {
+        setDirection(dir.ordinal());
+    }
+
+    /**
+     * "Tourne" vers la gauche (si différence < 0) ou vers la droite (si différence > 0)
+     * @param difference, entre -5 et +5
+     */
+    public void setDirectionRelatif(int difference)
+    {
+        setDirection(direction + difference);
+    }
+
+    /**
+     * Modifie la direction.
+     * @param direction, entre -6 et 6
+     */
+    public void setDirection(int direction)
+    {
+        // TODO: passer par la position arrêt?
+        // Afin d'avoir direction entre 0 et 5
+        direction += 6;
+        direction %= 6;
+        if(direction != this.direction)
+        {
+            capteur.tourner(direction);
+            try
+            {
+                EnumEtatPatte[] sauv = new EnumEtatPatte[6];
+                for(int i = 0; i < 6; i++)
+                    sauv[i] = pattes[direction][i].getEtat();
+                this.direction = direction;
+                for(int i = 0; i < 6; i++)
+                    if(sauv[i] != EnumEtatPatte.OTHER)
+                        pattes[direction][i].goto_etat(i, sauv[i], Sleep.temps_defaut);
+                Sleep.sleep(Sleep.temps_defaut);
+            } catch (GoToException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * Lève l'hexapode (en piétinant)
+     */
+    public void stand_up()
+    {
+        try
+        {
+            System.out.println("L'hexapode se lève");
+            // On piétine pour monter
+            for(int i = 0; i < 9; i++)
+            {
+                pietine(i%3, 1500, 1800-25*i, 1600+25*i);
+                pietine(5-i%3, 1500, 1800-25*i, 1600+25*i);
+            }
+            // On baisse toutes les pattes
+            for(int i = 0; i < 6; i++)
+                pattes[direction][i].baisser();
+            Sleep.sleep(500);
+            // On abaisse un peu l'hexapode
+            for(int i = 0; i < 6; i++)
+                pattes[direction][i].goto_etat(1500, 1800, 1800);
+        } catch (GoToException e)
+        {
+            e.printStackTrace();
+        }
+        
+    }
+
+    /**
+     * Utilisé pour piétiner
+     * @param num
+     * @param angle0
+     * @param angle1
+     * @param angle2
+     * @throws GoToException 
+     */
+    private void pietine(int num, int angle0, int angle1, int angle2) throws GoToException
+    {
+        pattes[direction][num].goto_etat(angle0, angle1, angle2-400);
+        Sleep.sleep(100);
+        pattes[direction][num].goto_etat(angle0, angle1, angle2);
+        Sleep.sleep(100);
+    }
+    
+    /**
+     * Met l'hexapode en position "normale" (toute patte baissée).
+     */
+    public void arret()
+    {
+        for(int i = 0; i < 6; i++)
+            pattes[direction][i].baisser();
+        Sleep.sleep();
+    }
+
+    /**
+     * Désasservit l'hexapode
+     */
+    public void desasserv()
+    {
+        System.out.println("Desasservissement de l'hexapode");
+        for(int i = 0; i < 6; i++)
+            pattes[direction][i].desasserv();
+    }
+    
+    @Override
+    public String toString()
+    {
+        String s = new String();
+        for(int i = 0; i < 6; i++)
+        {
+            if(i > 0)
+                s += "\n";
+            s += pattes[direction][i].getEtat().toString();
+        }
+        return s;
+    }
+
 }
