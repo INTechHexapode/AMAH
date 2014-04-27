@@ -23,7 +23,7 @@ public class SerialManager
 	private Hashtable<String, Serial> series = new Hashtable<String, Serial>();
 
 	//Pour chaque carte, on connait a l'avance son nom, son ping et son baudrate
-	private SpecificationCard carteAsservissement = new SpecificationCard("serieAsservissement", 0, 115200);
+	private SpecificationCard carteAsservissement = new SpecificationCard("serieAsservissement", 0, 38400);
 
 	//On stock les cartes dans une liste
 	private ArrayList <SpecificationCard> cards = new ArrayList <SpecificationCard>();
