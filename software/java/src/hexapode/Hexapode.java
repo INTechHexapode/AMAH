@@ -28,7 +28,7 @@ public class Hexapode {
                                                     1,2,5,0,3,4};
     
     // CAPTEURS
-    private boolean capteur_active = true;
+    private boolean capteur_actif = true;
     private static final int distance_detection = 100;
     private Capteur capteur;
 
@@ -126,7 +126,7 @@ public class Hexapode {
 	 * "Tourne" vers la gauche (si différence < 0) ou vers la droite (si différence > 0)
 	 * @param difference, entre -5 et +5
 	 */
-    public void setDirectioneRelatif(int difference)
+    public void setDirectionRelatif(int difference)
     {
         setDirection(direction + difference);
     }
@@ -135,16 +135,24 @@ public class Hexapode {
 	 * L'hexapode fait l'action donnée par une chaîne binaire.
 	 * Note: on peut ignorer une patte en mettant un autre caractère.
 	 * @param e
+     * @throws EnnemiException 
 	 */
-	public void goto_etat(String e)
+	public void goto_etat(String e) throws EnnemiException
 	{
+	    int attente = 0;
         while(detecter_ennemi())
+        {
+            System.out.println("Ennemi détecté! Attente.");
             Sleep.sleep(1000);
+            attente++;
+            if(attente == 5)
+                throw new EnnemiException();
+        }
 
         if(date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
             fin_match();
 
-        boolean mouvement = false;
+        boolean mouvement = false, avance = false;
 
        // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les pattes intéressées, puis on les abaisse en même temps
        // On ramène en arrière et on lève
@@ -157,6 +165,7 @@ public class Hexapode {
                }
                else if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.ARRIERE)
                {
+                   avance = true; // si on ramène une patte en arrière, alors c'est que l'hexapode avance
                    mouvement = true;
                    pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE, Sleep.temps_defaut);
                }
@@ -173,6 +182,11 @@ public class Hexapode {
                        pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
         
                Sleep.sleep(Sleep.temps_defaut/4);
+
+               if(avance)
+                   position.add(new Vec2((int)(Patte.avancee*Math.cos(direction*Math.PI/3)),
+                           (int)(Patte.avancee*Math.sin(direction*Math.PI/3))));
+
            }
 	    }
 	    catch(GoToException exception)
@@ -281,8 +295,9 @@ public class Hexapode {
 	/**
 	 * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
 	 * @param distance
+	 * @throws EnnemiException 
 	 */
-	private void avancer(int distance)
+	private void avancer(int distance) throws EnnemiException
 	{
 	    int nb_iteration = distance / ((int) Patte.avancee);
 	    for(int i = 0; i < nb_iteration; i++)
@@ -298,13 +313,31 @@ public class Hexapode {
 	    for(Vec2 point: points)
 	        va_au_point(point, true);
 	}
+
+    /**
+     * Va au point (coordonnées absolues)
+     * @param x
+     * @param y
+     */
+	public void va_au_point(Vec2 point, boolean trajectoire_horaire)
+	{
+	    try
+        {
+            va_au_point(point, trajectoire_horaire, true);
+        } catch (EnnemiException e)
+        {
+            e.printStackTrace();
+        }
+	}
 	
 	/**
-	 * Va au point (coordonnées absolues)
-	 * @param x
-	 * @param y
+	 * Va_au_point avec évitement
+	 * @param point
+	 * @param trajectoire_horaire
+	 * @param insiste
+	 * @throws EnnemiException
 	 */
-	public void va_au_point(Vec2 point, boolean trajectoire_horaire)
+	private void va_au_point(Vec2 point, boolean trajectoire_horaire, boolean insiste) throws EnnemiException
 	{
 	    // On décompose le vecteur (x,y) sur la base formée par les deux vecteurs direction les plus proches de (x,y).
 	    // Cette base n'étant pas orthogonale, la formule est peu plus complexe qu'un produit scalaire.
@@ -323,25 +356,45 @@ public class Hexapode {
         double longueur1 = 2*(orthogonal[4*((direction1+6)%6)]*relatif.x+orthogonal[4*((direction1+6)%6)+1]*relatif.y)/racinede3;
         double longueur2 = 2*(orthogonal[4*((direction1+6)%6)+2]*relatif.x+orthogonal[4*((direction1+6)%6)+3]*relatif.y)/racinede3;
 
-        if(trajectoire_horaire)
-        {
-            setDirection(direction1);
-            avancer((int)longueur1);
+        try {
+            if(trajectoire_horaire)
+            {
+                setDirection(direction1);
+                avancer((int)longueur1);
+            }
+            setDirection(direction2);
+            avancer((int)longueur2);
+            if(!trajectoire_horaire)
+            {
+                setDirection(direction1);
+                avancer((int)longueur1);
+            }
         }
-        setDirection(direction2);
-        avancer((int)longueur2);
-        if(!trajectoire_horaire)
+        catch(EnnemiException e)
         {
-            setDirection(direction1);
-            avancer((int)longueur1);
+            if(!insiste)
+                throw e;
+            try {
+                System.out.println("Evitement de l'ennemi");
+                setDirectionRelatif(-1);
+                // le coefficient 2 vient de 1/cos(PI/3).
+                avancer(distance_detection*2);
+                setDirectionRelatif(2);
+                avancer(distance_detection*2);
+                va_au_point(point, trajectoire_horaire, false);
+            }
+            catch(EnnemiException e2)
+            {
+                System.out.println("Evitement échoué. On passe au point suivant.");
+            }
         }
-        
 	}
 	
 	/**
 	 * Avance de "Patte.avancee" millimètres dans la direction actuelle
+	 * @throws EnnemiException 
 	 */
-	private void avancer_elementaire()
+	private void avancer_elementaire() throws EnnemiException
 	{
         goto_etat(marche[pas]);
 	    pas++;
@@ -354,15 +407,16 @@ public class Hexapode {
 	 */
 	private boolean detecter_ennemi()
 	{
-	    if(!capteur_active)
+	    if(!capteur_actif)
 	        return false;
 	    return capteur.mesure() < distance_detection;
 	}
 	
 	/**
-	 * Met l'hexapode en "carré" pour le mettre manuellement de manière facile
+	 * Se recale dans un coin supérieur gauche (si jaune)
+	 * @throws EnnemiException 
 	 */
-	public void recaler()
+	public void recaler() throws EnnemiException
 	{
         try
         {
@@ -375,10 +429,6 @@ public class Hexapode {
                 goto_etat("010??1");
             }
             arret();
-            setDirection(Direction.GAUCHE_BAS);
-            avancer(100);
-            setDirection(Direction.BAS);
-            avancer(100);
         } catch (GoToException e)
         {
             e.printStackTrace();
@@ -387,12 +437,13 @@ public class Hexapode {
 	
 	/**
 	 * Pose les fresques
+	 * @throws EnnemiException 
 	 */
 	public void poser_fresques()
 	{
         try
         {
-    	    capteur_active = false;
+    	    capteur_actif = false;
     	    setDirection(Direction.HAUT);
     	    
     	    // On lève la patte 0
@@ -416,10 +467,13 @@ public class Hexapode {
             
             // On repose la patte 3
             goto_etat("010101");
-            // TODO mise à jour position
+            
+            recaler();
+            // TODO set position
+            
             setDirection(Direction.BAS);
-            capteur_active = true;
-        } catch (GoToException e)
+            capteur_actif = true;
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -436,13 +490,29 @@ public class Hexapode {
         serie.close();
     }
 	
+	/**
+	 * Initialise l'hexapode en le recalant et attend le jumper
+	 */
 	public void initialiser()
 	{
-	    recaler();
+	    try
+        {
+	        capteur_actif = false;
+            recaler();
+            setDirection(Direction.GAUCHE_BAS);
+            avancer(100);
+            setDirection(Direction.BAS);
+            avancer(400);
+        } catch (EnnemiException e)
+        {
+            // Exception impossible car le capteur est désactivé
+            e.printStackTrace();
+        }
 	    // TODO set position
 	    while(!capteur.jumper())
 	        Sleep.sleep(100);
 	    date_debut = System.currentTimeMillis();
+        capteur_actif = true;
 	}
 	
 }

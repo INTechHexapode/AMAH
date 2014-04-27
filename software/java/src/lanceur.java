@@ -1,3 +1,4 @@
+import hexapode.EnnemiException;
 import hexapode.GoToException;
 import hexapode.Hexapode;
 import hexapode.Vec2;
@@ -51,7 +52,7 @@ public class lanceur {
 		}
 				
 	}
-	public static void cercle(Hexapode hexa) throws GoToException
+	public static void cercle(Hexapode hexa) throws GoToException, EnnemiException
 	{
         Sleep.temps_defaut = 300;
         for(int i = 0; i < 18; i++)
@@ -59,11 +60,11 @@ public class lanceur {
             hexa.goto_etat("101010");
             hexa.goto_etat("010101");
             if(i % 3 == 2)
-                hexa.setDirectioneRelatif(1);
+                hexa.setDirectionRelatif(1);
         }	    
 	}
 	
-	public static void marche_scriptee(Hexapode hexa) throws GoToException
+	public static void marche_scriptee(Hexapode hexa) throws GoToException, EnnemiException
 	{
         Sleep.temps_defaut = 200;
         for(int i = 0; i < 30; i++)
@@ -76,7 +77,7 @@ public class lanceur {
 
 	// TODO: comparer la précision avec la première marche scriptée
 	// par contre, celle-là est 3 fois plus lente
-	   public static void autre_marche_scriptee(Hexapode hexa) throws GoToException
+	   public static void autre_marche_scriptee(Hexapode hexa) throws GoToException, EnnemiException
 	    {
 	        Sleep.temps_defaut = 200;
 	        for(int i = 0; i < 30; i++)
@@ -91,7 +92,7 @@ public class lanceur {
 	        hexa.arret();
 	    }
 
-	public static void acceleration(Hexapode hexa) throws GoToException
+	public static void acceleration(Hexapode hexa) throws GoToException, EnnemiException
 	{
         Sleep.temps_defaut = 500;
 	    for(int i = 0; i < 10; i++)
