@@ -14,7 +14,7 @@ public class Hexapode {
 	
     private Vec2 position; // position à laquelle l'hexapode se croit
 	private Patte[][] pattes;
-//	private Serial serie; // TODO
+	private Serial serie;
 	private int direction = 0;
 	private int pas = 0; // indice pour la marche
     private static final int[] pattes_rotation = {  3,0,1,4,5,2,
@@ -24,7 +24,7 @@ public class Hexapode {
                                                     1,2,5,0,3,4};
     private boolean capteur_active = true;
 	private String[] marche;
-//	private long date_debut = -1; // TODO
+	private long date_debut = -1;
 	
 	private double[] orthogonal = {};
 	private static final double racinede3 = Math.sqrt(3);
@@ -35,10 +35,8 @@ public class Hexapode {
 	 */
 	public Hexapode(Serial serie, boolean inverser)
 	{
-//      this.serie = serie; // TODO
+        this.serie = serie;
 
-	    position = new Vec2(0,0); // TODO
-	    
 	    marche = new String[2];
 	    marche[0] = new String("101010");
         marche[1] = new String("010101");
@@ -66,6 +64,8 @@ public class Hexapode {
                     pattes[6-i][j] = pattes[0][pattes_rotation[(i-1)*6+j]];
                 else
                     pattes[i][j] = pattes[0][pattes_rotation[(i-1)*6+j]];
+        
+        // TODO tourner le capteur
 
         arret();
         desasserv();
@@ -128,13 +128,8 @@ public class Hexapode {
         while(detecter_ennemi())
             Sleep.sleep(1000);
 
-        // TODO: quand on aura un jumper
-/*        if(System.currentTimeMillis() - date_debut > 90000)
-        {
-            arret();
-            desasserv();
-            serie.close();
-        }*/
+        if(date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
+            fin_match();
 
         boolean mouvement = false;
 
@@ -415,5 +410,24 @@ public class Hexapode {
         }
 
 	}
+	
+	/**
+	 * Initialise la date de début de match
+	 * @param date
+	 */
+	public void setDateDebut(long date)
+	{
+	    date_debut = date;
+	}
 
+	/**
+	 * Méthode exécutée au bout de 90s
+	 */
+	private void fin_match()
+    {
+        arret();
+        desasserv();
+        serie.close();
+    }
+	
 }

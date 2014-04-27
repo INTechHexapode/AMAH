@@ -11,10 +11,12 @@ import test.TestEngine;
 import util.Sleep;
 
 /*
- * TODO list
+ * TODO list (méca/élec)
  * Cartes électroniques (alim/capteurs)
- * Capteur ultrason + servo (on tourne le capteur dans la direction où on va)
+ * Capteur ultrason ou infrarouge + servo (on tourne le capteur dans la direction où on va)
  * Jumper
+ * Bouton d'arrêt d'urgence
+ * Raspberry
  * Un ou deux boutons de manière à pouvoir le configurer sans pc?...
  * (un commutateur pour la couleur, un bouton poussoir pour le recalage)
  */
@@ -31,9 +33,18 @@ public class lanceur {
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
 
-			hexa.recaler();
+            hexa.va_au_point(new Vec2(0, 100), true);
+            hexa.va_au_point(new Vec2(-10, 110), true);
 
-			scanner.close();
+//			hexa.recaler();
+
+            Hexapode hexaJaune = new Hexapode(null, false);
+            Hexapode hexaRouge = new Hexapode(null, true);
+
+            cercle(hexaJaune);
+            cercle(hexaRouge);
+
+            scanner.close();
 //			serie.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,10 +117,18 @@ public class lanceur {
 	
 	public static void script(Hexapode hexa)
 	{
-	    Vec2[] itineraire = {   new Vec2(1100, 1400),
-	                           new Vec2(1100, 600),
-	                           new Vec2(700, 400)};
-	    hexa.suit_chemin(itineraire);
+	    // recaler
+	    // attente du jumper
+	    // set date_debut
+	    
+	    // TODO: pouvoir se recaler en cours de match
+	    Vec2[] itineraire1 = {   new Vec2(1100, 1400),
+	                             new Vec2(1100, 600),
+	                             new Vec2(700, 400),
+	                             new Vec2(0, 600),
+	                             new Vec2(0, 1500)};
+	    hexa.suit_chemin(itineraire1);
+	    hexa.poser_fresques();
 	}
 	
 }
