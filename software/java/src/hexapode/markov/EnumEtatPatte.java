@@ -11,6 +11,7 @@ public enum EnumEtatPatte {
     AVANT,
 	POUSSE,
 	DEBOUT,
+	HAUT,
 	OTHER; // Other: position manuelle, désasservi, ...
 
 }

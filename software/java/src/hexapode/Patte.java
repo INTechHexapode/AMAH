@@ -56,31 +56,38 @@ class Patte {
 	    // On n'a pas le droit de demander à aller à OTHER
 	    if(etat == EnumEtatPatte.OTHER)
 	        throw new GoToException();
-
-	    double angle = angles[role];
-
-        // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
-        // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
-        // (ici, c'est vu du dessus; dans setEtaMoteurs, c'est vu de côté)
-        double x = r[profil_actuel]*Math.sin(angle);
-        double y;
-        if(etat == EnumEtatPatte.ARRIERE || etat == EnumEtatPatte.POUSSE)
-            y = r[profil_actuel]*Math.cos(angle) - avancee[profil_actuel];
-        else // DEBOUT ou AVANT
-            y = r[profil_actuel]*Math.cos(angle) + avancee[profil_actuel];
+	    if(etat == EnumEtatPatte.DEBOUT)
+	        lever();
+	    else
+	    {
+    	    double angle = angles[role];
     
-        double new_r = Math.sqrt(x*x+y*y);
-        double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
+            // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
+            // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
+            // (ici, c'est vu du dessus; dans setEtaMoteurs, c'est vu de côté)
+            double x = r[profil_actuel]*Math.sin(angle);
+            double y;
+            if(etat == EnumEtatPatte.ARRIERE || etat == EnumEtatPatte.POUSSE)
+                y = r[profil_actuel]*Math.cos(angle) - avancee[profil_actuel];
+            else if(etat == EnumEtatPatte.DEBOUT || etat == EnumEtatPatte.AVANT)
+                y = r[profil_actuel]*Math.cos(angle) + avancee[profil_actuel];
+            else // HAUT
+                y = r[profil_actuel]*Math.cos(angle);
         
-        if(etat == EnumEtatPatte.DEBOUT)
-            setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel], temps);
-        else if(etat == EnumEtatPatte.AVANT)
-            setEtatMoteurs(new_angle, new_r, hauteur_baisse[profil_actuel], temps);
-        else if(etat == EnumEtatPatte.POUSSE)
-            setEtatMoteurs(new_angle, new_r, hauteur_pousse[profil_actuel], temps); // et on pousse un peu sur les pattes
-        else if(etat == EnumEtatPatte.ARRIERE)
-            setEtatMoteurs(new_angle, new_r, hauteur_baisse[profil_actuel], temps);
-
+            double new_r = Math.sqrt(x*x+y*y);
+            double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
+            
+            if(etat == EnumEtatPatte.DEBOUT)
+                setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel], temps);
+            else if(etat == EnumEtatPatte.AVANT)
+                setEtatMoteurs(new_angle, new_r, hauteur_baisse[profil_actuel], temps);
+            else if(etat == EnumEtatPatte.POUSSE)
+                setEtatMoteurs(new_angle, new_r, hauteur_pousse[profil_actuel], temps); // et on pousse un peu sur les pattes
+            else if(etat == EnumEtatPatte.ARRIERE)
+                setEtatMoteurs(new_angle, new_r, hauteur_baisse[profil_actuel], temps);
+            else if(etat == EnumEtatPatte.HAUT)
+                setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel], temps);
+	    }
         this.etat = etat; // le faire après setEtatMoteur qui met l'état à OTHER
     }
     
