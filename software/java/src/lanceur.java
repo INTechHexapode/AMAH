@@ -117,16 +117,14 @@ public class lanceur {
 	
 	public static void script(Hexapode hexa)
 	{
-	    // recaler
-	    // attente du jumper
-	    // set date_debut
-	    
+        Vec2[] itineraire1 = {   new Vec2(1100, 1400),
+                new Vec2(1100, 600),
+                new Vec2(700, 400),
+                new Vec2(0, 600),
+                new Vec2(0, 1500)};
+
+        hexa.initialiser();
 	    // TODO: pouvoir se recaler en cours de match
-	    Vec2[] itineraire1 = {   new Vec2(1100, 1400),
-	                             new Vec2(1100, 600),
-	                             new Vec2(700, 400),
-	                             new Vec2(0, 600),
-	                             new Vec2(0, 1500)};
 	    hexa.suit_chemin(itineraire1);
 	    hexa.poser_fresques();
 	}

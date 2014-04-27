@@ -1,5 +1,6 @@
 package hexapode;
 
+import hexapode.capteurs.Capteur;
 import hexapode.markov.EnumEtatPatte;
 import serial.Serial;
 import util.Sleep;
@@ -12,23 +13,34 @@ import util.Sleep;
 
 public class Hexapode {
 	
+    // ATTRIBUTS D'ÉTAT
     private Vec2 position; // position à laquelle l'hexapode se croit
 	private Patte[][] pattes;
 	private Serial serie;
 	private int direction = 0;
 	private int pas = 0; // indice pour la marche
+	
+	// Utilisé afin de pouvoir changer la direction
     private static final int[] pattes_rotation = {  3,0,1,4,5,2,
                                                     4,3,0,5,2,1,
                                                     5,4,3,2,1,0,
                                                     2,5,4,1,0,3,
                                                     1,2,5,0,3,4};
+    
+    // CAPTEURS
     private boolean capteur_active = true;
-	private String[] marche;
-	private long date_debut = -1;
-	
+    private static final int distance_detection = 100;
+    private Capteur capteur;
+
+    // DÉPLACEMENTS
+    private String[] marche;
 	private double[] orthogonal = {};
 	private static final double racinede3 = Math.sqrt(3);
-	/**
+	
+	// FIN DE MATCH
+    private long date_debut = -1;
+
+    /**
 	 * Crée un hexapode. Le boolean inverser est vrai si on est rouge, faux si on est jaune.
 	 * @param serie
 	 * @param inverser
@@ -36,6 +48,7 @@ public class Hexapode {
 	public Hexapode(Serial serie, boolean inverser)
 	{
         this.serie = serie;
+        capteur = new Capteur();
 
 	    marche = new String[2];
 	    marche[0] = new String("101010");
@@ -65,7 +78,7 @@ public class Hexapode {
                 else
                     pattes[i][j] = pattes[0][pattes_rotation[(i-1)*6+j]];
         
-        // TODO tourner le capteur
+        setDirection(Direction.BAS);
 
         arret();
         desasserv();
@@ -89,9 +102,9 @@ public class Hexapode {
 	    // Afin d'avoir direction entre 0 et 5
 	    direction += 6;
 	    direction %= 6;
-	    if(direction !=  this.direction)
+	    if(direction != this.direction)
 	    {
-            // TODO: tourner le capteur
+	        capteur.tourner(direction);
             try
             {
         	    EnumEtatPatte[] sauv = new EnumEtatPatte[6];
@@ -335,12 +348,15 @@ public class Hexapode {
 	    pas %= marche.length;
 	}
 	
+	/**
+	 * Méthode qui répond à la question "y a-t-il un ennemi devant moi?"
+	 * @return true s'il y a un ennemi devant false sinon
+	 */
 	private boolean detecter_ennemi()
 	{
 	    if(!capteur_active)
 	        return false;
-	    // TODO
-	    return false;
+	    return capteur.mesure() < distance_detection;
 	}
 	
 	/**
@@ -367,7 +383,6 @@ public class Hexapode {
         {
             e.printStackTrace();
         }
-        // TODO: modifier position
 	}
 	
 	/**
@@ -412,15 +427,6 @@ public class Hexapode {
 	}
 	
 	/**
-	 * Initialise la date de début de match
-	 * @param date
-	 */
-	public void setDateDebut(long date)
-	{
-	    date_debut = date;
-	}
-
-	/**
 	 * Méthode exécutée au bout de 90s
 	 */
 	private void fin_match()
@@ -429,5 +435,14 @@ public class Hexapode {
         desasserv();
         serie.close();
     }
+	
+	public void initialiser()
+	{
+	    recaler();
+	    // TODO set position
+	    while(!capteur.jumper())
+	        Sleep.sleep(100);
+	    date_debut = System.currentTimeMillis();
+	}
 	
 }

@@ -36,7 +36,7 @@ class TriMoteur {
      * Deplacement groupé des trois moteurs
      * Lève une exception si un angle ne satisfait pas les bornes.
      * @param angles
-     * @param temps de déplaceme,t en ms
+     * @param temps de déplacement en ms
      * @throws GoToException
      */
     public void goto_etat(int[] angles, int temps) throws GoToException
