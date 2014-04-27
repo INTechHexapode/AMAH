@@ -1,7 +1,7 @@
 package hexapode;
 
+import hexapode.enums.EnumEtatPatte;
 import hexapode.exceptions.GoToException;
-import hexapode.markov.EnumEtatPatte;
 import serial.Serial;
 import util.Sleep;
 

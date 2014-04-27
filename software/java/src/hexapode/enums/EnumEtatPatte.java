@@ -1,4 +1,4 @@
-package hexapode.markov;
+package hexapode.enums;
 
 /**
  * Ne pas modifier l'ordre de l'enum; ça a une signification sémantique.

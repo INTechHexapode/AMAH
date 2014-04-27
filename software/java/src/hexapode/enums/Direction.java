@@ -1,4 +1,4 @@
-package hexapode;
+package hexapode.enums;
 
 /**
  * Enumération des directions possibles.

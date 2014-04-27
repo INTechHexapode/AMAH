@@ -1,10 +1,12 @@
 package hexapode;
 
 import hexapode.capteurs.Capteur;
+import hexapode.enums.Direction;
+import hexapode.enums.EnumEtatPatte;
+import hexapode.enums.EnumPatte;
 import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
-import hexapode.markov.EnumEtatPatte;
 import serial.Serial;
 import util.Sleep;
 
