@@ -32,7 +32,7 @@ public class Hexapode {
     
     // CAPTEURS
     private boolean capteur_actif = true;
-    private static final int distance_detection = 100; // à calculer pour l'évitement
+    private static final int distance_detection = 300; // calculé de manière à pouvoir contourner
     private Capteur capteur;
 
     // DÉPLACEMENTS
