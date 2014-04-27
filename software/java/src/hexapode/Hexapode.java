@@ -83,11 +83,11 @@ public class Hexapode {
                 else
                     pattes[i][j] = pattes[0][pattes_rotation[(i-1)*6+j]];
         
-        setDirection(Direction.BAS);
+        setDirection(Direction.HAUT);
 
         arret();
         desasserv();
-        position = new Vec2(0,0);
+        position = new Vec2(0,1000);
 	}
 			
 	/**
@@ -161,7 +161,7 @@ public class Hexapode {
     }
 
     /**
-     * Se recale dans un coin supérieur gauche (si jaune)
+     * Se recale dans un coin supérieur droit (si jaune)
      * @throws EnnemiException 
      */
     public void recaler() throws EnnemiException
@@ -512,7 +512,9 @@ public class Hexapode {
                 EnumEtatPatte[] sauv = new EnumEtatPatte[6];
                 for(int i = 0; i < 6; i++)
                     sauv[i] = pattes[direction][i].getEtat();
+                
                 this.direction = direction;
+
                 for(int i = 0; i < 6; i++)
                     if(sauv[i] != EnumEtatPatte.OTHER)
                         pattes[direction][i].goto_etat(i, sauv[i], Sleep.temps_defaut);
@@ -521,6 +523,7 @@ public class Hexapode {
             {
                 e.printStackTrace();
             }
+            System.out.println("Nouvelle direction: "+this.direction);
         }
     }
     
