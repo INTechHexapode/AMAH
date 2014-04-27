@@ -14,12 +14,13 @@ class TriMoteur {
 
 	private Serial serie;
 	private int id;
-
+	private boolean desasservi;
+	
     private static final int[] angle_min = {900, 500, 1000};  // sécurité des moteurs
     private static final int[] angle_max = {1500, 2000, 2000}; // sécurité des moteurs
     
 	/**
-	 * Construit un moteur, désasservi.
+	 * Construit trois moteurs, désasservis.
 	 * @param serie
 	 * @param id
 	 * @param etat
@@ -51,15 +52,17 @@ class TriMoteur {
                 // S500 pour régler la vitesse maximale
                 for(int i = 0; i < 3; i++)
                     ordre += "#"+Integer.toString(id+i)+"P"+Integer.toString(angles[i])+" ";
-                ordre += "T"+Integer.toString(temps);
+                if(!desasservi) // c'est la datasheet du SSC-32 qui le dit.
+                    ordre += "T"+Integer.toString(temps);
                 serie.communiquer(ordre);
             } catch (SerialException e1) {
                 e1.printStackTrace();
             }
-	}
+        desasservi = false;
+     }
 
 	/**
-	 * Désasservit le moteur
+	 * Désasservit les moteurs
 	 */
 	public void desasserv()
 	{
@@ -70,6 +73,7 @@ class TriMoteur {
     		} catch (SerialException e1) {
     			e1.printStackTrace();
     		}		
+        desasservi = true;
 	}
 	
 }
