@@ -1,5 +1,6 @@
 package hexapode;
 
+import hexapode.exceptions.GoToException;
 import hexapode.markov.EnumEtatPatte;
 import serial.Serial;
 import util.Sleep;

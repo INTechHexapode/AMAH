@@ -1,4 +1,4 @@
-package hexapode;
+package hexapode.exceptions;
 
 /**
  * Exception levée si un état n'est pas atteignable

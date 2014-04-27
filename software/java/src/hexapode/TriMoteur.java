@@ -1,5 +1,6 @@
 package hexapode;
 
+import hexapode.exceptions.GoToException;
 import serial.Serial;
 import serial.SerialException;
 

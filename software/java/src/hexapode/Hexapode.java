@@ -1,6 +1,9 @@
 package hexapode;
 
 import hexapode.capteurs.Capteur;
+import hexapode.exceptions.BordureException;
+import hexapode.exceptions.EnnemiException;
+import hexapode.exceptions.GoToException;
 import hexapode.markov.EnumEtatPatte;
 import serial.Serial;
 import util.Sleep;
@@ -29,7 +32,7 @@ public class Hexapode {
     
     // CAPTEURS
     private boolean capteur_actif = true;
-    private static final int distance_detection = 100;
+    private static final int distance_detection = 100; // à calculer pour l'évitement
     private Capteur capteur;
 
     // DÉPLACEMENTS
@@ -291,13 +294,34 @@ public class Hexapode {
         }
 	    return s;
 	}
-		
+
+	 /**
+     * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
+     * @param distance
+     * @throws EnnemiException 
+     * @throws BordureException 
+     */
+    private void avancer_pres_bord(int distance) throws EnnemiException
+    {
+        int nb_iteration = distance / ((int) Patte.avancee);
+        for(int i = 0; i < nb_iteration; i++)
+        {
+            try {
+                avancer_elementaire();
+            }
+            catch(BordureException e)
+            {                
+            }
+        }
+    }
+
 	/**
 	 * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
 	 * @param distance
 	 * @throws EnnemiException 
+	 * @throws BordureException 
 	 */
-	private void avancer(int distance) throws EnnemiException
+	private void avancer(int distance) throws EnnemiException, BordureException
 	{
 	    int nb_iteration = distance / ((int) Patte.avancee);
 	    for(int i = 0; i < nb_iteration; i++)
@@ -324,7 +348,7 @@ public class Hexapode {
 	    try
         {
             va_au_point(point, trajectoire_horaire, true);
-        } catch (EnnemiException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -336,8 +360,9 @@ public class Hexapode {
 	 * @param trajectoire_horaire
 	 * @param insiste
 	 * @throws EnnemiException
+	 * @throws BordureException 
 	 */
-	private void va_au_point(Vec2 point, boolean trajectoire_horaire, boolean insiste) throws EnnemiException
+	private void va_au_point(Vec2 point, boolean trajectoire_horaire, boolean insiste) throws EnnemiException, BordureException
 	{
 	    // On décompose le vecteur (x,y) sur la base formée par les deux vecteurs direction les plus proches de (x,y).
 	    // Cette base n'étant pas orthogonale, la formule est peu plus complexe qu'un produit scalaire.
@@ -370,22 +395,37 @@ public class Hexapode {
                 avancer((int)longueur1);
             }
         }
+        // l'exception BordureException n'est pas traité et est directement passé au cran supérieur
         catch(EnnemiException e)
         {
             if(!insiste)
                 throw e;
             try {
                 System.out.println("Evitement de l'ennemi");
-                setDirectionRelatif(-1);
                 // le coefficient 2 vient de 1/cos(PI/3).
-                avancer(distance_detection*2);
-                setDirectionRelatif(2);
-                avancer(distance_detection*2);
+                if(trajectoire_horaire)
+                {
+                    setDirectionRelatif(-1);
+                    avancer(distance_detection*2);
+                    setDirectionRelatif(2);
+                    avancer(distance_detection*2);
+                }
+                else
+                {
+                    setDirectionRelatif(1);
+                    avancer(distance_detection*2);
+                    setDirectionRelatif(-2);
+                    avancer(distance_detection*2);                    
+                }
                 va_au_point(point, trajectoire_horaire, false);
             }
             catch(EnnemiException e2)
             {
-                System.out.println("Evitement échoué. On passe au point suivant.");
+                System.out.println("Evitement échoué (on voit encore l'ennemi). On passe au point suivant.");
+            }
+            catch(BordureException e2)
+            {
+                System.out.println("Evitement échoué (on s'approche trop près du bord). On passe au point suivant.");
             }
         }
 	}
@@ -393,12 +433,15 @@ public class Hexapode {
 	/**
 	 * Avance de "Patte.avancee" millimètres dans la direction actuelle
 	 * @throws EnnemiException 
+	 * @throws BordureException 
 	 */
-	private void avancer_elementaire() throws EnnemiException
+	private void avancer_elementaire() throws EnnemiException, BordureException
 	{
         goto_etat(marche[pas]);
 	    pas++;
 	    pas %= marche.length;
+	    if(position.x > 1400 || position.x < -1400 || position.y > 900 || position.y < 100)
+	        throw new BordureException();
 	}
 	
 	/**
@@ -500,9 +543,9 @@ public class Hexapode {
 	        capteur_actif = false;
             recaler();
             setDirection(Direction.GAUCHE_BAS);
-            avancer(100);
+            avancer_pres_bord(100);
             setDirection(Direction.BAS);
-            avancer(400);
+            avancer_pres_bord(400);
         } catch (EnnemiException e)
         {
             // Exception impossible car le capteur est désactivé

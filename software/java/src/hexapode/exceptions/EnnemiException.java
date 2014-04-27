@@ -1,4 +1,4 @@
-package hexapode;
+package hexapode.exceptions;
 
 /**
  * Exception levée si un ennemi est détecté et qu'il ne semble pas vouloir partir.
