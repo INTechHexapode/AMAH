@@ -1,6 +1,7 @@
 package test;
 
 import hexapode.Hexapode;
+import hexapode.exceptions.EnnemiException;
 import hexapode.markov.Markov;
 
 public class TestCoordinationPattes extends Test {
@@ -34,7 +35,13 @@ public class TestCoordinationPattes extends Test {
 		etat_suivant = markov.next();
 		
 		//On demande � l'hexapode de se mettre en position
-		hexapode.goto_etat(etat_suivant);
+		try
+        {
+            hexapode.goto_etat(etat_suivant);
+        } catch (EnnemiException e)
+        {
+            e.printStackTrace();
+        }
 		
 		//On calcule la note en fonction de la transition 
 		calcNote();

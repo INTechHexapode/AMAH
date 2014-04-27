@@ -47,6 +47,17 @@ public class Vec2
     }
     
     @Override
+    public boolean equals(Object other)
+    {
+        if(other == null)
+            return false;
+        if(!(other instanceof Vec2))
+            return false;
+        Vec2 a = (Vec2) other;
+        return x == a.x && y == a.y;
+    }
+    
+    @Override
     public String toString()
     {
         return "("+x+","+y+")";
