@@ -18,11 +18,11 @@ class Patte {
 
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
-    private static final double r = 80;    // rayon d'une patte posée
-    public static final double avancee = 25; // avancée en millimètres
+    private static final double r = 70;    // rayon d'une patte posée
+    public static final double avancee = 40; // avancée en millimètres
     private static final double hauteur_debout = -80;
-    private static final double hauteur_baisse = -110;
-    private static final double hauteur_pousse = -120;
+    private static final double hauteur_baisse = -120;
+    private static final double hauteur_pousse = -130;
     
     // TODO Si on soulève suffisamment les pattes, peut-on passer sur les foyers?
     
@@ -106,9 +106,8 @@ class Patte {
         
         ordres[1] = (int)(300./25.*180./Math.PI*(beta+gamma)+(1500.-300./25.*90.));
         ordres[2] = (int)(-400./40.*180./Math.PI*alpha+(1600.+400./40.*90.));        
-        ordres[0] = (int)(-300./30.*(angle*180./Math.PI+90.)+1500.+300./30.*60.);
+        ordres[0] = (int)(-300./30.*((angle*180./Math.PI+90.+360)%360)+1500.+300./30.*60.);
         
-        System.out.println(ordres[0]+" "+ordres[1]+" "+ordres[2]);
         moteurs.goto_etat(ordres, temps);
     }
     
