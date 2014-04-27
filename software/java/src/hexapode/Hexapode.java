@@ -10,6 +10,7 @@ import util.Sleep;
 
 /**
  * Classe de l'hexapode, composé de six pattes. 
+ * Le haut niveau est en haut du fichier, le bas niveau en bas.
  * @author pf
  *
  */
@@ -297,38 +298,50 @@ public class Hexapode {
 	    return s;
 	}
 
-	 /**
-     * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
-     * @param distance
-     * @throws EnnemiException 
-     * @throws BordureException 
+	/**
+     * Initialise l'hexapode en le recalant et attend le jumper
      */
-    private void avancer_pres_bord(int distance) throws EnnemiException
+    public void initialiser()
     {
-        int nb_iteration = distance / ((int) Patte.avancee);
-        for(int i = 0; i < nb_iteration; i++)
+        try
         {
-            try {
-                avancer_elementaire();
-            }
-            catch(BordureException e)
-            {                
-            }
+            capteur_actif = false;
+            recaler();
+            setDirection(Direction.GAUCHE_BAS);
+            avancer_pres_bord(100);
+            setDirection(Direction.BAS);
+            avancer_pres_bord(400);
+        } catch (EnnemiException e)
+        {
+            // Exception impossible car le capteur est désactivé
+            e.printStackTrace();
+        }
+        // TODO set position
+        while(!capteur.jumper())
+            Sleep.sleep(100);
+        date_debut = System.currentTimeMillis();
+        capteur_actif = true;
+    }
+    
+    /**
+     * Fait avancer l'hexapode et fait tomber un feu d'un certain côté
+     * L'hexapode tend une patte et marche sans elle.
+     * @param distance
+     * @throws BordureException 
+     * @throws EnnemiException 
+     */
+    public void avancer_tomber_feu(int distance, EnumPatte patte) throws EnnemiException, BordureException
+    {
+        try
+        {
+            pattes[direction][patte.ordinal()].setEtatMoteurs(0, 160, 0);
+            EnumPatte[] ignore = {patte};
+            avancer_en_ignorant(distance, ignore);
+        } catch (GoToException e)
+        {
+            e.printStackTrace();
         }
     }
-
-	/**
-	 * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
-	 * @param distance
-	 * @throws EnnemiException 
-	 * @throws BordureException 
-	 */
-	private void avancer(int distance) throws EnnemiException, BordureException
-	{
-	    int nb_iteration = distance / ((int) Patte.avancee);
-	    for(int i = 0; i < nb_iteration; i++)
-	        avancer_elementaire();
-	}
 
 	/**
      * Suit un itinéraire
@@ -431,15 +444,83 @@ public class Hexapode {
             }
         }
 	}
-	
+
+
+    /**
+    * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
+    * @param distance
+    * @throws EnnemiException 
+    * @throws BordureException 
+    */
+   private void avancer_pres_bord(int distance) throws EnnemiException
+   {
+       avancer_pres_bord_en_ignorant(distance, null);
+   }
+
+    /**
+    * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
+    * Ignore certaines pattes (null pour en ignorer aucune)
+    * @param distance
+    * @param ignore
+    * @throws EnnemiException 
+    * @throws BordureException 
+    */
+   private void avancer_pres_bord_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException
+   {
+       int nb_iteration = distance / ((int) Patte.avancee);
+       for(int i = 0; i < nb_iteration; i++)
+       {
+           try {
+               avancer_elementaire(ignore);
+           }
+           catch(BordureException e)
+           {                
+           }
+       }
+   }
+
+   /**
+    * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
+    * @param distance
+    * @throws EnnemiException 
+    * @throws BordureException 
+    */
+   private void avancer(int distance) throws EnnemiException, BordureException
+   {
+       avancer_en_ignorant(distance, null);
+   }
+   
+   /**
+    * Avance en ignorant certaines pattes, qui ne bougeront donc pas.
+    * @param distance
+    * @param ignore
+    * @throws EnnemiException
+    * @throws BordureException
+    */
+   private void avancer_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, BordureException
+   {
+       int nb_iteration = distance / ((int) Patte.avancee);
+       for(int i = 0; i < nb_iteration; i++)
+           avancer_elementaire(ignore);
+   }
+
 	/**
 	 * Avance de "Patte.avancee" millimètres dans la direction actuelle
+	 * Ignore certaines pattes, qui resteront dans leur position initiale.
+	 * @param ignore
 	 * @throws EnnemiException 
 	 * @throws BordureException 
 	 */
-	private void avancer_elementaire() throws EnnemiException, BordureException
+	private void avancer_elementaire(EnumPatte[] ignore) throws EnnemiException, BordureException
 	{
-        goto_etat(marche[pas]);
+	    String prochain_pas = marche[pas];
+
+	    // On ignore certaines pattes dans le mouvement
+	    if(ignore != null)
+    	    for(EnumPatte patte: ignore)
+    	        prochain_pas = prochain_pas.substring(0,patte.ordinal()) + "?" + prochain_pas.substring(patte.ordinal()+1);
+
+	    goto_etat(prochain_pas);
 	    pas++;
 	    pas %= marche.length;
 	    if(position.x > 1500-ecart_bordure || position.x < -1500+ecart_bordure || position.y > 1000-ecart_bordure || position.y < ecart_bordure)
@@ -534,30 +615,5 @@ public class Hexapode {
         desasserv();
         serie.close();
     }
-	
-	/**
-	 * Initialise l'hexapode en le recalant et attend le jumper
-	 */
-	public void initialiser()
-	{
-	    try
-        {
-	        capteur_actif = false;
-            recaler();
-            setDirection(Direction.GAUCHE_BAS);
-            avancer_pres_bord(100);
-            setDirection(Direction.BAS);
-            avancer_pres_bord(400);
-        } catch (EnnemiException e)
-        {
-            // Exception impossible car le capteur est désactivé
-            e.printStackTrace();
-        }
-	    // TODO set position
-	    while(!capteur.jumper())
-	        Sleep.sleep(100);
-	    date_debut = System.currentTimeMillis();
-        capteur_actif = true;
-	}
-	
+		
 }
