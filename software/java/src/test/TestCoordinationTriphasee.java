@@ -109,7 +109,8 @@ public class TestCoordinationTriphasee extends Test
 
             if(etat_actuel.charAt(i) == '2' && etat_suivant.charAt(i) == '0')
                 retourArriere = true;
-            if(etat_actuel.charAt(i) == '0' && etat_suivant.charAt(i) == '0')
+            if(etat_actuel.charAt(i) == '0' && etat_suivant.charAt(i) == '0' ||
+               etat_actuel.charAt(i) == '2' && etat_suivant.charAt(i) == '2')
                 reste_sol = true;
         }
         if(reste_sol && retourArriere)
@@ -134,9 +135,20 @@ public class TestCoordinationTriphasee extends Test
     @Override
     public void init()
     {
-        markov = new Markov(3);
+        if(validation)
+            markov=chargement_matrice();
+        else
+            markov = new Markov(3);
+
         // le premier état (mis dans etat_actuel dans start)
         etat_suivant = new String("000000");
+        try
+        {
+            hexapode.goto_etat_triphase(etat_suivant);
+        } catch (EnnemiException e)
+        {
+            e.printStackTrace();
+        }        
     }
 
     @Override

@@ -52,8 +52,10 @@ public abstract class Test {
 	public void terminate()				//Fin de tous les tests
 	{
 		if(!validation)
-			sauvegarde_matrice(true);
-//		System.out.println(markov.toString());
+		{
+			sauvegarde_matrice(true);		
+			System.out.println(markov.toString());
+		}
 	}
 	
 	public int getNbIteration()			//Nombre d'it�rations � effectuer

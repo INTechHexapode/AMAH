@@ -17,7 +17,7 @@ public class Markov implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private short matrice[][];
-	private List<char[]> positionsViables;
+	private transient List<char[]> positionsViables; // transient = pas sauvegardé
 	private Random randomgenerator = new Random();
 	private int nbEtatsParPattes;
 	private int dimension;
@@ -96,7 +96,7 @@ public class Markov implements java.io.Serializable {
 			lineSum += matrice[numeroEtatActuel][j];
 			if(lineSum >= r)
 			{
-			    return Index2String((int) matrice[numeroEtatActuel][j]);
+			    return Index2String(j);
 			}
 		}
 		return null;
