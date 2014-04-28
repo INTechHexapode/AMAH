@@ -21,6 +21,7 @@ public class Markov implements java.io.Serializable {
 	private Random randomgenerator = new Random();
 	private int nbEtatsParPattes;
 	private int dimension;
+	private int diviseur = 0; // en puissance de 2
 	
 	/**
 	 * Constructeur pour une nouvelle matrice
@@ -98,26 +99,26 @@ public class Markov implements java.io.Serializable {
 			    return Index2String((int) matrice[numeroEtatActuel][j]);
 			}
 		}
-		System.out.println("ABWABWA");
 		return null;
 	}
 	
 	public void updateMatrix(int resultat, String etatPrecedent, String etatSuivant)
 	{
+	    int note_actuelle = matrice[String2Index(etatPrecedent)][String2Index(etatSuivant)];
+	    resultat >>= diviseur;
+	    // S'il y a un overflow, on divise par 2 toutes les notes de la lignes
+		// Les prochaines notes aussi seront divisées par deux.
+	    if((note_actuelle+resultat) != (int)(short)(note_actuelle+resultat))
+	    {
+	        System.out.println("Overflow des notes!");
+	        for(int i = 0; i < dimension; i++)
+	            for(int j = 0; j < dimension; j++)
+	                matrice[i][j] >>= 1;
+	        diviseur++;
+	        resultat >>= 1;
+	    }
+	        
 		matrice[String2Index(etatPrecedent)][String2Index(etatSuivant)]+=resultat;
-	}
-	
-	@Deprecated
-	public void affiche_matrice()
-	{
-		String s = "";
-		for(int i = 0; i < matrice.length; i++)
-		{
-			for(int j = 0; j < matrice.length; j++)
-				s += Double.toString(matrice[i][j])+" ";
-			s += "\n";
-		}
-		System.out.println(s);
 	}
 	
 	public short[][] getMat()
@@ -132,7 +133,7 @@ public class Markov implements java.io.Serializable {
 		{
 			num *= nbEtatsParPattes;
 			try {
-			    num += Integer.parseInt(String.valueOf(e.charAt(6-i)));
+			    num += Integer.parseInt(String.valueOf(e.charAt(5-i)));
 			}
 			catch(Exception exception)
 			{
@@ -164,7 +165,7 @@ public class Markov implements java.io.Serializable {
 		{
 			for(int j = 0; j < dimension; j++)
 			    if(matrice[i][j] != 0)
-			        s += Short.toString(matrice[i][j])+" ";
+			        s += Index2String(i)+" "+Index2String(j)+": "+Short.toString(matrice[i][j])+"\n";
 		}
 		return s;
 	}

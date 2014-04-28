@@ -53,7 +53,7 @@ public abstract class Test {
 	{
 		if(!validation)
 			sauvegarde_matrice(true);
-		System.out.println(markov.toString());
+//		System.out.println(markov.toString());
 	}
 	
 	public int getNbIteration()			//Nombre d'it�rations � effectuer

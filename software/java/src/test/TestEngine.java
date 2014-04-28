@@ -21,16 +21,18 @@ public class TestEngine {
 	
 	public void start()
 	{
+	    long debut_test = System.currentTimeMillis();
 		long lastPauseTime = System.currentTimeMillis();
         int pourcentage = 0;
+        System.out.println("0%");
 		for(int index = 0; index < test.getNbIteration(); ++index)
 		{
 			long currentTime = System.currentTimeMillis();
-			if(!((currentTime - lastPauseTime) / 1000 > test.getConsecutiveLearnTime()))
+			if((currentTime - lastPauseTime) / 1000 <= test.getConsecutiveLearnTime())
 			{
-			    if(100*(index+1)/test.getNbIteration() > pourcentage)
+			    if(100*index/(test.getNbIteration()-1) > pourcentage)
 			    {
-			        pourcentage = 100*(index+1)/test.getNbIteration();
+			        pourcentage = 100*index/(test.getNbIteration()-1);
 	                System.out.println(pourcentage+"%");
 			    }
 				test.onStart();
@@ -38,7 +40,7 @@ public class TestEngine {
 					test.validTest();
 				else
 					test.proceedTest();
-				test.onExit();
+                test.onExit();
 			}
 			else
 			{
@@ -50,6 +52,8 @@ public class TestEngine {
 			}
 		}
 		test.terminate();
+		long temps_total = System.currentTimeMillis() - debut_test; 
+		System.out.println("Temps écoulé: "+temps_total/3600000+"h "+(temps_total/60000)%60+"m "+(temps_total/1000)%60+"s.");
 	}
 
 }

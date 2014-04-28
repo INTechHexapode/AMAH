@@ -1,7 +1,5 @@
 import hexapode.Hexapode;
 import hexapode.Vec2;
-import hexapode.enums.Direction;
-import hexapode.enums.EnumPatte;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
 
@@ -45,24 +43,10 @@ public class lanceur {
 		Scanner scanner = new Scanner(System.in);
 		scanner.nextLine();
 
-        TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10, 50, 1, true, true);
+        TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10, 5000, 0, true, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
-//	        marche_triphase_5(hexa);		
-//	        hexa.avancer(200);
-        //	        hexa.setMarche(Hexapode.marche_basique);
-//	        hexa.setProfil(0);
-//            hexa.avancer(2000);
-//			hexa.poser_fresques();
-//            autre_marche_scriptee(hexa);
-//			test_validation(hexa);
-//			cercle(hexa);
-//			hexa.va_au_point(new Vec2(-300, 1500), true);
-//			marche_scriptee(hexa);
-//			hexa.avancer_tomber_feu(1000, EnumPatte.DROITE);
-//			hexa.recaler();
-		hexa.arret();
-		hexa.desasserv();
+
 		scanner.close();
 		}
 		catch(Exception e)
@@ -84,74 +68,6 @@ public class lanceur {
                 hexa.setDirectionRelatif(1);
         }	    
 	}
-
-	// Tests de marche triphasée... mais ça ne marche pas.
-	// Peut-être à réessayer avec des patins anti-dérapants.
-	   public static void marche_triphase_1(Hexapode hexa) throws GoToException, EnnemiException
-	   {
-	        for(int i = 0; i < 10; i++)
-	        {
-	            hexa.goto_etat_triphase("ACBACB");
-	            hexa.goto_etat_triphase("BACBAC");
-                hexa.goto_etat_triphase("CBACBA");
-	        }
-	        hexa.arret();
-	    }
-
-       public static void marche_triphase_4(Hexapode hexa) throws GoToException, EnnemiException
-       {
-            for(int i = 0; i < 10; i++)
-            {
-                hexa.goto_etat_triphase("ABCABC");
-                hexa.goto_etat_triphase("BCABCA");
-                hexa.goto_etat_triphase("CABCAB");
-            }
-            hexa.arret();
-        }
-
-       public static void marche_triphase_2(Hexapode hexa) throws GoToException, EnnemiException
-       {
-            for(int i = 0; i < 10; i++)
-            {
-                hexa.goto_etat_triphase("ACBCBA");
-                hexa.goto_etat_triphase("BACACB");
-                hexa.goto_etat_triphase("CBABAC");
-            }
-            hexa.arret();
-        }
-
-       public static void marche_triphase_5(Hexapode hexa) throws GoToException, EnnemiException
-       {
-            for(int i = 0; i < 10; i++)
-            {
-                hexa.goto_etat_triphase("ABCCAB");
-                hexa.goto_etat_triphase("BCAABC");
-                hexa.goto_etat_triphase("CABBCA");
-            }
-            hexa.arret();
-        }
-
-       public static void marche_triphase_3(Hexapode hexa) throws GoToException, EnnemiException
-       {
-            for(int i = 0; i < 10; i++)
-            {
-                hexa.goto_etat_triphase("ACBBAC");
-                hexa.goto_etat_triphase("BACCBA");
-                hexa.goto_etat_triphase("CBAACB");
-            }
-            hexa.arret();
-        }
-
-       public static void marche_triphase_6(Hexapode hexa) throws GoToException, EnnemiException
-       {
-            for(int i = 0; i < 10; i++)
-            {
-                hexa.goto_etat_triphase("ABCBCA");
-                hexa.goto_etat_triphase("BCACAB");
-                hexa.goto_etat_triphase("CABABC");
-            }
-            hexa.arret();
-        }
 
 	public static void marche_scriptee(Hexapode hexa) throws GoToException, EnnemiException
 	{

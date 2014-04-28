@@ -13,7 +13,8 @@ import hexapode.exceptions.EnnemiException;
 public class TestCoordinationTriphasee extends Test
 {
 
-    Random randomgenerator;
+    private boolean non_viable = false;
+    private Random randomgenerator;
     
     public TestCoordinationTriphasee(Hexapode hexapode, int nbIteration,
             double consecutiveLearnTime, double pauseTime,
@@ -54,27 +55,27 @@ public class TestCoordinationTriphasee extends Test
         * 2: AVANT
         */
         String etat_test;
-        do {
-            etat_suivant = new String(etat_actuel);
-    
-            for(int i = 0; i < 6; i++)
-                if(randomgenerator.nextBoolean()) // la patte bouge
-                {
-                    if(etat_suivant.charAt(i) == '0')
-                        etat_suivant = etat_suivant.substring(0,i) + "1" + etat_suivant.substring(i+1);
-                    else if(etat_suivant.charAt(i) == '1')
-                        etat_suivant = etat_suivant.substring(0,i) + "2" + etat_suivant.substring(i+1);
-                    else if(etat_suivant.charAt(i) == '2')
-                        etat_suivant = etat_suivant.substring(0,i) + "0" + etat_suivant.substring(i+1);
-                }
-            etat_test = new String();
-            for(int i = 0; i < 6; i++)
-                if(etat_suivant.charAt(i) == '1') // on lève la patte
-                    etat_test += "1";
-                else
-                    etat_test += "0";
-        } while(!markov.estViable(etat_test));
-        
+        etat_suivant = new String(etat_actuel);
+
+        for(int i = 0; i < 6; i++)
+            if(randomgenerator.nextBoolean()) // la patte bouge
+            {
+                if(etat_suivant.charAt(i) == '0')
+                    etat_suivant = etat_suivant.substring(0,i) + "1" + etat_suivant.substring(i+1);
+                else if(etat_suivant.charAt(i) == '1')
+                    etat_suivant = etat_suivant.substring(0,i) + "2" + etat_suivant.substring(i+1);
+                else if(etat_suivant.charAt(i) == '2')
+                    etat_suivant = etat_suivant.substring(0,i) + "0" + etat_suivant.substring(i+1);
+            }
+        etat_test = new String();
+        for(int i = 0; i < 6; i++)
+            if(etat_suivant.charAt(i) == '1' ||
+            (etat_actuel.charAt(i) == '1' && etat_suivant.charAt(i) == '2')) // on lève la patte ou on la met à l'avant: dans les deux cas, le mouvement est en l'air.
+                etat_test += "1";
+            else
+                etat_test += "0";
+        non_viable = !markov.estViable(etat_test);
+                
         //On demande � l'hexapode de se mettre en position
         try
         {
@@ -90,7 +91,11 @@ public class TestCoordinationTriphasee extends Test
     {
         boolean retourArriere = false;
         boolean reste_sol = false;
-        note = 1;
+        note = 0;
+
+        if(non_viable)
+            return;
+
         for(int i = 0; i < 6; i++)
         {
             if(etat_actuel.charAt(i) == '0' && etat_suivant.charAt(i) == '1' || 
@@ -99,6 +104,9 @@ public class TestCoordinationTriphasee extends Test
             {
                 note += 20;
             }
+            else
+                note += 5;
+
             if(etat_actuel.charAt(i) == '2' && etat_suivant.charAt(i) == '0')
                 retourArriere = true;
             if(etat_actuel.charAt(i) == '0' && etat_suivant.charAt(i) == '0')
@@ -127,7 +135,7 @@ public class TestCoordinationTriphasee extends Test
     public void init()
     {
         markov = new Markov(3);
-        etat_actuel = new String("000000");
+        // le premier état (mis dans etat_actuel dans start)
         etat_suivant = new String("000000");
     }
 
