@@ -6,12 +6,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import test.TestStep;
-import hexapode.markov.EtatHexa;
 import hexapode.markov.Markov;
 
 /**
  * Classe statique qui gere les sauvegardes et chargements.
- * @author Stud
+ * @author Stud, pf
  *
  */
 
@@ -22,11 +21,31 @@ public class DataSaver {
     	
     }
     
-    public static <T> void sauvegarder_test(EtatHexa etat, int resultat)
+    public static void supprimer(String filename)
     {
-    	TestStep stored = (TestStep)charger("steps.dat");
-    	stored.addStep(etat, resultat);
-    	sauvegarder(stored, "steps.dat");
+        // System.out.println("Suppression de " + filename);
+        try
+        {
+            (new java.io.File(filename)).delete();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T> void sauvegarder_test(String etat, int resultat)
+    {
+    	try {
+    		TestStep stored = (TestStep)charger("steps.dat");
+        	System.out.println(stored.toString());
+        	stored.addStep(etat, resultat);
+        	sauvegarder(stored, "steps.dat");
+    	}
+    	catch(Exception e)
+		{
+    		System.out.println("Création d'une nouvelle sauvegarde dans steps.dat");
+			e.printStackTrace();
+		}
     }
 
     public static void sauvegarder_matrice(Markov markov, boolean sauvegarde_intermediaire)

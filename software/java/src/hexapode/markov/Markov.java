@@ -39,7 +39,7 @@ public class Markov implements java.io.Serializable {
 	
 	private void getPositionsViables()
 	{
-		double pos[] = DataSaver.charger_matrice_equilibre("C:\\Users\\Stud\\Documents\\Workspace\\hexapode\\software\\java\\markov_equilibre.dat");
+		double pos[] = DataSaver.charger_matrice_equilibre("markov_equilibre.dat");
 		positionsViables = new LinkedList<char[]>();
 		for(int i=0; i< pos.length; i++)
 		{
@@ -51,71 +51,60 @@ public class Markov implements java.io.Serializable {
 		}
 	}
 	
-	public EtatHexa next(EtatHexa etatActuel)
+	public String getRandomPositionViable()
 	{
-		EtatPatte[] ep = new EtatPatte[6];
-		EtatHexa nEtatHexa;		
-
-		/* Ce bloc permet de piocher une transition parmis les états d'équilibres */
+		/* Ce bloc permet de piocher une transition parmis les ï¿½tats d'ï¿½quilibres */
 		int r = randomgenerator.nextInt(positionsViables.size());//Pioche un int entre 0 et 63
-		char[] binaryString =  (char[]) positionsViables.get(r);//Chope l'état de l'hexapode associé
-		for(int i = 0; i < 6; ++i)
-		{
-			if(binaryString[i] == '1' && i < binaryString.length)//On met la patte en avant si il y a un 1
-			{
-				ep[i] = new EtatPatte(EtatPatteTest2.AVANT);
-			}
-			else
-			{
-				ep[i] = new EtatPatte(EtatPatteTest2.ARRIERE);//On laise la patte en place si il y a un 0 ou si le string a moins de 6 char
-			}
-		}
-		
-		/* Ici on compare l'état actuel avec l'état objectif pour déplacer seulement les pattes qui en ont besoin */
-		
+		String out = String.valueOf(positionsViables.get(r));
 
-		nEtatHexa = new EtatHexa(ep);
-		return nEtatHexa;
-	}
-	
-	public EtatHexa next()
-	{
-		EtatPatte[] ep = new EtatPatte[6];
-/*		nb_total++;
-		int nb_debout;
-		do {
-			nb_debout = 0;
-			ep = new EtatPatte[6];
-			for(int i = 0; i < 6; i++)
-			{
-				boolean debout = randomgenerator.nextBoolean();
-				ep[i] = new EtatPatte(debout);
-				if(debout)
-					nb_debout++;
-			}
-		} while(nb_debout > 3);*/
-		for(int j = 0; j < 6; j++)
+		while(out.length() < 6)
 		{
-		int i = randomgenerator.nextInt()%4;
-		if(i == 0)
-			ep[j] = new EtatPatte(EtatPatteTest2.ARRIERE);
-		else if(i == 1)
-			ep[j] = new EtatPatte(EtatPatteTest2.AVANT);
-		else if(i == 2)
-			ep[j] = new EtatPatte(EtatPatteTest2.LEVE);
-		else
-			ep[j] = new EtatPatte(EtatPatteTest2.BAISSE);
+			out = "0" + out;
 		}
-		return new EtatHexa(ep);
+		return out;
 	}
 	
+	public String next()
+	{
+		return getRandomPositionViable();
+	}
 	
-	public void updateMatrix(int resultat, EtatHexa etatPrecedent, EtatHexa etatSuivant)
+	public String nextValidation(int numeroEtatActuel)
+	{
+		String out = new String();
+		
+		int lineSum = 0;
+		for(int j = 0; j < matrice.length; ++j)
+		{
+			lineSum += matrice[numeroEtatActuel][j];
+		}
+		
+		int r = randomgenerator.nextInt(lineSum+1);
+		
+		lineSum = 0;
+		for(int j = 0; j < matrice.length; ++j)
+		{
+			lineSum += matrice[numeroEtatActuel][j];
+			if(lineSum > r)
+			{
+				out = Integer.toBinaryString((int) matrice[numeroEtatActuel][j]);
+				break;
+			}
+		}
+        while(out.length() < 6)
+        {
+            out = "0" + out;
+        }
+		
+		return out;
+	}
+	
+	public void updateMatrix(int resultat, String etatPrecedent, String etatSuivant)
 	{
 		matrice[getNum(etatPrecedent)][getNum(etatSuivant)]+=resultat;
-		affiche_matrice();
 	}
 	
+	@Deprecated
 	public void affiche_matrice()
 	{
 		String s = "";
@@ -133,16 +122,30 @@ public class Markov implements java.io.Serializable {
 		return matrice;
 	}
 	
-	public int getNum(EtatHexa e)
+	public int getNum(String e)
 	{
 		int num = 0;
 		for(int i = 0; i < 6; i++)
 		{
 			num *= 2;
-			if(e.epattes[i].isLeve())
+			if(e.charAt(i) == '1')
 				num++;
 		}
 		return num;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String s = "";
+		for(int i = 0; i < matrice.length; i++)
+		{
+			for(int j = 0; j < matrice.length; j++)
+				s += Double.toString(matrice[i][j])+" ";
+			s += "\n";
+		}
+		System.out.println(s);
+		return s;
 	}
 	
 }
