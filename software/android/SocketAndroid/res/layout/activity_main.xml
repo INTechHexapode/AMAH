@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".MainActivity" >
+
+    <RadioGroup
+        android:id="@+id/radioColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </RadioGroup>
+    
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="174dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Etat du serveur :"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/textServerStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Déconnecté"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/openSocketButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:onClick="openSocket"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Lancer le serveur" />
+    
+    <ToggleButton
+        android:id="@+id/toggleWifiButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:onClick="toggleWifi"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textOff="Activer le point d'accès"
+        android:textOn="Désactiver le point d'accès" />
+
+</LinearLayout>
