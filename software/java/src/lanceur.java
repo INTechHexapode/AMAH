@@ -1,7 +1,7 @@
-import hexapode.Direction;
-import hexapode.EnumPatte;
 import hexapode.Hexapode;
 import hexapode.Vec2;
+import hexapode.enums.Direction;
+import hexapode.enums.EnumPatte;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
 
@@ -10,6 +10,7 @@ import java.util.Scanner;
 import serial.Serial;
 import serial.SerialManager;
 import test.TestCoordinationPattesSimulation;
+import test.TestCoordinationTriphasee;
 import test.TestEngine;
 import util.Sleep;
 
@@ -29,17 +30,27 @@ public class lanceur {
 
 	public static void main(String[] args) {
 		SerialManager serialmanager;
+		Serial serie = null;
+        Sleep.temps_defaut = 500;
 		try {
 		    serialmanager = new SerialManager();
-			Serial serie = serialmanager.getSerial("serieAsservissement");
-			Hexapode hexa = new Hexapode(serie, false);
- 			System.out.println("Attente");
-			Scanner scanner = new Scanner(System.in);
-			scanner.nextLine();
-	
-	        Sleep.temps_defaut = 200;
-	        hexa.avancer(200);
-	        //	        hexa.setMarche(Hexapode.marche_basique);
+			serie = serialmanager.getSerial("serieAsservissement");
+        } catch (Exception e) {
+            Sleep.temps_defaut = 0;
+            e.printStackTrace();
+        }               
+		try {
+		Hexapode hexa = new Hexapode(serie, false);
+		System.out.println("Attente");
+		Scanner scanner = new Scanner(System.in);
+		scanner.nextLine();
+
+        TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10, 50, 1, true, true);
+        TestEngine testEngine = new TestEngine(test);
+        testEngine.start();
+//	        marche_triphase_5(hexa);		
+//	        hexa.avancer(200);
+        //	        hexa.setMarche(Hexapode.marche_basique);
 //	        hexa.setProfil(0);
 //            hexa.avancer(2000);
 //			hexa.poser_fresques();
@@ -50,13 +61,16 @@ public class lanceur {
 //			marche_scriptee(hexa);
 //			hexa.avancer_tomber_feu(1000, EnumPatte.DROITE);
 //			hexa.recaler();
-			hexa.arret();
-			hexa.desasserv();
-			scanner.close();
-			serie.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}				
+		hexa.arret();
+		hexa.desasserv();
+		scanner.close();
+		}
+		catch(Exception e)
+		{
+		    e.printStackTrace();
+		}
+		if(serie != null)
+		    serie.close();
 	}
 
 	public static void cercle(Hexapode hexa) throws GoToException, EnnemiException
@@ -190,6 +204,7 @@ public class lanceur {
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
 	}
+
 	
 	public static void script(Hexapode hexa)
 	{
