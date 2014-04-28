@@ -64,7 +64,7 @@ public class Hexapode {
 	public Hexapode(Serial serie, boolean inverser)
 	{
         this.serie = serie;
-        capteur = new Capteur();
+        capteur = new Capteur(serie);
         
 	    orthogonal = new Vec2[2*6];
 	    for(int i = 0; i < 6; i++)
@@ -498,9 +498,9 @@ public class Hexapode {
     /**
      * L'hexapode fait l'action donnée par une chaîne ternaire.
      * Note: on peut ignorer une patte en mettant un autre caractère.
-     * A: POUSSE
-     * B: DEBOUT
-     * C: AVANT
+     * 0: POUSSE
+     * 1: DEBOUT
+     * 2: AVANT
      * @param e
      * @throws EnnemiException 
      */
@@ -526,18 +526,18 @@ public class Hexapode {
        // On ramène en arrière et on lève
         try {
            for(int i = 0; i < 6; i++)
-               if(e.charAt(i) == 'A' && pattes[direction][i].getEtat() != EnumEtatPatte.POUSSE)
+               if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.POUSSE)
                {
                    mouvement = true;
                    avance = true; // si on ramène une patte en arrière, alors c'est que l'hexapode avance
                    pattes[direction][i].goto_etat(i, EnumEtatPatte.POUSSE);
                }
-               else if(e.charAt(i) == 'B' && pattes[direction][i].getEtat() != EnumEtatPatte.DEBOUT)
+               else if(e.charAt(i) == '1' && pattes[direction][i].getEtat() != EnumEtatPatte.DEBOUT)
                {
                    mouvement = true;
                    pattes[direction][i].goto_etat(i, EnumEtatPatte.DEBOUT);
                }
-               else if(e.charAt(i) == 'C' && pattes[direction][i].getEtat() != EnumEtatPatte.AVANT)
+               else if(e.charAt(i) == '2' && pattes[direction][i].getEtat() != EnumEtatPatte.AVANT)
                {
                    mouvement = true;
                    pattes[direction][i].goto_etat(i, EnumEtatPatte.AVANT);
@@ -551,7 +551,7 @@ public class Hexapode {
                    position.add(new Vec2((int) Math.round(Patte.avancee_effective*Math.cos(Math.PI/2-direction*Math.PI/3)),
                            (int) Math.round(Patte.avancee_effective*Math.sin(Math.PI/2-direction*Math.PI/3))));
                
-               System.out.println(position);
+//               System.out.println(position);
 
            }
         }
