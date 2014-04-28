@@ -22,12 +22,17 @@ public class TestEngine {
 	public void start()
 	{
 		long lastPauseTime = System.currentTimeMillis();
+        int pourcentage = 0;
 		for(int index = 0; index < test.getNbIteration(); ++index)
 		{
 			long currentTime = System.currentTimeMillis();
 			if(!((currentTime - lastPauseTime) / 1000 > test.getConsecutiveLearnTime()))
 			{
-				System.out.println("Test "+(index+1)+" sur "+test.getNbIteration());
+			    if(100*(index+1)/test.getNbIteration() > pourcentage)
+			    {
+			        pourcentage = 100*(index+1)/test.getNbIteration();
+	                System.out.println(pourcentage+"%");
+			    }
 				test.onStart();
 				if(test.isValidation())
 					test.validTest();

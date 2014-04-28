@@ -2,7 +2,6 @@ package test;
 
 import util.DataSaver;
 import hexapode.Hexapode;
-import hexapode.markov.Markov;
 
 /**
  * Classe abstraite � h�riter pour coder les tests.
@@ -45,8 +44,8 @@ public abstract class Test {
 	
 	public void onExit()				//A la fin de chaque test
 	{
-		if(!validation)
-			sauvegarde_matrice(false);
+//		if(!validation)
+//			sauvegarde_matrice(false);
 		//DataSaver.sauvegarder_test(etat_suivant, result);
 	}
 

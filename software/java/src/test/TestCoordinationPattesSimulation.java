@@ -2,7 +2,6 @@ package test;
 
 import hexapode.Hexapode;
 import hexapode.exceptions.EnnemiException;
-import hexapode.markov.Markov;
 
 public class TestCoordinationPattesSimulation extends Test {
 
@@ -42,7 +41,7 @@ public class TestCoordinationPattesSimulation extends Test {
 
 		@Override
 		public void validTest() {
-			etat_suivant = markov.nextValidation(markov.getNum(etat_actuel));
+			etat_suivant = markov.nextValidation(markov.String2Index(etat_actuel));
 
 			//On demande � l'hexapode de se mettre en position
 			try

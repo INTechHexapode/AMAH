@@ -5,8 +5,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import test.Markov;
 import test.TestStep;
-import hexapode.markov.Markov;
 
 /**
  * Classe statique qui gere les sauvegardes et chargements.
@@ -43,7 +43,7 @@ public class DataSaver {
     	}
     	catch(Exception e)
 		{
-    		System.out.println("Création d'une nouvelle sauvegarde dans steps.dat");
+    		System.out.println("Crï¿½ation d'une nouvelle sauvegarde dans steps.dat");
 			e.printStackTrace();
 		}
     }

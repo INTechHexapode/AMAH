@@ -2,7 +2,6 @@ package test;
 
 import hexapode.Hexapode;
 import hexapode.exceptions.EnnemiException;
-import hexapode.markov.Markov;
 
 public class TestCoordinationPattes extends Test {
 
@@ -23,7 +22,6 @@ public class TestCoordinationPattes extends Test {
 		markov.updateMatrix(note, etat_actuel, etat_suivant);
 	}
 	
-
 	@Override
 	public void onBreak() {
 		hexapode.desasserv();

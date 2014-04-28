@@ -2,7 +2,6 @@ package test;
 
 import util.Sleep;
 import hexapode.Hexapode;
-import hexapode.markov.Markov;
 
 public class StandStillTest extends Test {
 
