@@ -1,17 +1,17 @@
 package test;
 
 import util.Sleep;
-import hexapode.Hexapode;
+import hexapode.Deplacement;
 
 public class StandStillTest extends Test {
 
 //	private Scanner scanner = new Scanner(System.in);
 	private boolean last_good = false;
 	
-	public StandStillTest(Hexapode hexapode, int nbIteration,
+	public StandStillTest(Deplacement deplacement, int nbIteration,
 			double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
 	{
-		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
+		super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
 	}
 
 	@Override
@@ -94,12 +94,12 @@ public class StandStillTest extends Test {
 	@Override
 	public void terminate() {
 		super.terminate();	// sauvegarde
-		hexapode.desasserv();
+		deplacement.desasserv();
 	}
 
 	@Override
 	public void onBreak() {
-		hexapode.desasserv();
+	    deplacement.desasserv();
 		last_good = false;		// afin qu'il se relève après la pause
 	}
 

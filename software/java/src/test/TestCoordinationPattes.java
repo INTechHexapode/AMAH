@@ -1,14 +1,14 @@
 package test;
 
-import hexapode.Hexapode;
+import hexapode.Deplacement;
 import hexapode.enums.Mode;
 import hexapode.exceptions.EnnemiException;
 
 public class TestCoordinationPattes extends Test {
 
-	public TestCoordinationPattes(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation) 
+	public TestCoordinationPattes(Deplacement deplacement, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation) 
 	{
-		super(hexapode, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
+		super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
 	}
 
 	@Override
@@ -18,7 +18,7 @@ public class TestCoordinationPattes extends Test {
 		
 	@Override
 	public void onBreak() {
-		hexapode.desasserv();
+	    deplacement.desasserv();
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class TestCoordinationPattes extends Test {
 		//On demande � l'hexapode de se mettre en position
 		try
         {
-            hexapode.goto_etat(etat_suivant);
+		    deplacement.goto_etat(etat_suivant);
         } catch (EnnemiException e)
         {
             e.printStackTrace();
@@ -47,14 +47,14 @@ public class TestCoordinationPattes extends Test {
 	@Override
 	public void terminate() {
 		super.terminate();	// sauvegarde
-		hexapode.desasserv();
+		deplacement.desasserv();
 	}
 
 	@Override
 	public void init() 
 	{
 		markov = new Markov(2);
-        hexapode.setMode(Mode.BIPHASE);
+		deplacement.setMode(Mode.BIPHASE);
 	}
 	
     @Override

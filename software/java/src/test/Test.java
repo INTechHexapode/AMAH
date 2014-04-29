@@ -1,7 +1,7 @@
 package test;
 
 import util.DataSaver;
-import hexapode.Hexapode;
+import hexapode.Deplacement;
 
 /**
  * Classe abstraite � h�riter pour coder les tests.
@@ -15,7 +15,7 @@ public abstract class Test {
 	protected int nbIteration;				//Nombre de tests � executer
 	protected double consecutiveLearnTime;	//Temps de test entre chaque pause en seconde
 	protected double pauseTime;				//Temps d'arr�t par pause en seconde
-	protected Hexapode hexapode;
+	protected Deplacement deplacement;
 	protected Markov markov;
 	protected boolean restartMarkov;
 	protected boolean validation;
@@ -26,9 +26,9 @@ public abstract class Test {
 	//variables utilis�es pour la sauvegarde
 	protected int result;
 	
-	public Test(Hexapode hexapode, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
+	public Test(Deplacement deplacement, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
 	{
-		this.hexapode = hexapode;
+		this.deplacement = deplacement;
 		this.nbIteration = nbIteration;
 		this.consecutiveLearnTime = consecutiveLearnTime;
 		this.pauseTime = pauseTime;

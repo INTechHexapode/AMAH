@@ -1,8 +1,6 @@
+import hexapode.Deplacement;
 import hexapode.Hexapode;
 import hexapode.Vec2;
-import hexapode.enums.Mode;
-import hexapode.exceptions.EnnemiException;
-import hexapode.exceptions.GoToException;
 
 import java.util.Scanner;
 
@@ -40,7 +38,8 @@ public class lanceur {
             e.printStackTrace();
         }
 		try {
-	    Hexapode hexa = new Hexapode(serie, false);
+//	    Hexapode hexa = new Hexapode(serie, false, false);
+        Deplacement deplacement = new Deplacement(serie, false, false);
         if(serie != null)
         {
     		System.out.println("Attente");
@@ -48,7 +47,7 @@ public class lanceur {
 		    scanner.nextLine();
         }
 
-        TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10000000, 5000, 0, true, serie != null);
+        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 10000000, 5000, 0, true, serie != null);
 //        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 10000000, 5000, 0, true, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
@@ -68,66 +67,9 @@ public class lanceur {
 		}
 	}
 
-	public static void cercle(Hexapode hexa) throws GoToException, EnnemiException
+	public static void test_validation(Deplacement deplacement)
 	{
-        Sleep.temps_defaut = 300;
-        for(int i = 0; i < 18; i++)
-        {
-            hexa.goto_etat("101010");
-            hexa.goto_etat("010101");
-            if(i % 3 == 2)
-                hexa.setDirectionRelatif(1);
-        }	    
-	}
-
-	public static void marche_scriptee(Hexapode hexa) throws GoToException, EnnemiException
-	{
-        Sleep.temps_defaut = 600;
-        for(int i = 0; i < 15; i++)
-        {
-            hexa.goto_etat("101010");
-            hexa.goto_etat("010101");
-        }
-        hexa.arret();
-	}
-
-	// TODO: comparer la précision avec la première marche scriptée
-	// par contre, celle-là est 3 fois plus lente
-	   public static void autre_marche_scriptee(Hexapode hexa) throws GoToException, EnnemiException
-	    {
-	        Sleep.temps_defaut = 300;
-	        for(int i = 0; i < 30; i++)
-	        {
-	            if(i % 2 == 0)
-	                hexa.goto_etat("101010");
-	            else
-                    hexa.goto_etat("010101");
-	            hexa.goto_etat("111111");
-                hexa.goto_etat("000000");
-	        }
-	        hexa.arret();
-	    }
-
-	public static void acceleration(Hexapode hexa) throws GoToException, EnnemiException
-	{
-        Sleep.temps_defaut = 500;
-	    for(int i = 0; i < 10; i++)
-        {
-            hexa.goto_etat("101010");
-            Sleep.temps_defaut -= 20;
-            hexa.goto_etat("010101");
-            Sleep.temps_defaut -= 20;
-        }
-        for(int i = 0; i < 5; i++)
-        {
-            hexa.goto_etat("101010");
-            hexa.goto_etat("010101");
-        }	    
-	}
-
-	public static void test_validation(Hexapode hexa)
-	{
-        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 10000, 50, 1, true, true);
+        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 10000, 50, 1, true, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
 	}
