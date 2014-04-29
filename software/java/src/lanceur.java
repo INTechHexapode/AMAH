@@ -29,6 +29,7 @@ public class lanceur {
 	public static void main(String[] args) {
 		SerialManager serialmanager;
 		Serial serie = null;
+		Scanner scanner = null;
         Sleep.temps_defaut = 500;
 		try {
 		    serialmanager = new SerialManager();
@@ -39,22 +40,27 @@ public class lanceur {
         }               
 		try {
 		Hexapode hexa = new Hexapode(serie, false);
-		System.out.println("Attente");
-		Scanner scanner = new Scanner(System.in);
-		scanner.nextLine();
+        if(serie != null)
+        {
+    		System.out.println("Attente");
+    		scanner = new Scanner(System.in);
+		    scanner.nextLine();
+        }
 
         TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10, 5000, 0, true, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
-
-		scanner.close();
+        hexa.avancer(200);
 		}
 		catch(Exception e)
 		{
 		    e.printStackTrace();
 		}
 		if(serie != null)
+		{
+	        scanner.close();
 		    serie.close();
+		}
 	}
 
 	public static void cercle(Hexapode hexa) throws GoToException, EnnemiException
