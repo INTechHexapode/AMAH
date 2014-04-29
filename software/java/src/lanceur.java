@@ -31,16 +31,16 @@ public class lanceur {
 		SerialManager serialmanager;
 		Serial serie = null;
 		Scanner scanner = null;
-        Sleep.temps_defaut = 500;
+        Sleep.temps_defaut = 300;
 		try {
 		    serialmanager = new SerialManager();
 			serie = serialmanager.getSerial("serieAsservissement");
         } catch (Exception e) {
             Sleep.temps_defaut = 0;
             e.printStackTrace();
-        }               
+        }
 		try {
-		Hexapode hexa = new Hexapode(serie, false);
+	    Hexapode hexa = new Hexapode(serie, false);
         if(serie != null)
         {
     		System.out.println("Attente");
@@ -48,11 +48,14 @@ public class lanceur {
 		    scanner.nextLine();
         }
 
-        TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10, 5000, 0, true, true);
+        TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10000000, 5000, 0, true, serie != null);
+//        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 10000000, 5000, 0, true, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
-        hexa.setMode(Mode.BIPHASE);
-        hexa.avancer(200);
+//        hexa.setMode(Mode.BIPHASE);
+//        hexa.setProfil(0);
+//        hexa.avancer(10);
+//        hexa.va_au_point(new Vec2(-100, 600), true);
 		}
 		catch(Exception e)
 		{

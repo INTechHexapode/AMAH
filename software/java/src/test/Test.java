@@ -58,7 +58,7 @@ public abstract class Test {
 		if(!validation)
 		{
 			sauvegarde_matrice(true);		
-			System.out.println(markov.toString());
+//			System.out.println(markov.toString());
 		}
 	}
 	

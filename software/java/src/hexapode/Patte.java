@@ -1,6 +1,7 @@
 package hexapode;
 
-import hexapode.enums.EnumEtatPatte;
+import hexapode.enums.EtatPatte;
+import hexapode.enums.Profil;
 import hexapode.exceptions.GoToException;
 import serial.Serial;
 import util.Sleep;
@@ -15,11 +16,9 @@ import util.Sleep;
 class Patte {
 
 	private TriMoteur moteurs;
-	private EnumEtatPatte etat;
+	private EtatPatte etat;
 
-	public static int profil_actuel = 0;
-	public static final int profil_basique = 0;
-    public static final int profil_enjamber = 1;	
+	public static Profil profil_actuel = Profil.BASIQUE;
 	
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
@@ -39,7 +38,7 @@ class Patte {
 	 */
 	public Patte(Serial serie, int id)
 	{
-        this.etat = EnumEtatPatte.OTHER;
+        this.etat = EtatPatte.OTHER;
         moteurs = new TriMoteur(serie, 5*id+1);
 	}
 	
@@ -49,7 +48,7 @@ class Patte {
 	 * @param etat
 	 * @throws GoToException
 	 */
-	public void goto_etat(int role, EnumEtatPatte etat) throws GoToException
+	public void goto_etat(int role, EtatPatte etat) throws GoToException
 	{
 	    goto_etat(role, etat, Sleep.temps_defaut);
 	}
@@ -60,10 +59,10 @@ class Patte {
 	 * @param etat: l'état souhaité
 	 * @throws GoToException 
 	 */
-	public void goto_etat(int role, EnumEtatPatte etat, int temps) throws GoToException
+	public void goto_etat(int role, EtatPatte etat, int temps) throws GoToException
 	{
 	    // On n'a pas le droit de demander à aller à OTHER (parce que ce n'est pas un endroit défini)
-	    if(etat == EnumEtatPatte.OTHER)
+	    if(etat == EtatPatte.OTHER)
 	        throw new GoToException();
 //	    if(etat == EnumEtatPatte.DEBOUT)
 //	        lever();
@@ -74,24 +73,24 @@ class Patte {
             // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
             // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
             // (ici, c'est vu du dessus; dans setEtaMoteurs, c'est vu de côté)
-            double x = r[profil_actuel]*Math.sin(angle);
+            double x = r[profil_actuel.ordinal()]*Math.sin(angle);
             double y;
-            if(etat == EnumEtatPatte.ARRIERE || etat == EnumEtatPatte.POUSSE)
-                y = r[profil_actuel]*Math.cos(angle) - avancee[profil_actuel];
-            else if(etat == EnumEtatPatte.DEBOUT || etat == EnumEtatPatte.AVANT)
-                y = r[profil_actuel]*Math.cos(angle) + avancee[profil_actuel];
+            if(etat == EtatPatte.ARRIERE || etat == EtatPatte.POUSSE)
+                y = r[profil_actuel.ordinal()]*Math.cos(angle) - avancee[profil_actuel.ordinal()];
+            else if(etat == EtatPatte.DEBOUT || etat == EtatPatte.AVANT)
+                y = r[profil_actuel.ordinal()]*Math.cos(angle) + avancee[profil_actuel.ordinal()];
             else // HAUT ou POSE
-                y = r[profil_actuel]*Math.cos(angle);
+                y = r[profil_actuel.ordinal()]*Math.cos(angle);
         
             double new_r = Math.sqrt(x*x+y*y);
             double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
             
-            if(etat == EnumEtatPatte.DEBOUT || etat == EnumEtatPatte.HAUT)
-                setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel], temps);
-            else if(etat == EnumEtatPatte.AVANT || etat == EnumEtatPatte.ARRIERE || etat == EnumEtatPatte.POSE)
-                setEtatMoteurs(new_angle, new_r, hauteur_baisse[profil_actuel], temps);
-            else if(etat == EnumEtatPatte.POUSSE)
-                setEtatMoteurs(new_angle, new_r, hauteur_pousse[profil_actuel], temps); // et on pousse un peu sur les pattes
+            if(etat == EtatPatte.DEBOUT || etat == EtatPatte.HAUT)
+                setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel.ordinal()], temps);
+            else if(etat == EtatPatte.AVANT || etat == EtatPatte.ARRIERE || etat == EtatPatte.POSE)
+                setEtatMoteurs(new_angle, new_r, hauteur_baisse[profil_actuel.ordinal()], temps);
+            else if(etat == EtatPatte.POUSSE)
+                setEtatMoteurs(new_angle, new_r, hauteur_pousse[profil_actuel.ordinal()], temps); // et on pousse un peu sur les pattes
 	    }
         this.etat = etat; // le faire après setEtatMoteur qui met l'état à OTHER
     }
@@ -118,7 +117,7 @@ class Patte {
      */    
     public void setEtatMoteurs(double angle, double x, double y, int temps) throws GoToException
     {
-        etat = EnumEtatPatte.OTHER;
+        etat = EtatPatte.OTHER;
         int[] ordres = new int[3];
         double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
         double beta = Math.PI-Math.acos((b*b-x*x-y*y-a*a)/(2*a*Math.sqrt(x*x+y*y)));
@@ -211,7 +210,7 @@ class Patte {
      */
     public void goto_etat(int m0, int m1, int m2, int temps) throws GoToException
     {
-        etat = EnumEtatPatte.OTHER;
+        etat = EtatPatte.OTHER;
         int[] ordres = {m0, m1, m2};
         moteurs.goto_etat(ordres, temps);
     }
@@ -221,7 +220,7 @@ class Patte {
 	 */
 	public void desasserv()
 	{
-        etat = EnumEtatPatte.OTHER;
+        etat = EtatPatte.OTHER;
 	    moteurs.desasserv();
 	}
 	
@@ -229,7 +228,7 @@ class Patte {
 	 * Retourne l'état de la patte
 	 * @return
 	 */
-	public EnumEtatPatte getEtat()
+	public EtatPatte getEtat()
 	{
 	    return etat;
 	}

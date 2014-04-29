@@ -6,7 +6,7 @@ package hexapode.enums;
  *
  */
 
-public enum EnumEtatPatte {
+public enum EtatPatte {
     ARRIERE(true, true),
     AVANT(true, true),
 	POUSSE(true, true),
@@ -17,18 +17,18 @@ public enum EnumEtatPatte {
 
     private boolean biphase, triphase;
 
-    private EnumEtatPatte(boolean biphase, boolean triphase)
+    private EtatPatte(boolean biphase, boolean triphase)
     {
         this.biphase = biphase;
         this.triphase = triphase;
     }    
     
-    public boolean isPossible(EnumEtatPatte e)
+    public boolean isPossible(EtatPatte e)
     {
         return e.biphase;
     }
 
-    public boolean isTriphase(EnumEtatPatte e)
+    public boolean isTriphase(EtatPatte e)
     {
         return e.triphase;
     }
