@@ -26,8 +26,8 @@ class Patte {
     private static final double[] r = {60, 60};    // rayon d'une patte posée
     private static final double[] avancee = {30, 10}; // avancée en millimètres
     private static final double[] hauteur_debout = {-80, -80};
-    private static final double[] hauteur_baisse = {-100, -150};
-    private static final double[] hauteur_pousse = {-110, -160};
+    private static final double[] hauteur_baisse = {-110, -150};
+    private static final double[] hauteur_pousse = {-120, -160};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
     public static double avancee_effective = 1; //avancee[profil_actuel]*130./50.; // mesurée
     

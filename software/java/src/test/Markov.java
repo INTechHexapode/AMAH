@@ -37,7 +37,7 @@ public class Markov implements java.io.Serializable {
 		matrice = new short[dimension][dimension];
 		for(int i = 0; i < dimension; i++)
 			for(int j = 0; j < dimension; j++)
-				matrice[i][j] = 0;
+				matrice[i][j] = 1;
 		getPositionsViables();
 	}
 	
