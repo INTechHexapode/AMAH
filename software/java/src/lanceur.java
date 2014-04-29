@@ -1,5 +1,6 @@
 import hexapode.Hexapode;
 import hexapode.Vec2;
+import hexapode.enums.Mode;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
 
@@ -50,6 +51,7 @@ public class lanceur {
         TestCoordinationTriphasee test = new TestCoordinationTriphasee(hexa, 10, 5000, 0, true, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
+        hexa.setMode(Mode.BIPHASE);
         hexa.avancer(200);
 		}
 		catch(Exception e)
