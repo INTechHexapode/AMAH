@@ -515,7 +515,7 @@ public class Hexapode {
        // On ramène en arrière et on lève
         try {
            for(int i = 0; i < 6; i++)
-               if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.POUSSE)
+               if(e.charAt(i) == '0' && pattes[direction][i].getEtat() != EnumEtatPatte.ARRIERE)
                {
                    mouvement = true;
                    avance = true; // si on ramène une patte en arrière, alors c'est que l'hexapode avance
