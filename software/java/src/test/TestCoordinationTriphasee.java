@@ -3,6 +3,7 @@ package test;
 import java.util.Random;
 
 import hexapode.Hexapode;
+import hexapode.enums.Mode;
 import hexapode.exceptions.EnnemiException;
 
 /**
@@ -31,15 +32,7 @@ public class TestCoordinationTriphasee extends Test
         etat_actuel = etat_suivant;
         note = 0;        
     }
-
-    @Override
-    public void onExit()
-    {
-        super.onExit();
-        calcNote();
-        markov.updateMatrix(note, etat_actuel, etat_suivant);
-    }
-    
+   
     @Override
     public void onBreak()
     {
@@ -79,7 +72,7 @@ public class TestCoordinationTriphasee extends Test
         //On demande � l'hexapode de se mettre en position
         try
         {
-            hexapode.goto_etat_triphase(etat_suivant);
+            hexapode.goto_etat(etat_suivant);
         } catch (EnnemiException e)
         {
             e.printStackTrace();
@@ -87,7 +80,8 @@ public class TestCoordinationTriphasee extends Test
 
     }
 
-    private void calcNote()
+    @Override
+    public void updateNote()
     {
         boolean retourArriere = false;
         boolean reste_sol = false;
@@ -125,7 +119,7 @@ public class TestCoordinationTriphasee extends Test
         //On demande � l'hexapode de se mettre en position
         try
         {
-            hexapode.goto_etat_triphase(etat_suivant);
+            hexapode.goto_etat(etat_suivant);
         } catch (EnnemiException e)
         {
             e.printStackTrace();
@@ -140,11 +134,13 @@ public class TestCoordinationTriphasee extends Test
         else
             markov = new Markov(3);
 
+        hexapode.setMode(Mode.TRIPHASE);
+        
         // le premier état (mis dans etat_actuel dans start)
         etat_suivant = new String("000000");
         try
         {
-            hexapode.goto_etat_triphase(etat_suivant);
+            hexapode.goto_etat(etat_suivant);
         } catch (EnnemiException e)
         {
             e.printStackTrace();

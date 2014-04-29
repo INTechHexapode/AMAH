@@ -41,9 +41,13 @@ public abstract class Test {
 	public abstract void proceedTest();	//Lancement de chaque test
 	public abstract void validTest();	//Routine de validation des tests (sert � refaire les tests sans apprentissage, pour valider les r�sultats)
 	public abstract void init();		//Au lancement de tous les tests
+	public abstract void updateNote();  //Met à jour la note après proceedTest
 	
 	public void onExit()				//A la fin de chaque test
 	{
+        updateNote();
+        if(!validation)
+            markov.updateMatrix(note, etat_actuel, etat_suivant);
 //		if(!validation)
 //			sauvegarde_matrice(false);
 		//DataSaver.sauvegarder_test(etat_suivant, result);

@@ -1,6 +1,7 @@
 package test;
 
 import hexapode.Hexapode;
+import hexapode.enums.Mode;
 import hexapode.exceptions.EnnemiException;
 
 public class TestCoordinationPattesSimulation extends Test {
@@ -16,17 +17,6 @@ public class TestCoordinationPattesSimulation extends Test {
 			etat_actuel = etat_suivant;
 		}
 		
-		@Override
-		public void onExit()
-		{
-			super.onExit();
-
-			//On calcule la note en fonction de la transition 
-			calcNote();
-			markov.updateMatrix(note, etat_actuel, etat_suivant);
-		}
-		
-
 		@Override
 		public void onBreak() {
 			hexapode.desasserv();
@@ -70,11 +60,15 @@ public class TestCoordinationPattesSimulation extends Test {
 			{
 				markov = new Markov(2);
 			}
+			
+			hexapode.setMode(Mode.BIPHASE);
+			
 			etat_actuel = new String("000000");
 			etat_suivant = new String("000000");
 		}
 		
-		private void calcNote()
+	    @Override
+		public void updateNote()
 		{
 			int nbRetourArriere = 0;
 

@@ -64,18 +64,23 @@ public class StandStillTest extends Test {
 	{
 		/*EtatHexa etat_suivant = markov.next();
 		
-		hexapode.goto_etat(etat_suivant);
-		Sleep.sleep(1000);
-		System.out.println("Veuillez entrer le résultat: 0 (tombé) ou 1 (debout)");
-		try {
-			result = Integer.parseInt(scanner.nextLine());		
-			last_good = (result == 1);
-			markov.updateMatrix(result, etat_suivant);
-		}
-		catch(Exception e)
-		{
-			System.out.println("Erreur: itération ignorée");
-		}*/
+		hexapode.goto_etat(etat_suivant);*/
+	}
+	
+	@Override
+	public void updateNote()
+	{
+       /*Sleep.sleep(1000);
+        System.out.println("Veuillez entrer le résultat: 0 (tombé) ou 1 (debout)");
+        try {
+            result = Integer.parseInt(scanner.nextLine());      
+            last_good = (result == 1);
+            markov.updateMatrix(result, etat_suivant);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Erreur: itération ignorée");
+        }*/
 	}
 
 	@Override
