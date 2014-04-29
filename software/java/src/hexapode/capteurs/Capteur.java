@@ -3,7 +3,14 @@ package hexapode.capteurs;
 import serial.Serial;
 import serial.SerialException;
 
-// TODO
+/**
+ * Regroupe tous les capteurs de l'hexapode.
+ * Entrée A: interrupteur de couleur (discret)
+ * Entrée B: jumper (discret)
+ * Entrée D: infrarouge (analogique)
+ * @author pf
+ *
+ */
 
 public class Capteur {
 
@@ -16,8 +23,18 @@ public class Capteur {
     
 	public int mesure()
 	{
-	    // TODO
-	    return 1000;
+	    int mesure = 1000;
+        if(serie != null)
+            try
+            {
+                serie.communiquer("VD");
+                mesure = serie.readByte();
+            } catch (SerialException e)
+            {
+                e.printStackTrace();
+            }
+	    
+	    return mesure;
 	}
 	
 	public void tourner(int direction)
@@ -34,11 +51,41 @@ public class Capteur {
             }
 	}
 	
-	public boolean jumper()
+	/**
+	 * Renvoie vrai si le jumper est retiré, faux sinon.
+	 * @return
+	 */
+	public boolean jumper() // TODO vérifier
 	{
-	    // TODO
-	    return true;
+        if(serie != null)
+            try
+            {
+                serie.communiquer("B");
+                return serie.readBoolean();
+            } catch (SerialException e)
+            {
+                e.printStackTrace();
+            }
+        return true;
 	}
-    
+
+	   /**
+     * Renvoie vrai si on est rouge, faux sinon.
+     * @return
+     */
+    public boolean getInverser() // TODO vérifier
+    {
+        if(serie != null)
+            try
+            {
+                serie.communiquer("A");
+                return serie.readBoolean();
+            } catch (SerialException e)
+            {
+                e.printStackTrace();
+            }
+        return false;
+    }
+
     
 }

@@ -139,6 +139,47 @@ public class Serial implements SerialPortEventListener
 	{
 	}
 
+	public synchronized int readByte() // TODO tester
+	{
+        synchronized(output) {
+            try
+            {
+                //On vide le buffer de la serie cote PC
+                output.flush();
+    
+                return input.read();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            return 1000;
+        }
+	}
+
+	   public synchronized boolean readBoolean() // TODO tester
+	    {
+	        synchronized(output) {
+	            int ABWABWA;
+	            try
+	            {
+	                //On vide le buffer de la serie cote PC
+	                output.flush();
+	    
+	                //evacuation de l'acquittement
+	                ABWABWA = input.read();
+	                //recuperation de l'id de la carte
+	                return (ABWABWA == 49); // TODO vérifier
+	                // 49 = '1'
+	            }
+	            catch (Exception e)
+	            {
+	                e.printStackTrace();
+	            }
+	            return false;
+	        }
+	    }
+
 	/**
 	 * Ping de la carte.
 	 * Utilisé que par createSerial de SerialManager

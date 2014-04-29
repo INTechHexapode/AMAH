@@ -1,14 +1,12 @@
 import hexapode.Deplacement;
 import hexapode.Hexapode;
 import hexapode.Vec2;
-import hexapode.enums.Mode;
 
 import java.util.Scanner;
 
 import serial.Serial;
 import serial.SerialManager;
 import test.TestCoordinationPattesSimulation;
-import test.TestCoordinationTriphasee;
 import test.TestEngine;
 import util.Sleep;
 
@@ -41,7 +39,7 @@ public class lanceur {
 		
 		try {
 //	    Hexapode hexa = new Hexapode(serie, false, false);
-        Deplacement deplacement = new Deplacement(serie, false, false);
+        Deplacement deplacement = new Deplacement(serie, false);
         if(serie != null)
         {
     		System.out.println("Attente");

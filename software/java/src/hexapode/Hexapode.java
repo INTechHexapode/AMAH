@@ -29,9 +29,9 @@ public class Hexapode {
 	 * @param maj_position. On doit parfois désactiver la mise à jour de position,
 	 * afin de ne plus lever de BordureException.
 	 */
-	public Hexapode(Serial serie, boolean inverser, boolean maj_position)
+	public Hexapode(Serial serie, boolean maj_position)
 	{
-	    deplacement = new Deplacement(serie, inverser, maj_position);
+	    deplacement = new Deplacement(serie, maj_position);
 
 	    orthogonal = new Vec2[2*6];
 

@@ -55,7 +55,7 @@ public class Deplacement
     private int pas = 0; // indice pour la marche
     private Capteur capteur;
 
-    public Deplacement(Serial serie, boolean inverser, boolean maj_position)
+    public Deplacement(Serial serie, boolean maj_position)
     {
         this.maj_position = maj_position;
         this.serie = serie;
@@ -67,11 +67,14 @@ public class Deplacement
 
         // La couleur modifie les directions.
         // On applique une symétrie verticale (la direction 1 devient la 5)
-        for (int i = 1; i < 6; i++)
-            for (int j = 0; j < 6; j++)
-                if (inverser)
+        
+        if(capteur.getInverser())
+            for (int i = 1; i < 6; i++)
+                for (int j = 0; j < 6; j++)
                     pattes[6 - i][j] = pattes[0][pattes_rotation[(i - 1) * 6 + j]];
-                else
+        else
+            for (int i = 1; i < 6; i++)
+                for (int j = 0; j < 6; j++)
                     pattes[i][j] = pattes[0][pattes_rotation[(i - 1) * 6 + j]];
 
         setDirection(Direction.HAUT);
