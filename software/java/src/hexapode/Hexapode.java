@@ -436,19 +436,8 @@ public class Hexapode {
      */
     public void goto_etat(String e) throws EnnemiException
     {
-        int attente = 0;
-        while(detecter_ennemi())
-        {
-            System.out.println("Ennemi détecté! Attente.");
-            Sleep.sleep(attente_avant_evitement/5);
-            attente++;
-            if(attente == 5)
-                throw new EnnemiException();
-        }
-
-        if(date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
-            fin_match();
-
+        verif_avant_mouvement();
+        
         boolean mouvement = false, avance = false;
 
        // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les pattes intéressées, puis on les abaisse en même temps
@@ -506,19 +495,7 @@ public class Hexapode {
      */
     public void goto_etat_triphase(String e) throws EnnemiException
     {
-        int attente = 0;
-        
-        while(detecter_ennemi())
-        {
-            System.out.println("Ennemi détecté! Attente.");
-            Sleep.sleep(attente_avant_evitement/5);
-            attente++;
-            if(attente == 5)
-                throw new EnnemiException();
-        }
-
-        if(date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
-            fin_match();
+        verif_avant_mouvement();
 
         boolean mouvement = false, avance = false;
 
@@ -561,6 +538,29 @@ public class Hexapode {
         }
 
     }
+    
+    /**
+     * Vérifications avant de bouger. On vérifie:
+     * - qu'il n'y a pas d'ennemi
+     * - que le temps n'est pas écoulé
+     * @throws EnnemiException
+     */
+    private void verif_avant_mouvement() throws EnnemiException
+    {
+        int attente = 0;
+        
+        while(detecter_ennemi())
+        {
+            System.out.println("Ennemi détecté! Attente.");
+            Sleep.sleep(attente_avant_evitement/5);
+            attente++;
+            if(attente == 5)
+                throw new EnnemiException();
+        }
+
+        if(date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
+            fin_match();        
+    }
 
 	/**
 	 * Méthode exécutée au bout de 90s
@@ -591,31 +591,36 @@ public class Hexapode {
     }
 
     /**
-     * Modifie la direction.
+     * Modifie la direction. Prend du temps, mais c'est nécessaire si on ne veut
+     * pas des mouvements parasites qui font bouger un peu le robot.
      * @param direction, entre -6 et 6
      */
     public void setDirection(int direction)
     {
-        // TODO: passer par la position arrêt?
         // Afin d'avoir direction entre 0 et 5
         direction += 6;
         direction %= 6;
         if(direction != this.direction)
         {
-            // TODO: revoir correctement, il a tendance à tourner un peu sur lui-même
             capteur.tourner(direction);
+            this.direction = direction;
             try
             {
                 EnumEtatPatte[] sauv = new EnumEtatPatte[6];
                 for(int i = 0; i < 6; i++)
                     sauv[i] = pattes[direction][i].getEtat();
                 
-                this.direction = direction;
+                arret();
 
-                for(int i = 0; i < 6; i++)
-                    if(sauv[i] != EnumEtatPatte.OTHER)
-                        pattes[direction][i].goto_etat(i, sauv[i]);
+                for(int i = 0; i < 3; i++)
+                    if(sauv[2*i] != EnumEtatPatte.OTHER)
+                        pattes[direction][2*i].goto_etat(2*i, sauv[2*i]);
                 Sleep.sleep();
+                for(int i = 0; i < 3; i++)
+                    if(sauv[2*i+1] != EnumEtatPatte.OTHER)
+                        pattes[direction][2*i+1].goto_etat(2*i+1, sauv[2*i+1]);
+                Sleep.sleep();
+
             } catch (GoToException e)
             {
                 e.printStackTrace();
@@ -673,9 +678,24 @@ public class Hexapode {
      */
     public void arret()
     {
-        for(int i = 0; i < 6; i++)
-            pattes[direction][i].lever();
-        Sleep.sleep(600);
+        try {
+            for(int i = 0; i < 3; i++)
+                pattes[direction][2*i].lever();
+            Sleep.sleep();
+            for(int i = 0; i < 3; i++)
+                pattes[direction][2*i].goto_etat(2*i, EnumEtatPatte.POSE);
+            Sleep.sleep();
+            for(int i = 0; i < 3; i++)
+                pattes[direction][2*i+1].lever();
+            Sleep.sleep();
+            for(int i = 0; i < 3; i++)
+                pattes[direction][2*i+1].goto_etat(2*i+1, EnumEtatPatte.POSE);
+            Sleep.sleep();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
