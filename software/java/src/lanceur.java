@@ -1,6 +1,7 @@
 import hexapode.Deplacement;
 import hexapode.Hexapode;
 import hexapode.Vec2;
+import hexapode.enums.Mode;
 
 import java.util.Scanner;
 
@@ -37,6 +38,7 @@ public class lanceur {
             Sleep.temps_defaut = 0;
             e.printStackTrace();
         }
+		
 		try {
 //	    Hexapode hexa = new Hexapode(serie, false, false);
         Deplacement deplacement = new Deplacement(serie, false, false);
@@ -47,8 +49,8 @@ public class lanceur {
 		    scanner.nextLine();
         }
 
-        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 10000000, 5000, 0, true, serie != null);
-//        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(hexa, 10000000, 5000, 0, true, true);
+//        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 1000000, 5000, 0, true, serie != null);
+        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 10000000, 5000, 0, true, serie != null);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
 //        hexa.setMode(Mode.BIPHASE);

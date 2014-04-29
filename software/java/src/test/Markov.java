@@ -1,5 +1,7 @@
 package test;
 
+import hexapode.enums.Mode;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +24,15 @@ public class Markov implements java.io.Serializable {
 	private int nbEtatsParPattes;
 	private int dimension;
 	private int diviseur = 0; // en puissance de 2
+	
+	/**
+	 * Chargement de l'apprentissage réalisé pour ce mode.
+	 * @param mode (biphasé ou triphasé)
+	 */
+	public static Markov getLearnedMarkov(Mode mode)
+	{
+	    return DataSaver.charger_matrice("markov_"+mode+".dat"); // TODO (créer ces fichiers)
+	}
 	
 	/**
 	 * Constructeur pour une nouvelle matrice

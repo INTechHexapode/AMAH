@@ -31,6 +31,7 @@ public class Deplacement
 
     public Vec2 position; // position à laquelle l'hexapode se croit
     // Utilisé afin de pouvoir changer la direction
+
     private static final int[] pattes_rotation = { 3, 0, 1, 4, 5, 2, 4, 3, 0,
             5, 2, 1, 5, 4, 3, 2, 1, 0, 2, 5, 4, 1, 0, 3, 1, 2, 5, 0, 3, 4 };
 
@@ -46,11 +47,9 @@ public class Deplacement
                     new String("010101"), new String("111111"),
                     new String("000000") } } };
     private Marche marche_actuelle = Marche.BASIQUE;
-    private boolean useMarkov = false; // utilise-t-on la chaîne de Markov pour
-                                       // marcher?
-    private Markov[] marcheApprise;
+    private Markov[] marcheApprise = new Markov[Mode.values().length];
     private Mode mode = Mode.BIPHASE;
-    private String prochain_pas = "000000";
+    private String pas_actuel = "000000";
     private Patte[][] pattes;
     private int direction = 0;
     private int pas = 0; // indice pour la marche
@@ -77,12 +76,14 @@ public class Deplacement
 
         setDirection(Direction.HAUT);
 
+        for(Mode m: Mode.values())
+            marcheApprise[m.ordinal()] = Markov.getLearnedMarkov(m);
+
         arret();
         desasserv();
         // position = new Vec2(1300,1800);
         position = new Vec2(0, 500);
-        // TODO charger les deux chaînes de Markov
-
+        
     }
 
     /**
@@ -297,14 +298,15 @@ public class Deplacement
 
     public String getProchainPas()
     {
-        if (useMarkov)
-            return marcheApprise[mode.ordinal()].nextValidation(prochain_pas);
+        if (marche_actuelle == Marche.MARKOV)
+            pas_actuel = marcheApprise[mode.ordinal()].nextValidation(pas_actuel);
         else
         {
             pas++;
             pas %= marche[mode.ordinal()][marche_actuelle.indice].length;
-            return marche[mode.ordinal()][marche_actuelle.indice][pas];
+            pas_actuel = marche[mode.ordinal()][marche_actuelle.indice][pas];
         }
+        return pas_actuel;
     }
 
     /**
@@ -314,7 +316,11 @@ public class Deplacement
      */
     public void setMode(Mode mode)
     {
-        this.mode = mode;
+        if(this.mode != mode)
+        {
+            this.mode = mode;
+            pas_actuel = "000000";
+        }
     }
 
     /**
@@ -324,18 +330,11 @@ public class Deplacement
      */
     public void setMarche(Marche marche)
     {
-        this.marche_actuelle = marche;
-    }
-
-    /**
-     * Seter de useMarkov. Permet de sélectionner une marche par apprentissage
-     * ou non.
-     * 
-     * @param useMarkov
-     */
-    public void setUserMarkov(boolean useMarkov)
-    {
-        this.useMarkov = useMarkov;
+        if(marche_actuelle != marche)
+        {
+            marche_actuelle = marche;
+            pas = 0;
+        }
     }
 
     /**
@@ -531,6 +530,8 @@ public class Deplacement
 
     /**
      * Met à jour la position. On n'a pas d'odométrie, on estime juste.
+     * Peut-être désactivé afin de ne pas avoir de BordureException
+     * Par contre, si c'est désactivé, va_au_point aura un comportement faussé.
      */
     private void maj_position()
     {
@@ -561,6 +562,5 @@ public class Deplacement
     {
         Patte.profil_actuel = profil;
     }
-
 
 }
