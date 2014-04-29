@@ -3,7 +3,8 @@
 *.swp
 software/build/
 software/bin/
-logs/*
 *.classpath
 *.project
 /bin
+software/java/logs/*
+
