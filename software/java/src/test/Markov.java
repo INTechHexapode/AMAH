@@ -79,7 +79,12 @@ public class Markov implements java.io.Serializable {
 	{
 		return getRandomPositionViable();
 	}
-	
+
+	public String nextValidation(String e)
+	{
+	    return nextValidation(String2Index(e));
+	}
+
 	public String nextValidation(int numeroEtatActuel)
 	{
 		int lineSum = 0;

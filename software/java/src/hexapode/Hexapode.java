@@ -11,6 +11,7 @@ import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
 import serial.Serial;
+import test.Markov;
 import util.Sleep;
 
 /**
@@ -51,8 +52,10 @@ public class Hexapode {
 	private static final double racinede3 = Math.sqrt(3);
 	private static final int ecart_bordure = 400;
 	private static final int attente_avant_evitement = 5000;
-	
+	private boolean useMarkov = false; // utilise-t-on la chaîne de Markov pour marcher?
+	private Markov[] marcheApprise;
 	private Mode mode = Mode.BIPHASE;
+	private String prochain_pas = "000000";
 	
 	// FIN DE MATCH
     private long date_debut = -1;
@@ -99,6 +102,7 @@ public class Hexapode {
         desasserv();
  //       position = new Vec2(1300,1800);
         position = new Vec2(0,500);
+        // TODO charger les deux chaînes de Markov
         }
 			
 	/**
@@ -404,7 +408,7 @@ public class Hexapode {
 	 */
 	private void avancer_elementaire(EnumPatte[] ignore) throws EnnemiException, BordureException
 	{
-	    String prochain_pas = marche[mode.ordinal()][marche_actuelle.indice][pas];
+	    prochain_pas = getProchainPas();
 
 	    // On ignore certaines pattes dans le mouvement
 	    if(ignore != null)
@@ -412,11 +416,22 @@ public class Hexapode {
     	        prochain_pas = prochain_pas.substring(0,patte.ordinal()) + "?" + prochain_pas.substring(patte.ordinal()+1);
 
 	    goto_etat(prochain_pas);
-	    pas++;
-	    pas %= marche[mode.ordinal()][marche_actuelle.indice].length;
 	    if(position.x > 1500-ecart_bordure || position.x < -1500+ecart_bordure || position.y > 2000-ecart_bordure || position.y < ecart_bordure)
 	        throw new BordureException();
 	}
+
+	private String getProchainPas()
+	{
+	    if(useMarkov)
+	        return marcheApprise[mode.ordinal()].nextValidation(prochain_pas);
+	    else
+	    {
+            pas++;
+            pas %= marche[mode.ordinal()][marche_actuelle.indice].length;
+            return marche[mode.ordinal()][marche_actuelle.indice][pas];
+	    }
+	}
+
 	
 	/**
 	 * Méthode qui répond à la question "y a-t-il un ennemi devant moi?"

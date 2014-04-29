@@ -28,7 +28,7 @@ class Patte {
     private static final double[] hauteur_baisse = {-110, -150};
     private static final double[] hauteur_pousse = {-120, -160};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
-    public static double avancee_effective = 1; //avancee[profil_actuel]*130./50.; // mesurée
+    public static double avancee_effective = avancee[profil_actuel.ordinal()]*2;
     
 	/**
 	 * Constructeur d'une patte
