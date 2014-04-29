@@ -4,6 +4,8 @@ import hexapode.capteurs.Capteur;
 import hexapode.enums.Direction;
 import hexapode.enums.EnumEtatPatte;
 import hexapode.enums.EnumPatte;
+import hexapode.enums.Marche;
+import hexapode.enums.Mode;
 import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
@@ -39,19 +41,17 @@ public class Hexapode {
     private Capteur capteur;
 
     // DÉPLACEMENTS
-    private static final String[][] marche = {  {new String("101010"), new String("010101")},
+    private static final String[][][] marche = {{  {new String("101010"), new String("010101")},
                                                 {new String("100000"), new String("100001"), new String("100101"), new String("101101"), new String("000000")},
                                                 {new String("001000"), new String("001010"), new String("001011"), new String("011011"), new String("000000")},
-                                                {new String("101010"), new String("111111"), new String("000000"), new String("010101"), new String("111111"), new String("000000")}};
-    public static final int marche_basique = 0;
-    public static final int marche_torche = 1;
-    public static final int marche_recalage = 2;
-    public static final int marche_tirer = 3;
-    private int marche_actuelle = marche_basique;
+                                                {new String("101010"), new String("111111"), new String("000000"), new String("010101"), new String("111111"), new String("000000")}}};
+    private Marche marche_actuelle = Marche.BASIQUE;
 	private Vec2[] orthogonal = {};
 	private static final double racinede3 = Math.sqrt(3);
 	private static final int ecart_bordure = 400;
 	private static final int attente_avant_evitement = 5000;
+	
+	private Mode mode = Mode.BIPHASE;
 	
 	// FIN DE MATCH
     private long date_debut = -1;
@@ -132,7 +132,7 @@ public class Hexapode {
      */
     public void poser_fresques()
     {
-        marche_actuelle = marche_recalage;
+        marche_actuelle = Marche.RECALAGE;
         try
         {
             capteur_actif = false;
@@ -154,7 +154,7 @@ public class Hexapode {
         {
             e.printStackTrace();
         }
-        marche_actuelle = marche_basique;
+        marche_actuelle = Marche.BASIQUE;
 
     }
 
@@ -164,7 +164,7 @@ public class Hexapode {
      */
     public void recaler() throws EnnemiException
     {
-        marche_actuelle = marche_recalage;
+        marche_actuelle = Marche.RECALAGE;
         setDirection(Direction.DROITE_HAUT);
         pattes[direction][EnumPatte.HAUT_DROITE.ordinal()].lever();
         pattes[direction][EnumPatte.HAUT_GAUCHE.ordinal()].lever_gauche();
@@ -172,7 +172,7 @@ public class Hexapode {
         EnumPatte[] ignore = {EnumPatte.HAUT_DROITE, EnumPatte.HAUT_GAUCHE};
         avancer_pres_bord_en_ignorant(1000, ignore);
         arret();
-        marche_actuelle = marche_basique;
+        marche_actuelle = Marche.BASIQUE;
     }
 
     /**
@@ -185,7 +185,7 @@ public class Hexapode {
      */
     public void avancer_tomber_feu(int distance, EnumPatte patteHorizontale) throws EnnemiException, BordureException
     {
-        marche_actuelle = marche_torche;
+        marche_actuelle = Marche.TORCHE;
         EnumPatte patteDebout = EnumPatte.GAUCHE;
         try
         {
@@ -199,7 +199,7 @@ public class Hexapode {
         {
             e.printStackTrace();
         }
-        marche_actuelle = marche_basique;
+        marche_actuelle = Marche.BASIQUE;
     }
 
 	/**
@@ -403,7 +403,7 @@ public class Hexapode {
 	 */
 	private void avancer_elementaire(EnumPatte[] ignore) throws EnnemiException, BordureException
 	{
-	    String prochain_pas = marche[marche_actuelle][pas];
+	    String prochain_pas = marche[mode.ordinal()][marche_actuelle.indice][pas];
 
 	    // On ignore certaines pattes dans le mouvement
 	    if(ignore != null)
@@ -412,7 +412,7 @@ public class Hexapode {
 
 	    goto_etat(prochain_pas);
 	    pas++;
-	    pas %= marche[marche_actuelle].length;
+	    pas %= marche[mode.ordinal()][marche_actuelle.indice].length;
 	    if(position.x > 1500-ecart_bordure || position.x < -1500+ecart_bordure || position.y > 2000-ecart_bordure || position.y < ecart_bordure)
 	        throw new BordureException();
 	}
@@ -428,13 +428,26 @@ public class Hexapode {
 	    return capteur.mesure() < distance_detection;
 	}
 
+	/**
+	 * L'hexapode fait une action, biphasée ou triphasée.
+	 * @param e
+	 * @throws EnnemiException
+	 */
+    public void goto_etat(String e) throws EnnemiException
+    {
+        if(mode == Mode.BIPHASE)
+            goto_etat_biphase(e);
+        else if(mode == Mode.TRIPHASE)
+            goto_etat_triphase(e);
+    }
+
     /**
      * L'hexapode fait l'action donnée par une chaîne binaire.
      * Note: on peut ignorer une patte en mettant un autre caractère.
      * @param e
      * @throws EnnemiException 
      */
-    public void goto_etat(String e) throws EnnemiException
+    private void goto_etat_biphase(String e) throws EnnemiException
     {
         verif_avant_mouvement();
         
@@ -470,8 +483,7 @@ public class Hexapode {
                Sleep.sleep(Sleep.temps_defaut/4);
 
                if(avance)
-                   position.add(new Vec2((int) Math.round(Patte.avancee_effective*Math.cos(Math.PI/2-direction*Math.PI/3)),
-                           (int) Math.round(Patte.avancee_effective*Math.sin(Math.PI/2-direction*Math.PI/3))));
+                   maj_position();
                
                System.out.println(position);
 
@@ -493,7 +505,7 @@ public class Hexapode {
      * @param e
      * @throws EnnemiException 
      */
-    public void goto_etat_triphase(String e) throws EnnemiException
+    private void goto_etat_triphase(String e) throws EnnemiException
     {
         verif_avant_mouvement();
 
@@ -524,11 +536,16 @@ public class Hexapode {
            if(mouvement)
            {
                Sleep.sleep();
+
+               for(int i = 0; i < 6; i++) // on relève
+                   if(pattes[direction][i].getEtat() == EnumEtatPatte.POUSSE)
+                       pattes[direction][i].goto_etat(i, EnumEtatPatte.ARRIERE, Sleep.temps_defaut/4);
+
                if(avance)
-                   position.add(new Vec2((int) Math.round(Patte.avancee_effective*Math.cos(Math.PI/2-direction*Math.PI/3)),
-                           (int) Math.round(Patte.avancee_effective*Math.sin(Math.PI/2-direction*Math.PI/3))));
-               
-//               System.out.println(position);
+               {
+                   Sleep.sleep(Sleep.temps_defaut/4);
+                   maj_position();
+               }
 
            }
         }
@@ -537,6 +554,16 @@ public class Hexapode {
             exception.printStackTrace();
         }
 
+    }
+    
+    /**
+     * Met à jour la position. On n'a pas d'odométrie, on estime juste.
+     */
+    private void maj_position()
+    {
+        position.add(new Vec2((int) Math.round(Patte.avancee_effective*Math.cos(Math.PI/2-direction*Math.PI/3)),
+                (int) Math.round(Patte.avancee_effective*Math.sin(Math.PI/2-direction*Math.PI/3))));
+//        System.out.println(position);
     }
     
     /**
@@ -708,12 +735,29 @@ public class Hexapode {
             pattes[direction][i].desasserv();
     }
     
+    /**
+     * Modifie les constantes (lever les pattes plus haut,
+     * faire de plus grands pas, ...)
+     */
     public void setProfil(int profil)
     {
         Patte.profil_actuel = profil;
     }
 
-    public void setMarche(int marche)
+    /**
+     * Modifie le mode (biphasé, triphasé)
+     * @param mode
+     */
+    public void setMode(Mode mode)
+    {
+        this.mode = mode;        
+    }
+    
+    /**
+     * Modifie la marche, c'est-à-dire l'enchaînement d'états.
+     * @param marche
+     */
+    public void setMarche(Marche marche)
     {
         this.marche_actuelle = marche;
     }

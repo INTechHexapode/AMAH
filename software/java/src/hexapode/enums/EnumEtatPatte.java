@@ -7,12 +7,30 @@ package hexapode.enums;
  */
 
 public enum EnumEtatPatte {
-    ARRIERE,
-    AVANT,
-	POUSSE,
-	DEBOUT, // = levé en avant
-	HAUT,
-	POSE,
-	OTHER; // Other: position manuelle, désasservi, ...
+    ARRIERE(true, true),
+    AVANT(true, true),
+	POUSSE(true, true),
+	DEBOUT(true, false), // = levé en avant
+	HAUT(false, true),
+	POSE(false, false),
+	OTHER(false, false); // Other: position manuelle, désasservi, ...
+
+    private boolean biphase, triphase;
+
+    private EnumEtatPatte(boolean biphase, boolean triphase)
+    {
+        this.biphase = biphase;
+        this.triphase = triphase;
+    }    
+    
+    public boolean isPossible(EnumEtatPatte e)
+    {
+        return e.biphase;
+    }
+
+    public boolean isTriphase(EnumEtatPatte e)
+    {
+        return e.triphase;
+    }
 
 }

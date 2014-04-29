@@ -62,11 +62,11 @@ class Patte {
 	 */
 	public void goto_etat(int role, EnumEtatPatte etat, int temps) throws GoToException
 	{
-	    // On n'a pas le droit de demander à aller à OTHER
+	    // On n'a pas le droit de demander à aller à OTHER (parce que ce n'est pas un endroit défini)
 	    if(etat == EnumEtatPatte.OTHER)
 	        throw new GoToException();
-	    if(etat == EnumEtatPatte.DEBOUT)
-	        lever();
+//	    if(etat == EnumEtatPatte.DEBOUT)
+//	        lever();
 	    else
 	    {
     	    double angle = angles[role];
