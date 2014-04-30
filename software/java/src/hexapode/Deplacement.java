@@ -317,12 +317,13 @@ public class Deplacement
      * 
      * @param mode
      */
-    public void setMode(Mode mode)
+    public void setMode(Mode mode, Marche marche)
     {
         if(this.mode != mode)
         {
             this.mode = mode;
             pas_actuel = "000000";
+            setMarche(marche);
         }
     }
 
