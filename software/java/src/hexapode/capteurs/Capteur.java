@@ -14,29 +14,36 @@ import serial.SerialException;
 
 public class Capteur {
 
-    Serial serie;
+    // Pourquoi static? PARCE QUE CE CODE EST TRÈS MOCHE, VOILÀ POURQUOI.
+    private static Serial serie;
+    private static int[] dernieres_mesures = new int[20];
+    private static int indice = 0;
+    private static int mediane = 100;
+    
     
     public Capteur(Serial serie)
     {
-        this.serie = serie;
+        Capteur.serie = serie;
     }
     
-	public int mesure()
+    /**
+     * Renvoie true si il y a un obstacle à moins de 300mm, false sinon.
+     * 300mm est ajusté à l'évitement.
+     * @return
+     */
+	public boolean mesure()
 	{
-	    int mesure = 1000;
-        if(serie != null)
-            try
-            {
-                serie.communiquer("VD");
-                mesure = serie.readByte();
-            } catch (SerialException e)
-            {
-                e.printStackTrace();
-            }
-	    
-	    return mesure;
+        // Calcul provenant des datasheets (SSC-32 et GP2Y0A21YK0F (sérieux, c'est quoi ce nom?? on dirait de la mauvaise SF))
+        // Le raisonnement: on a une entrée de 5*mesure/256 volts.
+        // On capte à moins de 300mm si l'entrée est supérieur à 0.9V
+        // On simplifie, et voilà...
+	    return mediane > 46;
 	}
-	
+		
+	/**
+	 * Tourne le capteur dans la direction désirée.
+	 * @param direction
+	 */
 	public void tourner(int direction)
 	{
 	    // TODO: calcul de l'ordre en fonction de la direction
@@ -85,6 +92,37 @@ public class Capteur {
                 e.printStackTrace();
             }
         return false;
+    }
+    
+    /**
+     * Met à jour le tableau dernieres_mesures
+     */
+    public static void genere_mesure()
+    {
+        if(serie != null)
+            try
+            {
+                serie.communiquer("VD");
+                int mesure = serie.readByte();
+                dernieres_mesures[indice] = mesure;
+                indice++;
+                indice %= dernieres_mesures.length;
+                
+                // Calcul de médiane
+            } catch (SerialException e)
+            {
+                e.printStackTrace();
+            }
+    }
+    
+    /**
+     * Met à jour la variable mediane
+     */
+    public static void genere_mediane()
+    {
+        // TODO
+        int[] copie = new int[dernieres_mesures.length];
+        System.arraycopy(dernieres_mesures, 0, copie, 0, dernieres_mesures.length);
     }
 
     

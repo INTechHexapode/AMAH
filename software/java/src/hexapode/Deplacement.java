@@ -528,7 +528,7 @@ public class Deplacement
     {
         if (!capteur_actif)
             return false;
-        return capteur.mesure() < Config.distance_detection;
+        return capteur.mesure();
     }
 
     /**
