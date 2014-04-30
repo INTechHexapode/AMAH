@@ -3,5 +3,6 @@ package hexapode.enums;
 public enum Mode
 {
     BIPHASE,
-    TRIPHASE;
+    TRIPHASE,
+    TRIPHASE_ORIENTATION;
 }

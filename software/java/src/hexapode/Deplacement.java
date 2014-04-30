@@ -166,10 +166,14 @@ public class Deplacement implements Service
      */
     public void goto_etat(String e) throws EnnemiException
     {
+        verif_avant_mouvement();
+
         if (mode == Mode.BIPHASE)
             goto_etat_biphase(e);
         else if (mode == Mode.TRIPHASE)
             goto_etat_triphase(e);
+        else if (mode == Mode.TRIPHASE_ORIENTATION)
+            goto_etat_triphase_orientation(e);
     }
 
     /**
@@ -181,7 +185,6 @@ public class Deplacement implements Service
      */
     private void goto_etat_biphase(String e) throws EnnemiException
     {
-        verif_avant_mouvement();
 
         boolean mouvement = false, avance = false;
 
@@ -247,7 +250,6 @@ public class Deplacement implements Service
      */
     private void goto_etat_triphase(String e) throws EnnemiException
     {
-        verif_avant_mouvement();
 
         boolean mouvement = false, avance = false;
 
@@ -276,6 +278,74 @@ public class Deplacement implements Service
                 {
                     mouvement = true;
                     pattes[direction][i].goto_etat(i, EtatPatte.AVANT);
+                }
+
+            // On continue le mouvement que s'il y a un mouvement à continuer
+            if (mouvement)
+            {
+                sleep.sleep();
+
+                for (int i = 0; i < 6; i++)
+                    // on relève
+                    if (pattes[direction][i].getEtat() == EtatPatte.POUSSE)
+                        pattes[direction][i].goto_etat(i, EtatPatte.ARRIERE,
+                                Sleep.temps_defaut / 4);
+
+                if (avance)
+                {
+                    sleep.sleep(Sleep.temps_defaut / 4);
+                    maj_position();
+                }
+
+            }
+        } catch (GoToException exception)
+        {
+            exception.printStackTrace();
+        }
+
+    }
+
+    /**
+     * L'hexapode fait l'action donnée par une chaîne à 5 états. Note: on peut
+     * ignorer une patte en mettant un autre caractère.
+     * 0: POUSSE
+     * 1: DEBOUT
+     * 2: AVANT vers HAUT_DROITE
+     * 3: AVANT vers HAUT
+     * 4: AVANT vers HAUT_GAUCHE
+     * 
+     * @param e
+     * @throws EnnemiException
+     */
+    private void goto_etat_triphase_orientation(String e) throws EnnemiException
+    {
+
+        boolean mouvement = false, avance = false;
+
+        // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les
+        // pattes intéressées, puis on les abaisse en même temps
+        // On ramène en arrière et on lève
+        try
+        {
+            for (int i = 0; i < 6; i++)
+                if (e.charAt(i) == '0'
+                        && pattes[direction][i].getEtat() != EtatPatte.ARRIERE)
+                {
+                    mouvement = true;
+                    avance = true; // si on ramène une patte en arrière, alors
+                                   // c'est que l'hexapode avance
+                    pattes[direction][i].goto_etat(-1, EtatPatte.POUSSE);
+                }
+                else if (e.charAt(i) == '1'
+                        && pattes[direction][i].getEtat() != EtatPatte.DEBOUT)
+                {
+                    mouvement = true;
+                    pattes[direction][i].goto_etat(i, EtatPatte.DEBOUT);
+                }
+                else
+                {
+                    mouvement = true;
+                    pattes[direction][i].goto_etat((i+3+Integer.parseInt(String.valueOf(e.charAt(i)))%6), EtatPatte.AVANT);
                 }
 
             // On continue le mouvement que s'il y a un mouvement à continuer

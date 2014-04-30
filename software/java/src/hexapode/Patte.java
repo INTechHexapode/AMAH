@@ -17,7 +17,7 @@ class Patte {
 
 	private TriMoteur moteurs;
 	private EtatPatte etat;
-
+	private int saved_role = 0;
 	public static Profil profil_actuel = Profil.BASIQUE;
 	
     // Constantes
@@ -50,7 +50,9 @@ class Patte {
 	 */
 	public void goto_etat(int role, EtatPatte etat) throws GoToException
 	{
-	    goto_etat(role, etat, Sleep.temps_defaut);
+	    if(role != -1)
+	        saved_role = role;
+        goto_etat(saved_role, etat, Sleep.temps_defaut);
 	}
 	
 	/**
