@@ -31,7 +31,7 @@ public class TestCoordinationPattesSimulation extends Test {
 
 		@Override
 		public void validTest() {
-			etat_suivant = markov.nextValidation(markov.String2Index(etat_actuel));
+			etat_suivant = markov.nextValidation(markov.string2index(etat_actuel));
 
 			//On demande � l'hexapode de se mettre en position
 			try

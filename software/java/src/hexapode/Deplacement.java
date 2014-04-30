@@ -1,10 +1,11 @@
 package hexapode;
 
+import container.Service;
 import serial.Serial;
 import test.Markov;
 import util.Config;
-import util.Sleep;
 import hexapode.capteurs.Capteur;
+import hexapode.capteurs.Sleep;
 import hexapode.enums.Direction;
 import hexapode.enums.EnumPatte;
 import hexapode.enums.EtatPatte;
@@ -23,9 +24,10 @@ import hexapode.exceptions.GoToException;
  *
  */
 
-public class Deplacement
+public class Deplacement implements Service
 {
     private Serial serie;
+    private Sleep sleep;
     
     private boolean maj_position;
 
@@ -35,7 +37,6 @@ public class Deplacement
     private static final int[] pattes_rotation = { 3, 0, 1, 4, 5, 2, 4, 3, 0,
             5, 2, 1, 5, 4, 3, 2, 1, 0, 2, 5, 4, 1, 0, 3, 1, 2, 5, 0, 3, 4 };
 
-    public boolean capteur_actif = false;
     private long date_debut = -1;
     private static final String[][][] marche = { {
             { new String("101010"), new String("010101") },
@@ -55,11 +56,14 @@ public class Deplacement
     private int pas = 0; // indice pour la marche
     private Capteur capteur;
 
-    public Deplacement(Serial serie, boolean maj_position)
+    public Deplacement(Capteur capteur, Serial serie, Sleep sleep, boolean maj_position)
     {
+        this.sleep = sleep;
         this.maj_position = maj_position;
         this.serie = serie;
         pattes = new Patte[6][6];
+        
+        this.capteur = capteur;
 
         // Pattes pour la direction 0
         for (int i = 0; i < 6; i++)
@@ -205,7 +209,7 @@ public class Deplacement
             // On continue le mouvement que s'il y a un mouvement à continuer
             if (mouvement)
             {
-                Sleep.sleep();
+                sleep.sleep();
 
                 for (int i = 0; i < 6; i++)
                     // on baisse
@@ -216,7 +220,7 @@ public class Deplacement
                         pattes[direction][i].goto_etat(i, EtatPatte.ARRIERE,
                                 Sleep.temps_defaut / 4);
 
-                Sleep.sleep(Sleep.temps_defaut / 4);
+                sleep.sleep(Sleep.temps_defaut / 4);
 
                 if (avance)
                     maj_position();
@@ -277,7 +281,7 @@ public class Deplacement
             // On continue le mouvement que s'il y a un mouvement à continuer
             if (mouvement)
             {
-                Sleep.sleep();
+                sleep.sleep();
 
                 for (int i = 0; i < 6; i++)
                     // on relève
@@ -287,7 +291,7 @@ public class Deplacement
 
                 if (avance)
                 {
-                    Sleep.sleep(Sleep.temps_defaut / 4);
+                    sleep.sleep(Sleep.temps_defaut / 4);
                     maj_position();
                 }
 
@@ -314,8 +318,20 @@ public class Deplacement
 
     /**
      * Modifie le mode (biphasé, triphasé)
+     * Utilise la marche markovienne.
      * 
      * @param mode
+     */
+    public void setMode(Mode mode)
+    {
+        setMode(mode, Marche.MARKOV);
+    }
+
+    /**
+     * Modifie le mode (biphasé, triphasé)
+     * 
+     * @param mode
+     * @param marche
      */
     public void setMode(Mode mode, Marche marche)
     {
@@ -360,17 +376,17 @@ public class Deplacement
         {
             for (int i = 0; i < 3; i++)
                 pattes[direction][2 * i].lever();
-            Sleep.sleep();
+            sleep.sleep();
             for (int i = 0; i < 3; i++)
                 pattes[direction][2 * i].goto_etat(2 * i, EtatPatte.POSE);
-            Sleep.sleep();
+            sleep.sleep();
             for (int i = 0; i < 3; i++)
                 pattes[direction][2 * i + 1].lever();
-            Sleep.sleep();
+            sleep.sleep();
             for (int i = 0; i < 3; i++)
                 pattes[direction][2 * i + 1].goto_etat(2 * i + 1,
                         EtatPatte.POSE);
-            Sleep.sleep();
+            sleep.sleep();
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -390,7 +406,7 @@ public class Deplacement
         while (detecter_ennemi())
         {
             System.out.println("Ennemi détecté! Attente.");
-            Sleep.sleep(Config.attente_avant_evitement / 5);
+            sleep.sleep(Config.attente_avant_evitement / 5);
             attente++;
             if (attente == 5)
                 throw new EnnemiException();
@@ -459,12 +475,12 @@ public class Deplacement
                 for (int i = 0; i < 3; i++)
                     if (sauv[2 * i] != EtatPatte.OTHER)
                         pattes[direction][2 * i].goto_etat(2 * i, sauv[2 * i]);
-                Sleep.sleep();
+                sleep.sleep();
                 for (int i = 0; i < 3; i++)
                     if (sauv[2 * i + 1] != EtatPatte.OTHER)
                         pattes[direction][2 * i + 1].goto_etat(2 * i + 1,
                                 sauv[2 * i + 1]);
-                Sleep.sleep();
+                sleep.sleep();
 
             } catch (GoToException e)
             {
@@ -491,7 +507,7 @@ public class Deplacement
             // On baisse toutes les pattes
             for (int i = 0; i < 6; i++)
                 pattes[direction][i].baisser();
-            Sleep.sleep(500);
+            sleep.sleep(500);
             // On abaisse un peu l'hexapode
             for (int i = 0; i < 6; i++)
                 pattes[direction][i].goto_etat(1500, 1800, 1800);
@@ -515,9 +531,9 @@ public class Deplacement
             throws GoToException
     {
         pattes[direction][num].goto_etat(angle0, angle1, angle2 - 400);
-        Sleep.sleep(100);
+        sleep.sleep(100);
         pattes[direction][num].goto_etat(angle0, angle1, angle2);
-        Sleep.sleep(100);
+        sleep.sleep(100);
     }
 
     /**
@@ -527,8 +543,6 @@ public class Deplacement
      */
     private boolean detecter_ennemi()
     {
-        if (!capteur_actif)
-            return false;
         return capteur.mesure();
     }
 
@@ -552,9 +566,9 @@ public class Deplacement
     public void wait_jumper()
     {
         while(!capteur.jumper())
-            Sleep.sleep(100);
+            sleep.sleep(100);
         date_debut = System.currentTimeMillis();
-        capteur_actif = true;
+        capteur.setOn();
         position = new Vec2(1300, 1800); // TODO ajuster
     }
 
@@ -565,6 +579,22 @@ public class Deplacement
     public void setProfil(Profil profil)
     {
         Patte.profil_actuel = profil;
+    }
+    
+    /**
+     * Allume le capteur
+     */
+    public void setCapteurOn()
+    {
+        capteur.setOn();
+    }
+
+    /**
+     * Eteint le capteur
+     */
+    public void setCapteurOff()
+    {
+        capteur.setOff();
     }
 
 }

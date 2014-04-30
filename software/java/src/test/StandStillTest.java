@@ -1,6 +1,5 @@
 package test;
 
-import util.Sleep;
 import hexapode.Deplacement;
 
 public class StandStillTest extends Test {
@@ -42,7 +41,6 @@ public class StandStillTest extends Test {
 		if(!last_good)
 		{
 			//hexapode.lay_down();
-			Sleep.sleep(100);
 		}
 	}
 	

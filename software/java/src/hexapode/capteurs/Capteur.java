@@ -1,5 +1,8 @@
 package hexapode.capteurs;
 
+import java.util.Arrays;
+
+import container.Service;
 import serial.Serial;
 import serial.SerialException;
 
@@ -12,13 +15,15 @@ import serial.SerialException;
  *
  */
 
-public class Capteur {
+public class Capteur implements Service {
 
     // Pourquoi static? PARCE QUE CE CODE EST TRÈS MOCHE, VOILÀ POURQUOI.
     private static Serial serie;
-    private static int[] dernieres_mesures = new int[20];
-    private static int indice = 0;
-    private static int mediane = 100;
+    private static final int nb_mesures = 20;
+    private int[] dernieres_mesures = new int[nb_mesures];
+    private int indice = 0;
+    private int mediane = 100;
+    private boolean on = false;
     
     
     public Capteur(Serial serie)
@@ -33,6 +38,8 @@ public class Capteur {
      */
 	public boolean mesure()
 	{
+	    if(!on)
+	        return false;
         // Calcul provenant des datasheets (SSC-32 et GP2Y0A21YK0F (sérieux, c'est quoi ce nom?? on dirait de la mauvaise SF))
         // Le raisonnement: on a une entrée de 5*mesure/256 volts.
         // On capte à moins de 300mm si l'entrée est supérieur à 0.9V
@@ -62,7 +69,7 @@ public class Capteur {
 	 * Renvoie vrai si le jumper est retiré, faux sinon.
 	 * @return
 	 */
-	public boolean jumper() // TODO vérifier
+	public boolean jumper()
 	{
         if(serie != null)
             try
@@ -80,7 +87,7 @@ public class Capteur {
      * Renvoie vrai si on est rouge, faux sinon.
      * @return
      */
-    public boolean getInverser() // TODO vérifier
+    public boolean getInverser()
     {
         if(serie != null)
             try
@@ -97,7 +104,7 @@ public class Capteur {
     /**
      * Met à jour le tableau dernieres_mesures
      */
-    public static void genere_mesure()
+    public void genere_mesure()
     {
         if(serie != null)
             try
@@ -106,7 +113,7 @@ public class Capteur {
                 int mesure = serie.readByte();
                 dernieres_mesures[indice] = mesure;
                 indice++;
-                indice %= dernieres_mesures.length;
+                indice %= nb_mesures;
                 
                 // Calcul de médiane
             } catch (SerialException e)
@@ -118,12 +125,27 @@ public class Capteur {
     /**
      * Met à jour la variable mediane
      */
-    public static void genere_mediane()
+    public void genere_mediane()
     {
-        // TODO
-        int[] copie = new int[dernieres_mesures.length];
-        System.arraycopy(dernieres_mesures, 0, copie, 0, dernieres_mesures.length);
+        int[] copie = new int[nb_mesures];
+        System.arraycopy(dernieres_mesures, 0, copie, 0, nb_mesures);
+        Arrays.sort(copie);
+        mediane = copie[nb_mesures/2];
     }
 
+    public void setOn()
+    {
+        on = true;
+    }
+    
+    public void setOff()
+    {
+        on = false;
+    }
+    
+    public boolean isOn()
+    {
+        return on;
+    }
     
 }

@@ -114,7 +114,7 @@ public class TestCoordinationTriphasee extends Test
     @Override
     public void validTest()
     {
-        etat_suivant = markov.nextValidation(markov.String2Index(etat_actuel));
+        etat_suivant = markov.nextValidation(markov.string2index(etat_actuel));
         System.out.println(etat_suivant);
         //On demande � l'hexapode de se mettre en position
         try

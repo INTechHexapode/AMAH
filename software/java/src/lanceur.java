@@ -1,14 +1,19 @@
 import hexapode.Deplacement;
 import hexapode.Hexapode;
 import hexapode.Vec2;
+import hexapode.capteurs.Capteur;
+import hexapode.capteurs.Sleep;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
+import container.Container;
 import serial.Serial;
 import serial.SerialManager;
 import test.TestCoordinationPattesSimulation;
+import test.TestCoordinationTriphasee;
 import test.TestEngine;
-import util.Sleep;
 
 /*
  * TODO list (méca/élec)
@@ -34,27 +39,28 @@ public class lanceur {
 			serie = serialmanager.getSerial("serieAsservissement");
         } catch (Exception e) {
             Sleep.temps_defaut = 0;
-            e.printStackTrace();
+            System.out.println("Pas de série: "+e);
         }
 		
 		try {
-//	    Hexapode hexa = new Hexapode(serie, false, false);
-        Deplacement deplacement = new Deplacement(serie, false);
-        if(serie != null)
-        {
-    		System.out.println("Attente");
-    		scanner = new Scanner(System.in);
-		    scanner.nextLine();
-        }
-
-//        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 1000000, 5000, 0, true, serie != null);
-        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 10000000, 5000, 0, true, serie != null);
-        TestEngine testEngine = new TestEngine(test);
-        testEngine.start();
-//        hexa.setMode(Mode.BIPHASE);
-//        hexa.setProfil(0);
-//        hexa.avancer(10);
-//        hexa.va_au_point(new Vec2(-100, 600), true);
+		    Container container = new Container(serie, false);
+    	    Hexapode hexa = (Hexapode)container.getService("Hexapode");
+    	    Deplacement deplacement = (Deplacement)container.getService("Deplacement");
+            if(serie != null)
+            {
+        		System.out.println("Attente");
+        		scanner = new Scanner(System.in);
+    		    scanner.nextLine();
+            }
+  
+            Capteur capteur = new Capteur(serie);
+            
+    //        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 1000000, 5000, 0, true, serie != null);
+//            TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 100000, 5000, 0, true, true);
+//            TestEngine testEngine = new TestEngine(test);
+//            testEngine.start();
+            hexa.avancer(10);
+    //        hexa.va_au_point(new Vec2(-100, 600), true);
 		}
 		catch(Exception e)
 		{

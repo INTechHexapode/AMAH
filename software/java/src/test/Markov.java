@@ -2,6 +2,7 @@ package test;
 
 import hexapode.enums.Mode;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -18,9 +19,10 @@ import util.DataSaver;
 public class Markov implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private short matrice[][];
+	private transient short matrice[][]; // utilisé pour le remplissage seulement, à ne pas sauvegarder
 	private transient List<char[]> positionsViables; // transient = pas sauvegardé
-	private Random randomgenerator = new Random();
+	private ArrayList<ArrayList<IntPair>> compressed_matrix;
+	private transient Random randomgenerator = new Random();
 	private int nbEtatsParPattes;
 	private int dimension;
 	private int diviseur = 0; // en puissance de 2
@@ -31,9 +33,30 @@ public class Markov implements java.io.Serializable {
 	 */
 	public static Markov getLearnedMarkov(Mode mode)
 	{
-	    return DataSaver.charger_matrice("markov_"+mode+".dat"); // TODO (créer ces fichiers)
+	    return DataSaver.charger_matrice("markov_"+mode+".dat");
 	}
 	
+	/**
+	 * Prépare l'objet pour la sauvegarde, en remplissant compressed_matrix
+	 */
+	public void prepareForSave()
+	{
+	    compressed_matrix = new ArrayList<ArrayList<IntPair>>();
+	    for(int i = 0; i < dimension; i++)
+	    {
+	        ArrayList<IntPair> ligne = new ArrayList<IntPair>();
+	        int lineSum = 0;
+	        for(int j = 0; j < dimension; j++)
+	            lineSum += matrice[i][j];
+            for(int j = 0; j < dimension; j++)
+                if(matrice[i][j]*dimension > lineSum) // on ne conserve que ceux qui sont supérieurs à la moyenne
+                    ligne.add(new IntPair(j, matrice[i][j]));
+            if(ligne.isEmpty())
+                ligne.add(new IntPair(randomgenerator.nextInt(dimension),1));
+	        compressed_matrix.add(ligne);
+	    }
+	}
+
 	/**
 	 * Constructeur pour une nouvelle matrice
 	 * @param dimension
@@ -48,7 +71,7 @@ public class Markov implements java.io.Serializable {
 		matrice = new short[dimension][dimension];
 		for(int i = 0; i < dimension; i++)
 			for(int j = 0; j < dimension; j++)
-				matrice[i][j] = 1;
+				matrice[i][j] = 0;
 		getPositionsViables();
 	}
 	
@@ -65,6 +88,9 @@ public class Markov implements java.io.Serializable {
 	    return false;
 	}
 	
+	/**
+	 * Charge les positions stables.
+	 */
 	private void getPositionsViables()
 	{
 		double pos[] = DataSaver.charger_matrice_equilibre("markov_equilibre.dat");
@@ -74,7 +100,11 @@ public class Markov implements java.io.Serializable {
 				positionsViables.add(Integer.toBinaryString(i).toCharArray());
 	}
 	
-	public String getRandomPositionViable()
+	/**
+	 * Renvoie une position stable au hasard.
+	 * @return
+	 */
+	private String getRandomPositionViable()
 	{
 		/* Ce bloc permet de piocher une transition parmi les �tats d'�quilibres */
 		int r = randomgenerator.nextInt(positionsViables.size());//Pioche un int
@@ -86,41 +116,66 @@ public class Markov implements java.io.Serializable {
 		return out;
 	}
 	
+	/**
+	 * Donne le prochain état de manière équiprobable. Utilisé pour les tests.
+	 * @return
+	 */
 	public String next()
 	{
 		return getRandomPositionViable();
 	}
 
+	/**
+	 * Surcouche user-friendly de nextValidation
+	 * @param e
+	 * @return
+	 */
 	public String nextValidation(String e)
 	{
-	    return nextValidation(String2Index(e));
+	    return nextValidation(string2index(e));
 	}
 
+	/**
+	 * Renvoie la prochain état en validation. Utilise les résultats obtenus
+	 * précédemment et stockés dans compressed_matrix
+	 * @param numeroEtatActuel
+	 * @return
+	 */
 	public String nextValidation(int numeroEtatActuel)
 	{
+	    if(compressed_matrix == null)
+	        return null;
+	    
 		int lineSum = 0;
-		for(int j = 0; j < dimension; ++j)
-		{
-			lineSum += matrice[numeroEtatActuel][j];
-		}
 		
-		int r = randomgenerator.nextInt(lineSum+1);
+		for(IntPair e: compressed_matrix.get(numeroEtatActuel))
+			lineSum += e.score;
+		
+		if(lineSum == 0)
+		    return index2string(randomgenerator.nextInt(dimension));
+		
+		int r = randomgenerator.nextInt(lineSum);
 		
 		lineSum = 0;
-		for(int j = 0; j < dimension; ++j)
+        for(IntPair e: compressed_matrix.get(numeroEtatActuel))
 		{
-			lineSum += matrice[numeroEtatActuel][j];
-			if(lineSum >= r)
-			{
-			    return Index2String(j);
-			}
+			lineSum += e.score;
+			if(lineSum > r)
+			    return index2string(e.etat_suivant);
 		}
+		// Cas impossible
 		return null;
 	}
 	
+	/**
+	 * Met à jour la matrice avec le résultat d'un test.
+	 * @param resultat
+	 * @param etatPrecedent
+	 * @param etatSuivant
+	 */
 	public void updateMatrix(int resultat, String etatPrecedent, String etatSuivant)
 	{
-	    int note_actuelle = matrice[String2Index(etatPrecedent)][String2Index(etatSuivant)];
+	    int note_actuelle = matrice[string2index(etatPrecedent)][string2index(etatSuivant)];
 	    resultat >>= diviseur;
 	    // S'il y a un overflow, on divise par 2 toutes les notes de la lignes
 		// Les prochaines notes aussi seront divisées par deux.
@@ -134,15 +189,15 @@ public class Markov implements java.io.Serializable {
 	        resultat >>= 1;
 	    }
 	        
-		matrice[String2Index(etatPrecedent)][String2Index(etatSuivant)]+=resultat;
+		matrice[string2index(etatPrecedent)][string2index(etatSuivant)]+=resultat;
 	}
 	
-	public short[][] getMat()
-	{
-		return matrice;
-	}
-	
-	public int String2Index(String e)
+	/**
+	 * Convertit, à partir du nombre d'états, un String en nombre.
+	 * @param e
+	 * @return
+	 */
+	public int string2index(String e)
 	{
 		int num = 0;
 		for(int i = 0; i < 6; i++)
@@ -158,7 +213,12 @@ public class Markov implements java.io.Serializable {
 		return num;
 	}
 
-	   public String Index2String(int num)
+	/**
+     * Convertit, à partir du nombre d'états, un nombre en String.
+	 * @param num
+	 * @return
+	 */
+	   public String index2string(int num)
 	    {
 	        String out = new String();
 	        for(int i = 0; i < 6; i++)
@@ -178,11 +238,8 @@ public class Markov implements java.io.Serializable {
 	{
 		String s = "";
 		for(int i = 0; i < dimension; i++)
-		{
-			for(int j = 0; j < dimension; j++)
-			    if(matrice[i][j] != 0)
-			        s += Index2String(i)+" "+Index2String(j)+": "+Short.toString(matrice[i][j])+"\n";
-		}
+			for(IntPair e: compressed_matrix.get(i))
+			    s += index2string(i)+" "+index2string(e.etat_suivant)+": "+e.score+"\n";
 		return s;
 	}
 	

@@ -50,6 +50,7 @@ public class DataSaver {
 
     public static void sauvegarder_matrice(Markov markov, boolean sauvegarde_intermediaire)
     {
+        markov.prepareForSave();
 			if(sauvegarde_intermediaire)
 			{
 		    	try {

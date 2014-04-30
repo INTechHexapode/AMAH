@@ -1,11 +1,11 @@
 package hexapode;
 
+import container.Service;
 import hexapode.enums.Direction;
 import hexapode.enums.EnumPatte;
 import hexapode.enums.Marche;
 import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
-import serial.Serial;
 import util.Config;
 
 /**
@@ -15,9 +15,8 @@ import util.Config;
  *
  */
 
-public class Hexapode {
+public class Hexapode implements Service {
 	
-    // DÉPLACEMENTS
     private Deplacement deplacement;
 	private Vec2[] orthogonal = {};
 	private static final double racinede3 = Math.sqrt(3);
@@ -29,10 +28,9 @@ public class Hexapode {
 	 * @param maj_position. On doit parfois désactiver la mise à jour de position,
 	 * afin de ne plus lever de BordureException.
 	 */
-	public Hexapode(Serial serie, boolean maj_position)
+	public Hexapode(Deplacement deplacement)
 	{
-	    deplacement = new Deplacement(serie, maj_position);
-
+	    this.deplacement = deplacement;
 	    orthogonal = new Vec2[2*6];
 
 	    for(int i = 0; i < 6; i++)
@@ -77,7 +75,7 @@ public class Hexapode {
         deplacement.setMarche(Marche.RECALAGE);
         try
         {
-            deplacement.capteur_actif = false;
+            deplacement.setCapteurOff();
             deplacement.setDirection(Direction.HAUT);
             
             // On lève les pattes 0 et 3
@@ -91,7 +89,7 @@ public class Hexapode {
             // TODO set position
             
             deplacement.setDirection(Direction.BAS);
-            deplacement.capteur_actif = true;
+            deplacement.setCapteurOn();
         } catch (Exception e)
         {
             e.printStackTrace();

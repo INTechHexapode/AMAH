@@ -1,10 +1,10 @@
 package hexapode;
 
+import hexapode.capteurs.Sleep;
 import hexapode.enums.EtatPatte;
 import hexapode.enums.Profil;
 import hexapode.exceptions.GoToException;
 import serial.Serial;
-import util.Sleep;
 
 	/**
 	 * Classe des pattes, qui contiennent chacune 3 moteurs. Visibilité en "friendly"
