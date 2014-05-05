@@ -15,9 +15,15 @@ public class SocketClient {
 	public enum Request
 	{
 		CLOSE,
-		SPEED_X,
-		SPEED_Y,
-		SPEED_Z
+		LIN_ACC_X,
+		LIN_ACC_Y,
+		LIN_ACC_Z,
+		GYRO_X,
+		GYRO_Y,
+		GYRO_Z,
+		AZIMUTH,
+		PITCH,
+		ROLL
 	};
 	
 	public SocketClient()
