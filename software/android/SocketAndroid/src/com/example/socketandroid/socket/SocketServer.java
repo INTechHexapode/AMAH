@@ -60,19 +60,44 @@ public class SocketServer extends AsyncTask<Void, Integer, Void> {
 				String request = input.readLine();
 				switch(String.valueOf(request))
 				{
-				case "SPEED_X":
-					out.println(SensorsPreviewActivity.getxdistance());
+				case "LIN_ACC_X":
+					out.println(SensorsPreviewActivity.getxLinearAccelerometer());
 					out.flush();
 					break;
-				case "SPEED_Y":
-					out.println(SensorsPreviewActivity.getydistance());
+				case "LIN_ACC_Y":
+					out.println(SensorsPreviewActivity.getyLinearAccelerometer());
 					out.flush();
 					break;
-				case "SPEED_Z":
-					out.println(SensorsPreviewActivity.getzdistance());
+				case "LIN_ACC_Z":
+					out.println(SensorsPreviewActivity.getzLinearAccelerometer());
+					out.flush();
+					break;
+				case "GYRO_X":
+					out.println(SensorsPreviewActivity.getxGyroscope());
+					out.flush();
+					break;
+				case "GYRO_Y":
+					out.println(SensorsPreviewActivity.getyGyroscope());
+					out.flush();
+					break;
+				case "GYRO_Z":
+					out.println(SensorsPreviewActivity.getzGyroscope());
+					out.flush();
+					break;
+				case "AZIMUTH":
+					out.println(SensorsPreviewActivity.getAzimuth());
+					out.flush();
+					break;
+				case "PITCH":
+					out.println(SensorsPreviewActivity.getPitch());
+					out.flush();
+					break;
+				case "ROLL":
+					out.println(SensorsPreviewActivity.getRoll());
 					out.flush();
 					break;
 				case "CLOSE":
+					Log.d(TAG,"Stop le ");
 					isServerEnabled = false;
 					break;
 				default:
