@@ -12,37 +12,39 @@ import com.example.socketandroid.R;
 
 public class SensorsPreviewActivity extends Activity implements SensorEventListener {
 
+	@SuppressWarnings("unused")
 	private final static String TAG = "INTech-SensorsPreview";
 
 	private SensorManager sensorManager;
 	private Sensor accelerometer;
 	private Sensor linearAccelerometer;
 	private Sensor gyroscope;
+	private Sensor magnetic;
 
-	private float xGyroscope;
-	private float yGyroscope;
-	private float zGyroscope;
-	private float xAccelerometer;
-	private float yAccelerometer;
-	private float zAccelerometer;
+	private static float xGyroscope;
+	private static float yGyroscope;
+	private static float zGyroscope;
+	private static float xAccelerometer;
+	private static float yAccelerometer;
+	private static float zAccelerometer;
 	private static float xLinearAccelerometer;
 	private static float yLinearAccelerometer;
 	private static float zLinearAccelerometer;
-
-	private static float xdistance = 0;
-	private static float ydistance = 0;
-	private static float zdistance = 0;
+	private static float xMagnetic;
+	private static float yMagnetic;
+	private static float zMagnetic;
 	
-	private static final float ALPHA = 0.8f;
+	private float[] resultMatrix = new float[9];
+	float[] values = new float[3];
+	float[] acceleromterVector = new float[3];
+	float[] magneticVector = new float[3];
 
-	private long oldTimeLinearAcceleration = 0;
+	private static float azimuth;
 
-	private static float xspeed = 0;
+	private static float pitch;
 
-	private static float yspeed = 0;
-
-	private static float zspeed = 0;
-
+	private static float roll;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,10 +58,12 @@ public class SensorsPreviewActivity extends Activity implements SensorEventListe
 		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		linearAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 		gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+		magnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(this, magnetic, SensorManager.SENSOR_DELAY_UI);
 
 	}
 
@@ -68,6 +72,7 @@ public class SensorsPreviewActivity extends Activity implements SensorEventListe
 		sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
 		sensorManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_UI);
 		sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(this, magnetic, SensorManager.SENSOR_DELAY_UI);
 		super.onResume();
 	}
 
@@ -76,6 +81,7 @@ public class SensorsPreviewActivity extends Activity implements SensorEventListe
 		sensorManager.unregisterListener(this, accelerometer);
 		sensorManager.unregisterListener(this, linearAccelerometer);
 		sensorManager.unregisterListener(this, gyroscope);
+		sensorManager.unregisterListener(this, magnetic);
 		super.onPause();
 	}
 
@@ -92,46 +98,35 @@ public class SensorsPreviewActivity extends Activity implements SensorEventListe
 			xAccelerometer = event.values[0];
 			yAccelerometer = event.values[1];
 			zAccelerometer = event.values[2];
+			acceleromterVector = event.values;
 		}
 		else if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION)
 		{
-			//TODO
-	        float[] gravSensorVals = {0,0,0};
-	        
-	        gravSensorVals = lowPass(event.values.clone(), gravSensorVals);
-	        
-			long time = (System.currentTimeMillis() - oldTimeLinearAcceleration);
-
-			if(Math.abs(xLinearAccelerometer) > 0.1 )
-				xspeed += xLinearAccelerometer*time;
-			if(Math.abs(yLinearAccelerometer) > 0.1 )
-				yspeed += yLinearAccelerometer*time;
-			if(Math.abs(zLinearAccelerometer) > 0.1 )
-				zspeed+= zLinearAccelerometer*time;
-
-			if(Math.abs(xspeed) > 0.5)
-			xdistance += xspeed*time;
-			if(Math.abs(xspeed) > 0.5)
-				ydistance += yspeed*time;
-			if(Math.abs(xspeed) > 0.5)
-				zdistance += zspeed*time;
-
-			xLinearAccelerometer = gravSensorVals[0];
-			yLinearAccelerometer = gravSensorVals[1];
-			zLinearAccelerometer = gravSensorVals[2];
-
-			oldTimeLinearAcceleration = System.currentTimeMillis();
+			xLinearAccelerometer = event.values[0];
+			yLinearAccelerometer = event.values[1];
+			zLinearAccelerometer = event.values[2];
 		}
+		else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+	        // Valeur du vecteur du champ magnétique (x,y,z)
+	        xMagnetic = event.values[0];
+	        yMagnetic = event.values[1];
+	        zMagnetic = event.values[2];
+	        magneticVector = event.values;
+		}
+		
+		// Demander au sensorManager la matric de Rotation (resultMatric)
+		SensorManager.getRotationMatrix(resultMatrix, null, acceleromterVector, magneticVector);
+		// Demander au SensorManager le vecteur d'orientation associé (values)
+		SensorManager.getOrientation(resultMatrix, values);
+		// l'azimuth
+		azimuth =(float) Math.toDegrees(values[0]);
+		// le pitch
+		pitch = (float) Math.toDegrees(values[1]);
+		// le roll
+		roll = (float) Math.toDegrees(values[2]);
 
 	}
-	
-	protected float[] lowPass( float[] input, float[] output ) {
-	    if ( output == null ) return input;     
-	    for ( int i=0; i<input.length; i++ ) {
-	        output[i] = output[i] + ALPHA * (input[i] - output[i]);
-	    }
-	    return output;
-	}
+
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -139,19 +134,19 @@ public class SensorsPreviewActivity extends Activity implements SensorEventListe
 
 	}
 
-	public float getxGyroscope() {
+	public static float getxGyroscope() {
 		return xGyroscope;
 	}
 
-	public float getyGyroscope() {
+	public static float getyGyroscope() {
 		return yGyroscope;
 	}
 
-	public float getzGyroscope() {
+	public static float getzGyroscope() {
 		return zGyroscope;
 	}
 
-	public float getxAccelerometer() {
+	public static float getxAccelerometer() {
 		return xAccelerometer;
 	}
 
@@ -163,40 +158,39 @@ public class SensorsPreviewActivity extends Activity implements SensorEventListe
 		return zAccelerometer;
 	}
 
-	public float getxLinearAccelerometer() {
+	public static float getxLinearAccelerometer() {
 		return xLinearAccelerometer;
 	}
 
-	public float getyLinearAccelerometer() {
+	public static float getyLinearAccelerometer() {
 		return yLinearAccelerometer;
 	}
 
-	public float getzLinearAccelerometer() {
+	public static float getzLinearAccelerometer() {
 		return zLinearAccelerometer;
 	}
 
-	public static float getxdistance() {
-		float x = xdistance;
-		xdistance = 0;
-		xspeed = 0;
-		xLinearAccelerometer = 0;
-		return x;
+	public static float getxMagnetic() {
+		return xMagnetic;
 	}
 
-	public static float getydistance() {
-		float y = ydistance;
-		ydistance = 0;
-		yspeed = 0;
-		yLinearAccelerometer = 0;
-		return y;
+	public static float getyMagnetic() {
+		return yMagnetic;
 	}
 
-	public static float getzdistance() {
-		float z = zdistance;
-		zdistance = 0;
-		zspeed = 0;
-		zLinearAccelerometer = 0;
-		return z;
+	public static float getzMagnetic() {
+		return zMagnetic;
+	}
+	
+	public static float getAzimuth() {
+		return azimuth;
 	}
 
+	public static float getPitch() {
+		return pitch;
+	}
+
+	public static float getRoll() {
+		return roll;
+	}
 }
