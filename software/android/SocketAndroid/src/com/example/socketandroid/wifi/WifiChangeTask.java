@@ -16,10 +16,15 @@ public class WifiChangeTask extends AsyncTask<Void, Void, Void> {
 	private ProgressDialog dialog;
 
 	private static final int WIFI_AP_STATE_UNKNOWN = -1;
+	@SuppressWarnings("unused")
 	private static final int WIFI_AP_STATE_DISABLING = 0;
+	@SuppressWarnings("unused")
 	private static final int WIFI_AP_STATE_DISABLED = 1;
+	@SuppressWarnings("unused")
 	private static final int WIFI_AP_STATE_ENABLING = 2;
+	@SuppressWarnings("unused")
 	private static final int WIFI_AP_STATE_ENABLED = 3;
+	@SuppressWarnings("unused")
 	private static final int WIFI_AP_STATE_FAILED = 4;
 
 	public WifiChangeTask(boolean mode, WifiManager wifiManager,

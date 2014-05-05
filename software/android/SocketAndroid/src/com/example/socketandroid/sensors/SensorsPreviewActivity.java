@@ -12,6 +12,7 @@ import com.example.socketandroid.R;
 
 public class SensorsPreviewActivity extends Activity implements SensorEventListener {
 
+	@SuppressWarnings("unused")
 	private final static String TAG = "INTech-SensorsPreview";
 
 	private SensorManager sensorManager;

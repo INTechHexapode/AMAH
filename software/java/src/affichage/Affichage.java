@@ -1,12 +1,10 @@
 package affichage;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,7 +35,6 @@ public class Affichage extends ApplicationFrame {
 	private static final String TITLE = "Dynamic Series";
     private static final String START = "Start";
     private static final String STOP = "Stop";
-//    private static final float MINMAX = 2;
     private static final int COUNT = 2 * 60;
     private static final int FAST = 100;
     private static final int SLOW = FAST * 5;
