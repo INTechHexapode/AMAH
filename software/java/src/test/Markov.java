@@ -33,7 +33,9 @@ public class Markov implements java.io.Serializable {
 	 */
 	public static Markov getLearnedMarkov(Mode mode)
 	{
-	    return DataSaver.charger_matrice("markov_"+mode+".dat");
+	    Markov out = DataSaver.charger_matrice("markov_"+mode+".dat");
+	    out.randomgenerator = new Random();
+	    return out;
 	}
 	
 	/**
