@@ -33,9 +33,19 @@ public class Markov implements java.io.Serializable {
 	 */
 	public static Markov getLearnedMarkov(Mode mode)
 	{
-	    Markov out = DataSaver.charger_matrice("markov_"+mode+".dat");
-	    out.randomgenerator = new Random();
-	    return out;
+	    return charger_matrice("markov_"+mode+".dat");
+	}
+	
+	/**
+	 * Chargement d'une matrice.
+	 */
+	public static Markov charger_matrice(String filename)
+	{
+        Markov out = DataSaver.charger_matrice(filename);
+        // Initialisation des attributs transient
+        out.randomgenerator = new Random();
+        out.getPositionsViables();
+        return out;
 	}
 	
 	/**
@@ -146,7 +156,10 @@ public class Markov implements java.io.Serializable {
 	public String nextValidation(int numeroEtatActuel)
 	{
 	    if(compressed_matrix == null)
-	        return null;
+	    {
+	        System.out.println("Matrice compressée absente!");
+            return null;
+	    }
 	    
 		int lineSum = 0;
 		

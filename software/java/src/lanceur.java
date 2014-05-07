@@ -3,6 +3,7 @@ import hexapode.Hexapode;
 import hexapode.Vec2;
 import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
+import hexapode.enums.Mode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class lanceur {
 		SerialManager serialmanager;
 		Serial serie = null;
 		Scanner scanner = null;
-        Sleep.temps_defaut = 300;
+        Sleep.temps_defaut = 500;
 		try {
 		    serialmanager = new SerialManager();
 			serie = serialmanager.getSerial("serieAsservissement");
@@ -54,12 +55,13 @@ public class lanceur {
             }
   
             Capteur capteur = new Capteur(serie);
-            
-    //        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 1000000, 5000, 0, true, serie != null);
-//            TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 100000, 5000, 0, true, true);
+  
+            deplacement.generer_base_apprentissage();
+//            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
 //            TestEngine testEngine = new TestEngine(test);
 //            testEngine.start();
-            hexa.avancer(10);
+//            deplacement.setMode(Mode.BIPHASE);
+//            hexa.avancer(100);
     //        hexa.va_au_point(new Vec2(-100, 600), true);
 		}
 		catch(Exception e)

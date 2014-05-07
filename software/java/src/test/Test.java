@@ -94,6 +94,6 @@ public abstract class Test {
 	
 	protected Markov chargement_matrice(String filename)
 	{
-		return DataSaver.charger_matrice(filename);
+		return Markov.charger_matrice(filename);
 	}
 }

@@ -94,6 +94,33 @@ public class Deplacement implements Service
     }
 
     /**
+     * Génère des valeurs utilisées pour l'apprentissage du réseau de neurones.
+     * A exécuter sans la série!
+     */
+    public void generer_base_apprentissage()
+    {
+        if(serie == null)
+        {
+            for(int i = 0; i < 1000; i++)
+                for(int role = 0; role < 6; role++)
+                {
+                    double angle = 2*Math.PI/1000*i;
+                    System.out.println(angle);
+                    System.out.println(role);
+                    try
+                    {
+                        pattes[0][role].goto_etat(role, EtatPatte.AVANT, 0, angle);
+                    } catch (GoToException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+        }
+        else
+            System.out.println("Erreur: redémarrer sans la série");
+    }
+    
+    /**
      * Lève une patte et la tourne vers la droite (du point de vue de la patte).
      * @param patte
      */
@@ -153,6 +180,7 @@ public class Deplacement implements Service
             for(EnumPatte patte: ignore)
                 prochain_pas = prochain_pas.substring(0,patte.ordinal()) + "?" + prochain_pas.substring(patte.ordinal()+1);
 
+        System.out.println("Mode: "+mode);
         goto_etat(prochain_pas);
         if(position.x > 1500-Config.ecart_bordure || position.x < -1500+Config.ecart_bordure || position.y > 2000-Config.ecart_bordure || position.y < Config.ecart_bordure)
             throw new BordureException();
@@ -172,8 +200,8 @@ public class Deplacement implements Service
             goto_etat_biphase(e);
         else if (mode == Mode.TRIPHASE)
             goto_etat_triphase(e);
-        else if (mode == Mode.TRIPHASE_ORIENTATION)
-            goto_etat_triphase_orientation(e);
+//        else if (mode == Mode.TRIPHASE_ORIENTATION)
+//            goto_etat_triphase_orientation(e);
     }
 
     /**
@@ -250,7 +278,6 @@ public class Deplacement implements Service
      */
     private void goto_etat_triphase(String e) throws EnnemiException
     {
-
         boolean mouvement = false, avance = false;
 
         // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les
@@ -376,7 +403,10 @@ public class Deplacement implements Service
     public String getProchainPas()
     {
         if (marche_actuelle == Marche.MARKOV)
+        {
             pas_actuel = marcheApprise[mode.ordinal()].nextValidation(pas_actuel);
+            System.out.println("pas actuel: "+pas_actuel);
+        }
         else
         {
             pas++;

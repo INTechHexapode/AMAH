@@ -17,7 +17,6 @@ class Patte {
 
 	private TriMoteur moteurs;
 	private EtatPatte etat;
-	private int saved_role = 0;
 	public static Profil profil_actuel = Profil.BASIQUE;
 	
     // Constantes
@@ -29,6 +28,7 @@ class Patte {
     private static final double[] hauteur_pousse = {-120, -160};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
     public static double avancee_effective = avancee[profil_actuel.ordinal()]*2;
+    public double last_angle_direction;
     
 	/**
 	 * Constructeur d'une patte
@@ -50,18 +50,27 @@ class Patte {
 	 */
 	public void goto_etat(int role, EtatPatte etat) throws GoToException
 	{
-	    if(role != -1)
-	        saved_role = role;
-        goto_etat(saved_role, etat, Sleep.temps_defaut);
+        goto_etat(role, etat, Sleep.temps_defaut);
 	}
-	
+
+    public void goto_etat(int role, EtatPatte etat, int temps) throws GoToException
+    {
+        if(etat == EtatPatte.AVANT)
+        {
+            // TODO: demander la direction au réseau de neurones
+            goto_etat(role, etat, temps, last_angle_direction);
+        }
+        else
+            goto_etat(role, etat, temps, last_angle_direction);
+    }
+
 	/**
 	 * Change l'état de la patte
 	 * @param role: le rôle joué par la patte (avant gauche? etc.). Dépend de l'orientation (géré par hexapode)
 	 * @param etat: l'état souhaité
 	 * @throws GoToException 
 	 */
-	public void goto_etat(int role, EtatPatte etat, int temps) throws GoToException
+	public void goto_etat(int role, EtatPatte etat, int temps, double angle_direction) throws GoToException
 	{
 	    // On n'a pas le droit de demander à aller à OTHER (parce que ce n'est pas un endroit défini)
 	    if(etat == EtatPatte.OTHER)
@@ -70,7 +79,8 @@ class Patte {
 //	        lever();
 	    else
 	    {
-    	    double angle = angles[role];
+    	    double angle = angles[role]-angle_direction;
+            last_angle_direction = angle_direction;
     
             // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
             // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
@@ -86,6 +96,8 @@ class Patte {
         
             double new_r = Math.sqrt(x*x+y*y);
             double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
+            System.out.println(new_r);
+            System.out.println(new_angle);
             
             if(etat == EtatPatte.DEBOUT || etat == EtatPatte.HAUT)
                 setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel.ordinal()], temps);
@@ -119,6 +131,10 @@ class Patte {
      */    
     public void setEtatMoteurs(double angle, double x, double y, int temps) throws GoToException
     {
+        angle += 6 * Math.PI;
+        while(angle > Math.PI)
+            angle -= 2*Math.PI;
+
         etat = EtatPatte.OTHER;
         int[] ordres = new int[3];
         double alpha = Math.PI-Math.acos((x*x+y*y-a*a-b*b)/(2*a*b));
