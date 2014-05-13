@@ -3,6 +3,7 @@ import hexapode.Hexapode;
 import hexapode.Vec2;
 import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
+import hexapode.enums.Marche;
 import hexapode.enums.Mode;
 
 import java.util.ArrayList;
@@ -56,12 +57,13 @@ public class lanceur {
   
             Capteur capteur = new Capteur(serie);
   
-            deplacement.generer_base_apprentissage();
+//            deplacement.generer_base_apprentissage();
 //            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
 //            TestEngine testEngine = new TestEngine(test);
 //            testEngine.start();
-//            deplacement.setMode(Mode.BIPHASE);
-//            hexa.avancer(100);
+            deplacement.setMode(Mode.BIPHASE, Marche.BASIQUE);
+            hexa.setAngle(Math.PI/2);
+            hexa.avancer(100);
     //        hexa.va_au_point(new Vec2(-100, 600), true);
 		}
 		catch(Exception e)

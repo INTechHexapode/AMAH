@@ -52,6 +52,11 @@ class Patte {
 	{
         goto_etat(role, etat, Sleep.temps_defaut);
 	}
+	
+	public void setAngle(double angle)
+	{
+	    last_angle_direction = angle;
+	}
 
     public void goto_etat(int role, EtatPatte etat, int temps) throws GoToException
     {
@@ -96,8 +101,8 @@ class Patte {
         
             double new_r = Math.sqrt(x*x+y*y);
             double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
-            System.out.println(new_r);
-            System.out.println(new_angle);
+//            System.out.println(new_r);
+//            System.out.println(new_angle);
             
             if(etat == EtatPatte.DEBOUT || etat == EtatPatte.HAUT)
                 setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel.ordinal()], temps);

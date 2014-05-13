@@ -696,5 +696,11 @@ public class Deplacement implements Service
     {
         capteur.setOff();
     }
+    
+    public void setAngle(double angle)
+    {
+        for(int i = 0; i < 6; i++)
+            pattes[0][i].setAngle(angle);
+    }
 
 }

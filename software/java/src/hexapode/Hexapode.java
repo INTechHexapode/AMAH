@@ -324,5 +324,10 @@ public class Hexapode implements Service {
    {
        deplacement.desasserv();
    }
+   
+   public void setAngle(double angle)
+   {
+       deplacement.setAngle(angle);
+   }
 
 }
