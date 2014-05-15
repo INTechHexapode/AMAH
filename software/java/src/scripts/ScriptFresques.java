@@ -23,8 +23,8 @@ public class ScriptFresques extends Script
     @Override
     public void execute(int id)
     {
-        // TODO
         done = true;
+        hexa.poser_fresques(); 
     }
 
     @Override

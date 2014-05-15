@@ -27,6 +27,7 @@ public class ScriptTorches extends Script
     @Override
     public void execute(int id)
     {
+        // TODO
         done[id] = true;
     }
 
