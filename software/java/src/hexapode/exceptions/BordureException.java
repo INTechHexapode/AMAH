@@ -9,16 +9,12 @@ package hexapode.exceptions;
 public class BordureException extends Exception {
 
     private static final long serialVersionUID = 0L;
-
-    public BordureException()
+    public final boolean enAvancant;
+    
+    public BordureException(boolean enAvancant)
     {
         super();
+        this.enAvancant = enAvancant;
     }
-    
-    public BordureException(String m)
-    {
-        super(m);
-    }
-
 
 }

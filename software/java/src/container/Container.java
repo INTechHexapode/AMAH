@@ -8,6 +8,7 @@ import hexapode.capteurs.Sleep;
 import java.util.Hashtable;
 import java.util.Map;
 
+import scripts.Decision;
 import serial.Serial;
 
 public class Container
@@ -35,6 +36,8 @@ public class Container
             services.put(nom, (Service)new Deplacement((Capteur)getService("Capteur"), serie, (Sleep)getService("Sleep"), maj_position));
         else if(nom == "Hexapode")
             services.put(nom, (Service)new Hexapode((Deplacement)getService("Deplacement")));
+        else if(nom == "Decision")
+            services.put(nom, (Service)new Decision((Hexapode)getService("Hexapode")));
         return services.get(nom);
     }
 }

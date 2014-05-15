@@ -3,9 +3,11 @@ package hexapode;
 import container.Service;
 import hexapode.enums.Direction;
 import hexapode.enums.EnumPatte;
+import hexapode.enums.Evite;
 import hexapode.enums.Marche;
 import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
+import hexapode.exceptions.GoToException;
 import util.Config;
 
 /**
@@ -57,7 +59,7 @@ public class Hexapode implements Service {
             avancer_pres_bord(100);
             deplacement.setDirection(Direction.BAS);
             avancer_pres_bord(400);
-        } catch (EnnemiException e)
+        } catch (Exception e)
         {
             // Exception impossible car le capteur est désactivé
             e.printStackTrace();
@@ -109,7 +111,14 @@ public class Hexapode implements Service {
         deplacement.lever_gauche(EnumPatte.HAUT_GAUCHE);
 
         EnumPatte[] ignore = {EnumPatte.HAUT_DROITE, EnumPatte.HAUT_GAUCHE};
-        avancer_pres_bord_en_ignorant(1000, ignore);
+        try
+        {
+            avancer_pres_bord_en_ignorant(1000, ignore);
+        } catch (GoToException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         deplacement.arret();
         deplacement.setMarche(Marche.BASIQUE);
     }
@@ -140,33 +149,63 @@ public class Hexapode implements Service {
         }
         deplacement.setMarche(Marche.BASIQUE);
     }
-
+    
 	/**
-     * Suit un itinéraire
+     * Va au point
 	 * @param points
+	 * @throws BordureException 
+	 * @throws EnnemiException 
 	 */
-	public void suit_chemin(Vec2[] points)
+	public void va_au_point(Vec2 point) throws EnnemiException, BordureException
 	{
-	    for(Vec2 point: points)
-	        va_au_point(point, true);
-	}
-
-    /**
-     * Va au point (coordonnées absolues)
-     * @param x
-     * @param y
-     */
-	public void va_au_point(Vec2 point, boolean trajectoire_horaire)
-	{
-	    try
+        // Détermination de l'évitement (on évite du côté où on a de a place)
+        Evite evite;
+        Vec2 relatif = point.clone();
+        relatif.sub(deplacement.getPosition());
+        Vec2 point_gauche = new Vec2(-100*Math.max(point.x, point.y)/point.x, 100*Math.max(point.x, point.y)/point.y);
+        Vec2 point_droite = new Vec2(100*Math.max(point.x, point.y)/point.x, -100*Math.max(point.x, point.y)/point.y);
+        point_gauche.add(deplacement.getPosition());
+        point_droite.add(deplacement.getPosition());
+        relatif.x /= 2;
+        relatif.y /= 2;
+        point_gauche.add(relatif);
+        point_droite.add(relatif);
+        
+        if(point_droite.distance_au_bord() < point_gauche.distance_au_bord())
+            evite = Evite.PAR_LA_GAUCHE;
+        else
+            evite = Evite.PAR_LA_DROITE;
+        
+        System.out.println(evite);
+        
+        try
         {
-            va_au_point(point, trajectoire_horaire, true);
-        } catch (Exception e)
+            va_au_point_direct(point, evite);
+        } catch (GoToException e)
         {
+            // Problème de moteur: on utilise la méthode plus sûre de va_au_point_indirect
             e.printStackTrace();
+            try
+            {
+                va_au_point_indirect(point, evite);
+            } catch (GoToException e1)
+            {
+                // Cas normalement impossible.
+                e1.printStackTrace();
+            }
         }
 	}
-	
+
+    private void va_au_point_direct(Vec2 point, Evite evite) throws EnnemiException, BordureException, GoToException
+    {
+        Vec2 relatif = new Vec2(point);
+        relatif.sub(deplacement.position);
+        
+        double angle_consigne = Math.atan2(relatif.x,relatif.y);
+        deplacement.setAngle(angle_consigne);
+        avancer_et_evite((int) Math.round(relatif.length()), evite);
+    }
+
 	/**
 	 * Va_au_point avec évitement
 	 * @param point
@@ -174,8 +213,9 @@ public class Hexapode implements Service {
 	 * @param insiste
 	 * @throws EnnemiException
 	 * @throws BordureException 
+	 * @throws GoToException 
 	 */
-	private void va_au_point(Vec2 point, boolean trajectoire_horaire, boolean insiste) throws EnnemiException, BordureException
+	private void va_au_point_indirect(Vec2 point, Evite evite) throws EnnemiException, BordureException, GoToException
 	{
 	    // On décompose le vecteur (x,y) sur la base formée par les deux vecteurs direction les plus proches de (x,y).
 	    // Cette base n'étant pas orthogonale, la formule est peu plus complexe qu'un produit scalaire.
@@ -202,31 +242,42 @@ public class Hexapode implements Service {
         System.out.println("x: "+(longueur1*Math.cos(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.cos(Math.PI/2-direction2*Math.PI/3)));
         System.out.println("y: "+(longueur1*Math.sin(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.sin(Math.PI/2-direction2*Math.PI/3)));
 
-        try {
-            // Si trajectoire_horaire est vrai, on tourne à gauche avant de tourner à droite
-            // Sinon, c'est le contraire            
-            if(trajectoire_horaire)
-            {
-                deplacement.setDirection(direction1);
-                avancer((int) Math.round(longueur1));
-            }
-            deplacement.setDirection(direction2);
-            avancer((int) Math.round(longueur2));
-            if(!trajectoire_horaire)
-            {
-                deplacement.setDirection(direction1);
-                avancer((int) Math.round(longueur1));
-            }
+        // Si trajectoire_horaire est vrai, on tourne à gauche avant de tourner à droite
+        // Sinon, c'est le contraire            
+        if(evite == Evite.PAR_LA_GAUCHE)
+        {
+            deplacement.setDirection(direction1);
+            avancer_et_evite((int) Math.round(longueur1), evite);
+        }
+        deplacement.setDirection(direction2);
+        avancer_et_evite((int) Math.round(longueur2), evite);
+        if(evite == Evite.PAR_LA_DROITE)
+        {
+            deplacement.setDirection(direction1);
+            avancer_et_evite((int) Math.round(longueur1), evite);
+        }
+	}
+
+	/**
+	 * Avance dans la direction actuelle et procède à un évitement si on rencontre un ennemi.
+	 * Attention! A la fin de l'évitement, on n'est pas au point où on aurait voulu être. Il
+	 * faut donc relancer le mouvement.
+	 * @param distance
+	 * @throws BordureException
+	 * @throws GoToException 
+	 */
+	public void avancer_et_evite(int distance, Evite evite) throws BordureException, GoToException 
+	{
+	    try {
+	        avancer(distance);
         }
         // l'exception BordureException n'est pas traité et est directement passé au cran supérieur
         catch(EnnemiException e)
         {
-            if(!insiste)
-                throw e;
             try {
                 System.out.println("Evitement de l'ennemi");
                 // le coefficient 2 vient de 1/cos(PI/3).
-                if(trajectoire_horaire)
+                if(evite == Evite.PAR_LA_GAUCHE)
                 {
                     // On évite par la gauche
                     deplacement.setDirectionRelatif(-1);
@@ -242,27 +293,28 @@ public class Hexapode implements Service {
                     deplacement.setDirectionRelatif(-2);
                     avancer(Config.distance_detection*2);                    
                 }
-                va_au_point(point, trajectoire_horaire, false);
             }
             catch(EnnemiException e2)
             {
-                System.out.println("Evitement échoué (on voit encore l'ennemi). On passe au point suivant.");
+                System.out.println("Evitement échoué (on voit encore l'ennemi).");
             }
             catch(BordureException e2)
             {
-                System.out.println("Evitement échoué (on s'approche trop près du bord). On passe au point suivant.");
+                System.out.println("Evitement échoué (on s'approche trop près du bord).");
             }
         }
+	    
 	}
-
+	
 
     /**
     * Avance l'hexapode de "distance" millimètres dans la direction actuelle.
     * @param distance
     * @throws EnnemiException 
+     * @throws GoToException 
     * @throws BordureException 
     */
-   public void avancer_pres_bord(int distance) throws EnnemiException
+   public void avancer_pres_bord(int distance) throws EnnemiException, GoToException
    {
        avancer_pres_bord_en_ignorant(distance, null);
    }
@@ -273,18 +325,15 @@ public class Hexapode implements Service {
     * @param distance
     * @param ignore
     * @throws EnnemiException 
+     * @throws GoToException 
     * @throws BordureException 
     */
-   public void avancer_pres_bord_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException
+   public void avancer_pres_bord_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, GoToException
    {
-       int nb_iteration = (int) Math.round(distance / Patte.avancee_effective);
+       int nb_iteration = (int) Math.round(((double)distance) / Patte.avancee_effective);
        while(nb_iteration > 0)
-       {
-           Vec2 sauv = new Vec2(deplacement.position);
-           deplacement.avancer_elementaire_pres_bord(ignore);
-           if(!sauv.equals(deplacement.position))
+           if(deplacement.avancer_elementaire_pres_bord(ignore));
                nb_iteration--;
-       }
    }
 
    /**
@@ -292,8 +341,9 @@ public class Hexapode implements Service {
     * @param distance
     * @throws EnnemiException 
     * @throws BordureException 
+ * @throws GoToException 
     */
-   public void avancer(int distance) throws EnnemiException, BordureException
+   public void avancer(int distance) throws EnnemiException, BordureException, GoToException
    {
        avancer_en_ignorant(distance, null);
    }
@@ -304,17 +354,14 @@ public class Hexapode implements Service {
     * @param ignore
     * @throws EnnemiException
     * @throws BordureException
+ * @throws GoToException 
     */
-   public void avancer_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, BordureException
+   public void avancer_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, BordureException, GoToException
    {
-       int nb_iteration = (int) Math.round(distance / Patte.avancee_effective);
+       int nb_iteration = (int) Math.round(((double)distance) / Patte.avancee_effective);
        while(nb_iteration > 0)
-       {
-           Vec2 sauv = new Vec2(deplacement.position);
-           deplacement.avancer_elementaire(ignore);
-           if(!sauv.equals(deplacement.position))
+           if(deplacement.avancer_elementaire(ignore)); // si on a bougé
                nb_iteration--;
-       }
    }
    
    /**
@@ -325,9 +372,9 @@ public class Hexapode implements Service {
        deplacement.desasserv();
    }
    
-   public void setAngle(double angle)
+   public Vec2 getPosition()
    {
-       deplacement.setAngle(angle);
+       return deplacement.getPosition();
    }
-
+   
 }

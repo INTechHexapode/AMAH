@@ -28,7 +28,7 @@ class Patte {
     private static final double[] hauteur_pousse = {-120, -160};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
     public static double avancee_effective = avancee[profil_actuel.ordinal()]*2;
-    public double last_angle_direction;
+    public double angle_hexa;
     
 	/**
 	 * Constructeur d'une patte
@@ -55,18 +55,12 @@ class Patte {
 	
 	public void setAngle(double angle)
 	{
-	    last_angle_direction = angle;
+	    angle_hexa = angle;
 	}
 
     public void goto_etat(int role, EtatPatte etat, int temps) throws GoToException
     {
-        if(etat == EtatPatte.AVANT)
-        {
-            // TODO: demander la direction au réseau de neurones
-            goto_etat(role, etat, temps, last_angle_direction);
-        }
-        else
-            goto_etat(role, etat, temps, last_angle_direction);
+        goto_etat(role, etat, temps, angle_hexa);
     }
 
 	/**
@@ -85,7 +79,7 @@ class Patte {
 	    else
 	    {
     	    double angle = angles[role]-angle_direction;
-            last_angle_direction = angle_direction;
+            angle_hexa = angle_direction;
     
             // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
             // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!

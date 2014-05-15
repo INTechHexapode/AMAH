@@ -51,14 +51,14 @@ public class Capteur implements Service {
 	 * Tourne le capteur dans la direction désirée.
 	 * @param direction
 	 */
-	public void tourner(int direction)
+	public void tourner(double angle)
 	{
 	    // TODO: calcul de l'ordre en fonction de la direction
-	    int angle = 1500;
+	    int ordre = 1500;
 	    if(serie != null)
             try
             {
-                serie.communiquer("#15P"+Integer.toString(angle));
+                serie.communiquer("#15P"+Integer.toString(ordre));
             } catch (SerialException e)
             {
                 e.printStackTrace();

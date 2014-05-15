@@ -4,7 +4,6 @@ import java.util.Random;
 
 import hexapode.Deplacement;
 import hexapode.enums.Mode;
-import hexapode.exceptions.EnnemiException;
 
 /**
  * Test pour la coordination des pattes avec trois états d'équilibre: A, B et C
@@ -73,7 +72,7 @@ public class TestCoordinationTriphasee extends Test
         try
         {
             deplacement.goto_etat(etat_suivant);
-        } catch (EnnemiException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -120,7 +119,7 @@ public class TestCoordinationTriphasee extends Test
         try
         {
             deplacement.goto_etat(etat_suivant);
-        } catch (EnnemiException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }        
@@ -141,7 +140,7 @@ public class TestCoordinationTriphasee extends Test
         try
         {
             deplacement.goto_etat(etat_suivant);
-        } catch (EnnemiException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }        

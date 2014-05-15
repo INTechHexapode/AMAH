@@ -6,16 +6,12 @@ import hexapode.capteurs.Sleep;
 import hexapode.enums.Marche;
 import hexapode.enums.Mode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 import container.Container;
 import serial.Serial;
 import serial.SerialManager;
-import test.TestCoordinationPattesSimulation;
-import test.TestCoordinationTriphasee;
-import test.TestEngine;
+import test.*;
 
 /*
  * TODO list (méca/élec)
@@ -35,7 +31,7 @@ public class lanceur {
 		SerialManager serialmanager;
 		Serial serie = null;
 		Scanner scanner = null;
-        Sleep.temps_defaut = 500;
+        Sleep.temps_defaut = 250;
 		try {
 		    serialmanager = new SerialManager();
 			serie = serialmanager.getSerial("serieAsservissement");
@@ -57,13 +53,16 @@ public class lanceur {
   
             Capteur capteur = new Capteur(serie);
   
-//            deplacement.generer_base_apprentissage();
 //            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
 //            TestEngine testEngine = new TestEngine(test);
 //            testEngine.start();
-            deplacement.setMode(Mode.BIPHASE, Marche.BASIQUE);
-            hexa.setAngle(Math.PI/2);
-            hexa.avancer(100);
+
+          TestDeuxCoups test = new TestDeuxCoups(deplacement, 500000, 5000, 0, true, true);
+          TestEngine testEngine = new TestEngine(test);
+          testEngine.start();
+          
+//            deplacement.setMode(Mode.BIPHASE, Marche.BASIQUE);
+//            hexa.avancer(100);
     //        hexa.va_au_point(new Vec2(-100, 600), true);
 		}
 		catch(Exception e)
@@ -95,7 +94,6 @@ public class lanceur {
 
         hexa.initialiser();
 	    // TODO: pouvoir se recaler en cours de match
-	    hexa.suit_chemin(itineraire1);
 	    hexa.poser_fresques();
 	}
 	
