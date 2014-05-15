@@ -377,4 +377,9 @@ public class Hexapode implements Service {
        return deplacement.getPosition();
    }
    
+   public boolean isFini()
+   {
+       return isFini();
+   }
+   
 }

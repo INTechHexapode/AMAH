@@ -23,12 +23,9 @@ public class Decision implements Service
 
     public void lancement()
     {
-        // recalage
+        hexa.initialiser(); // recale et attend le jumper
         
-        hexa.initialiser(); // initialise et attend le jumper
-        
-        // boucle infinie, parce qu'il adooooore réfléchir.
-        while(true)
+        while(!hexa.isFini())
         {
             double distance_min = 100000000;
             int id_script = 0;
@@ -56,6 +53,7 @@ public class Decision implements Service
             {
             }
         }
+        System.out.println("Temps écoulé, arrêt de la stratégie.");
     }
     
 }

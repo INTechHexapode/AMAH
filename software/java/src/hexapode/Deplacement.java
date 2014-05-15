@@ -55,6 +55,8 @@ public class Deplacement implements Service
     private int pas = 0; // indice pour la marche
     private Capteur capteur;
     private double angle_actuel = 0;
+    private boolean inverser;
+    private boolean isFini = false;
 
     public Deplacement(Capteur capteur, Serial serie, Sleep sleep, boolean maj_position)
     {
@@ -465,9 +467,15 @@ public class Deplacement implements Service
      */
     private void fin_match()
     {
+        isFini = true;
         arret();
         desasserv();
         serie.close();
+    }
+    
+    public boolean isFini()
+    {
+        return isFini;
     }
 
     /**
@@ -585,6 +593,13 @@ public class Deplacement implements Service
         while(!capteur.jumper())
             sleep.sleep(100);
         date_debut = System.currentTimeMillis();
+        inverser = capteur.getInverser();
+
+        if(inverser)
+            System.out.println("On est rouge!");
+        else
+            System.out.println("On est jaune!");
+
         capteur.setOn();
         position = new Vec2(1300, 1800); // TODO ajuster
     }
@@ -627,6 +642,8 @@ public class Deplacement implements Service
      */
     public void setAngle(double angle)
     {
+        if(inverser)
+            angle = -angle;
         this.angle_actuel = angle;
         // si ce n'est pas déjà l'angle actuel
         // TODO mettre une tolérance au lieu d'une égalité

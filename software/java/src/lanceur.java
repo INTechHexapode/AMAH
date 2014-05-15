@@ -1,15 +1,12 @@
 import hexapode.Deplacement;
-import hexapode.Hexapode;
-import hexapode.Vec2;
-import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
-import hexapode.enums.Marche;
-import hexapode.enums.Mode;
 
 import java.util.*;
 
 import container.Container;
+import scripts.Decision;
 import serial.Serial;
+import serial.SerialException;
 import serial.SerialManager;
 import test.*;
 
@@ -42,7 +39,6 @@ public class lanceur {
 		
 		try {
 		    Container container = new Container(serie, false);
-    	    Hexapode hexa = (Hexapode)container.getService("Hexapode");
     	    Deplacement deplacement = (Deplacement)container.getService("Deplacement");
             if(serie != null)
             {
@@ -50,9 +46,7 @@ public class lanceur {
         		scanner = new Scanner(System.in);
     		    scanner.nextLine();
             }
-  
-            Capteur capteur = new Capteur(serie);
-  
+    
 //            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
 //            TestEngine testEngine = new TestEngine(test);
 //            testEngine.start();
@@ -82,19 +76,28 @@ public class lanceur {
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
 	}
-
 	
-	public static void script(Hexapode hexa)
+	public static void test_capteur(Serial serie)
 	{
-        Vec2[] itineraire1 = {   new Vec2(1100, 1400),
-                new Vec2(1100, 600),
-                new Vec2(700, 400),
-                new Vec2(0, 600),
-                new Vec2(0, 1500)};
+        for(int i = 0; i < 100; i++)
+        {
+            try
+            {
+                serie.communiquer("VD");
+                System.out.println("Mesure: "+serie.readByte());
+            } catch (SerialException e)
+            {
+                e.printStackTrace();
+            }
+        }
 
-        hexa.initialiser();
-	    // TODO: pouvoir se recaler en cours de match
-	    hexa.poser_fresques();
+	}
+	
+	public static void lanceur_coupe(Serial serie)
+	{
+        Container container = new Container(serie, false);
+        Decision decision = (Decision)container.getService("Decision");
+        decision.lancement();
 	}
 	
 }

@@ -135,11 +135,13 @@ public class Capteur implements Service {
 
     public void setOn()
     {
+        System.out.println("Capteur activé");
         on = true;
     }
     
     public void setOff()
     {
+        System.out.println("Capteur désactivé");
         on = false;
     }
     
