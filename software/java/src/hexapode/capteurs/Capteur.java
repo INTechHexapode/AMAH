@@ -17,7 +17,6 @@ import serial.SerialException;
 
 public class Capteur implements Service {
 
-    // Pourquoi static? PARCE QUE CE CODE EST TRÈS MOCHE, VOILÀ POURQUOI.
     private static Serial serie;
     private static final int nb_mesures = 20;
     private int[] dernieres_mesures = new int[nb_mesures];
@@ -114,8 +113,6 @@ public class Capteur implements Service {
                 dernieres_mesures[indice] = mesure;
                 indice++;
                 indice %= nb_mesures;
-                
-                // Calcul de médiane
             } catch (SerialException e)
             {
                 e.printStackTrace();

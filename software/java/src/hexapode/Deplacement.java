@@ -55,7 +55,6 @@ public class Deplacement implements Service
     private int pas = 0; // indice pour la marche
     private Capteur capteur;
     private double angle_actuel = 0;
-    private boolean inverser;
     private boolean isFini = false;
 
     public Deplacement(Capteur capteur, Serial serie, Sleep sleep, boolean maj_position)
@@ -86,7 +85,15 @@ public class Deplacement implements Service
         setDirection(Direction.HAUT);
 */
         for(Mode m: Mode.values())
-            marcheApprise[m.ordinal()] = Markov.getLearnedMarkov(m);
+            try {
+                marcheApprise[m.ordinal()] = Markov.getLearnedMarkov(m);
+                System.out.println("Matrice de "+m+" correctement chargée.");
+            }
+            catch(Exception e)
+            {
+                // on ne va pas laisser un fichier absent arrêter l'initialisation
+                System.out.println("Erreur lors du chargement de la matrice de "+m+".");
+            }
 
         arret();
         desasserv();
@@ -96,33 +103,6 @@ public class Deplacement implements Service
         
     }
 
-    /**
-     * Génère des valeurs utilisées pour l'apprentissage du réseau de neurones.
-     * A exécuter sans la série!
-     */
-    public void generer_base_apprentissage()
-    {
-        if(serie == null)
-        {
-            for(int i = 0; i < 1000; i++)
-                for(int role = 0; role < 6; role++)
-                {
-                    double angle = 2*Math.PI/1000*i;
-                    System.out.println(angle);
-                    System.out.println(role);
-                    try
-                    {
-                        pattes[role].goto_etat(role, EtatPatte.AVANT, 0, angle);
-                    } catch (GoToException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-        }
-        else
-            System.out.println("Erreur: redémarrer sans la série");
-    }
-    
     /**
      * Lève une patte et la tourne vers la droite (du point de vue de la patte).
      * @param patte
@@ -148,6 +128,16 @@ public class Deplacement implements Service
     public void lever(EnumPatte patte)
     {
         pattes[patte.ordinal()].lever();
+    }
+
+    public void lever(int n)
+    {
+        pattes[n].lever();
+    }
+
+    public void baisser(int n)
+    {
+        pattes[n].baisser();
     }
 
 
@@ -189,7 +179,6 @@ public class Deplacement implements Service
             for(EnumPatte patte: ignore)
                 prochain_pas = prochain_pas.substring(0,patte.ordinal()) + "?" + prochain_pas.substring(patte.ordinal()+1);
 
-        System.out.println("Mode: "+mode);
         boolean out = goto_etat(prochain_pas);
 
         // On lève une exception si on est près d'une bordure et qu'on s'en rapproche (afin de pouvoir s'en dégager)
@@ -202,7 +191,7 @@ public class Deplacement implements Service
     }
 
     /**
-     * L'hexapode fait une action, biphasée ou triphasée.
+     * L'hexapode avance, dans un mode quelconque.
      * 
      * @param e
      * @throws EnnemiException
@@ -211,139 +200,52 @@ public class Deplacement implements Service
      */
     public boolean goto_etat(String e) throws EnnemiException, GoToException
     {
+        boolean avance = false;
+        int division_attente = 0;
+
         verif_avant_mouvement();
 
-        if (mode == Mode.BIPHASE)
-            return goto_etat_biphase(e);
-        else //if (mode == Mode.TRIPHASE)
-            return goto_etat_triphase(e);
-//        else if (mode == Mode.TRIPHASE_ORIENTATION)
-//            goto_etat_triphase_orientation(e);
-    }
-
-    /**
-     * L'hexapode fait l'action donnée par une chaîne binaire. Note: on peut
-     * ignorer une patte en mettant un autre caractère.
-     * 
-     * @param e
-     * @throws EnnemiException
-     * @return true si on a avancé, false sinon
-     * @throws GoToException 
-     */
-    private boolean goto_etat_biphase(String e) throws EnnemiException, GoToException
-    {
-
-        boolean mouvement = false, avance = false;
-
-        // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les
-        // pattes intéressées, puis on les abaisse en même temps
-        // On ramène en arrière et on lève
-        for (int i = 0; i < 6; i++)
-            if (e.charAt(i) == '1'
-                    && pattes[i].getEtat() != EtatPatte.AVANT)
-            {
-                mouvement = true;
-                pattes[i].goto_etat(i, EtatPatte.DEBOUT);
-            }
-            else if (e.charAt(i) == '0'
-                    && pattes[i].getEtat() != EtatPatte.ARRIERE)
-            {
-                avance = true; // si on ramène une patte en arrière, alors
-                               // c'est que l'hexapode avance
-                mouvement = true;
-                pattes[i].goto_etat(i, EtatPatte.POUSSE);
-            }
-
-        // On continue le mouvement que s'il y a un mouvement à continuer
-        if (mouvement)
+        for(int i = 0; i < 6; i++)
         {
-            sleep.sleep();
-
-            for (int i = 0; i < 6; i++)
-                // on baisse
-                if (pattes[i].getEtat() == EtatPatte.DEBOUT)
-                    pattes[i].goto_etat(i, EtatPatte.AVANT,
-                            Sleep.temps_defaut / 4);
-                else if (pattes[i].getEtat() == EtatPatte.POUSSE)
-                    pattes[i].goto_etat(i, EtatPatte.ARRIERE,
-                            Sleep.temps_defaut / 4);
-
-            sleep.sleep(Sleep.temps_defaut / 4);
-
-            if (avance)
+            EtatPatte obj = mode.getEtatPatte(e.charAt(i));
+            EtatPatte intermediaire = pattes[i].getEtat().intermediaire(obj);
+            if(intermediaire != null)
             {
-                maj_position();
-                return true;
-            }
+                avance |= (intermediaire == EtatPatte.POUSSE);
 
+                int division_attente_tmp = pattes[i].getEtat().division_sleep_transition(obj);
+                if(division_attente_tmp != 0 && division_attente_tmp < division_attente)
+                    division_attente = division_attente_tmp;
+                pattes[i].goto_etat(intermediaire);
+            }
         }
-        return false;
-
-    }
-
-    /**
-     * L'hexapode fait l'action donnée par une chaîne ternaire. Note: on peut
-     * ignorer une patte en mettant un autre caractère.
-     * 0: POUSSE
-     * 1: DEBOUT
-     * 2: AVANT
-     * 
-     * @param e
-     * @return true si on a avancé, false sinon
-     * @throws EnnemiException
-     * @throws GoToException 
-     */
-    private boolean goto_etat_triphase(String e) throws EnnemiException, GoToException
-    {
-        boolean mouvement = false, avance = false;
-
-        // on sépare les deux for pour lever/baisser. Ainsi, on lève toutes les
-        // pattes intéressées, puis on les abaisse en même temps
-        // On ramène en arrière et on lève
-        for (int i = 0; i < 6; i++)
-            if (e.charAt(i) == '0'
-                    && pattes[i].getEtat() != EtatPatte.ARRIERE)
-            {
-                mouvement = true;
-                avance = true; // si on ramène une patte en arrière, alors
-                               // c'est que l'hexapode avance
-                pattes[i].goto_etat(i, EtatPatte.POUSSE);
-            }
-            else if (e.charAt(i) == '1'
-                    && pattes[i].getEtat() != EtatPatte.DEBOUT)
-            {
-                mouvement = true;
-                pattes[i].goto_etat(i, EtatPatte.DEBOUT);
-            }
-            else if (e.charAt(i) == '2'
-                    && pattes[i].getEtat() != EtatPatte.AVANT)
-            {
-                mouvement = true;
-                pattes[i].goto_etat(i, EtatPatte.AVANT);
-            }
-
-        // On continue le mouvement que s'il y a un mouvement à continuer
-        if (mouvement)
+        
+        if(division_attente != 0)
+            sleep.sleep(Sleep.temps_defaut/division_attente);
+        
+        division_attente = 0;
+        
+        for(int i = 0; i < 6; i++)
         {
-            sleep.sleep();
-
-            for (int i = 0; i < 6; i++)
-                // on relève
-                if (pattes[i].getEtat() == EtatPatte.POUSSE)
-                    pattes[i].goto_etat(i, EtatPatte.ARRIERE,
-                            Sleep.temps_defaut / 4);
-
-            if (avance)
+            EtatPatte obj = mode.getEtatPatte(e.charAt(i));
+            if(obj != pattes[i].getEtat()) // si on n'est pas encore arrivé
             {
-                sleep.sleep(Sleep.temps_defaut / 4);
-                maj_position();
-                return true;
+                int division_attente_tmp = pattes[i].getEtat().division_sleep_transition(obj);
+                if(division_attente_tmp != 0 && division_attente_tmp < division_attente)
+                    division_attente = division_attente_tmp;
+    
+                pattes[i].goto_etat(obj);
             }
-
         }
-        return false;
 
-    }
+        if(division_attente != 0)
+            sleep.sleep(Sleep.temps_defaut/division_attente);
+        
+        if(avance)
+            maj_position();
+        
+        return avance;
+   }
 
     public String getProchainPas()
     {
@@ -423,14 +325,13 @@ public class Deplacement implements Service
                 pattes[2 * i].lever();
             sleep.sleep();
             for (int i = 0; i < 3; i++)
-                pattes[2 * i].goto_etat(2 * i, EtatPatte.POSE);
+                pattes[2 * i].goto_etat(EtatPatte.POSE);
             sleep.sleep();
             for (int i = 0; i < 3; i++)
                 pattes[2 * i + 1].lever();
             sleep.sleep();
             for (int i = 0; i < 3; i++)
-                pattes[2 * i + 1].goto_etat(2 * i + 1,
-                        EtatPatte.POSE);
+                pattes[2 * i + 1].goto_etat(EtatPatte.POSE);
             sleep.sleep();
         } catch (Exception e)
         {
@@ -592,13 +493,9 @@ public class Deplacement implements Service
     {
         while(!capteur.jumper())
             sleep.sleep(100);
+        System.out.println("Le match commence!");
         date_debut = System.currentTimeMillis();
-        inverser = capteur.getInverser();
-
-        if(inverser)
-            System.out.println("On est rouge!");
-        else
-            System.out.println("On est jaune!");
+        Patte.setSymetrie(capteur.getInverser());
 
         capteur.setOn();
         position = new Vec2(1300, 1800); // TODO ajuster
@@ -642,15 +539,14 @@ public class Deplacement implements Service
      */
     public void setAngle(double angle)
     {
-        if(inverser)
-            angle = -angle;
         this.angle_actuel = angle;
-        // si ce n'est pas déjà l'angle actuel
-        // TODO mettre une tolérance au lieu d'une égalité
         if(angle < -Math.PI)
             angle += 2*Math.PI;
         else if(angle > Math.PI)
             angle -= 2*Math.PI;
+
+        // si ce n'est pas déjà l'angle actuel
+        // TODO mettre une tolérance au lieu d'une égalité
         if (angle != pattes[0].angle_hexa)
         {
             capteur.tourner(angle);
@@ -664,12 +560,11 @@ public class Deplacement implements Service
 
                 for (int i = 0; i < 3; i++)
                     if (sauv[2 * i] != EtatPatte.OTHER)
-                        pattes[2 * i].goto_etat(2 * i, sauv[2 * i]);
+                        pattes[2 * i].goto_etat(sauv[2 * i]);
                 sleep.sleep();
                 for (int i = 0; i < 3; i++)
                     if (sauv[2 * i + 1] != EtatPatte.OTHER)
-                        pattes[2 * i + 1].goto_etat(2 * i + 1,
-                                sauv[2 * i + 1]);
+                        pattes[2 * i + 1].goto_etat(sauv[2 * i + 1]);
                 sleep.sleep();
 
             } catch (GoToException e)

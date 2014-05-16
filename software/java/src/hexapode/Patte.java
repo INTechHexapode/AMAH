@@ -23,12 +23,13 @@ class Patte {
     private static final double a = 60, b = 120; // longueur des pattes
     private static final double[] r = {60, 60};    // rayon d'une patte posée
     private static final double[] avancee = {30, 10}; // avancée en millimètres
-    private static final double[] hauteur_debout = {-80, -80};
-    private static final double[] hauteur_baisse = {-110, -150};
-    private static final double[] hauteur_pousse = {-120, -160};
+    // hauteurs: haut, baisse et pousse
+    private static final double[][] hauteurs = {{-80, -80}, {-110, -150}, {-120, -160}};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
-    public static double avancee_effective = avancee[profil_actuel.ordinal()]*2;
+    public static double avancee_effective = avancee[profil_actuel.ordinal()]*2.34;
+    private static boolean symetrie;
     public double angle_hexa;
+    private int id;
     
 	/**
 	 * Constructeur d'une patte
@@ -39,6 +40,7 @@ class Patte {
 	public Patte(Serial serie, int id)
 	{
         this.etat = EtatPatte.OTHER;
+        this.id = id;
         moteurs = new TriMoteur(serie, 5*id+1);
 	}
 	
@@ -48,20 +50,17 @@ class Patte {
 	 * @param etat
 	 * @throws GoToException
 	 */
-	public void goto_etat(int role, EtatPatte etat) throws GoToException
+	public void goto_etat(EtatPatte etat) throws GoToException
 	{
-        goto_etat(role, etat, Sleep.temps_defaut);
+        goto_etat(etat, Sleep.temps_defaut);
 	}
 	
 	public void setAngle(double angle)
 	{
+	    if(symetrie)
+	        angle *= -1;
 	    angle_hexa = angle;
 	}
-
-    public void goto_etat(int role, EtatPatte etat, int temps) throws GoToException
-    {
-        goto_etat(role, etat, temps, angle_hexa);
-    }
 
 	/**
 	 * Change l'état de la patte
@@ -69,41 +68,28 @@ class Patte {
 	 * @param etat: l'état souhaité
 	 * @throws GoToException 
 	 */
-	public void goto_etat(int role, EtatPatte etat, int temps, double angle_direction) throws GoToException
+	public void goto_etat(EtatPatte etat, int temps) throws GoToException
 	{
 	    // On n'a pas le droit de demander à aller à OTHER (parce que ce n'est pas un endroit défini)
 	    if(etat == EtatPatte.OTHER)
 	        throw new GoToException();
-//	    if(etat == EnumEtatPatte.DEBOUT)
-//	        lever();
+
 	    else
 	    {
-    	    double angle = angles[role]-angle_direction;
-            angle_hexa = angle_direction;
+    	    double angle = angles[id]-angle_hexa;
     
             // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
             // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
             // (ici, c'est vu du dessus; dans setEtaMoteurs, c'est vu de côté)
             double x = r[profil_actuel.ordinal()]*Math.sin(angle);
-            double y;
-            if(etat == EtatPatte.ARRIERE || etat == EtatPatte.POUSSE)
-                y = r[profil_actuel.ordinal()]*Math.cos(angle) - avancee[profil_actuel.ordinal()];
-            else if(etat == EtatPatte.DEBOUT || etat == EtatPatte.AVANT)
-                y = r[profil_actuel.ordinal()]*Math.cos(angle) + avancee[profil_actuel.ordinal()];
-            else // HAUT ou POSE
-                y = r[profil_actuel.ordinal()]*Math.cos(angle);
+            double y = r[profil_actuel.ordinal()]*Math.cos(angle) + etat.avancee*avancee[profil_actuel.ordinal()];
         
             double new_r = Math.sqrt(x*x+y*y);
             double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
 //            System.out.println(new_r);
 //            System.out.println(new_angle);
-            
-            if(etat == EtatPatte.DEBOUT || etat == EtatPatte.HAUT)
-                setEtatMoteurs(new_angle, new_r, hauteur_debout[profil_actuel.ordinal()], temps);
-            else if(etat == EtatPatte.AVANT || etat == EtatPatte.ARRIERE || etat == EtatPatte.POSE)
-                setEtatMoteurs(new_angle, new_r, hauteur_baisse[profil_actuel.ordinal()], temps);
-            else if(etat == EtatPatte.POUSSE)
-                setEtatMoteurs(new_angle, new_r, hauteur_pousse[profil_actuel.ordinal()], temps); // et on pousse un peu sur les pattes
+
+            setEtatMoteurs(new_angle, new_r, hauteurs[etat.haut][profil_actuel.ordinal()], temps);
 	    }
         this.etat = etat; // le faire après setEtatMoteur qui met l'état à OTHER
     }
@@ -248,5 +234,14 @@ class Patte {
 	public EtatPatte getEtat()
 	{
 	    return etat;
+	}
+	
+	public static void setSymetrie(boolean symetrie)
+	{
+        if(symetrie)
+            System.out.println("On est rouge!");
+        else
+            System.out.println("On est jaune!");
+	    Patte.symetrie = symetrie;
 	}
 }

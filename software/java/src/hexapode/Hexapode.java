@@ -360,8 +360,11 @@ public class Hexapode implements Service {
    {
        int nb_iteration = (int) Math.round(((double)distance) / Patte.avancee_effective);
        while(nb_iteration > 0)
+       {
            if(deplacement.avancer_elementaire(ignore)); // si on a bougé
                nb_iteration--;
+       }
+       
    }
    
    /**
