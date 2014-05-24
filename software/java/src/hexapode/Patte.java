@@ -19,14 +19,15 @@ class Patte {
 	private EtatPatte etat;
 	public static Profil profil_actuel = Profil.BASIQUE;
 	
+	// TODO: sleep qui dépend du profil
+	
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
-    private static final double[] r = {60, 60};    // rayon d'une patte posée
-    private static final double[] avancee = {30, 10}; // avancée en millimètres
+    private static final double[][] r = {{60, 60, 40}, {60, 60, 50}, {60, 60, 60}};    // rayon d'une patte posée
+    private static final double[] avancee = {30, 10, 20}; // avancée en millimètres
     // hauteurs: haut, baisse et pousse
-    private static final double[][] hauteurs = {{-80, -80}, {-110, -150}, {-120, -160}};
+    private static final double[][] hauteurs = {{-80, -80, -80}, {-100, -150, -150}, {-120, -160, -160}};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
-    public static double avancee_effective = avancee[profil_actuel.ordinal()]*2.34;
     private static boolean symetrie;
     public double angle_hexa;
     private int id;
@@ -70,6 +71,7 @@ class Patte {
 	 */
 	public void goto_etat(EtatPatte etat, int temps) throws GoToException
 	{
+	    System.out.println(etat);
 	    // On n'a pas le droit de demander à aller à OTHER (parce que ce n'est pas un endroit défini)
 	    if(etat == EtatPatte.OTHER)
 	        throw new GoToException();
@@ -81,8 +83,8 @@ class Patte {
             // Pour additionner deux vecteurs en polaires, il faut forcément repasser en cartésien
             // ATTENTION: ce ne sont pas les mêmes x et y que setEtatMoteurs!
             // (ici, c'est vu du dessus; dans setEtaMoteurs, c'est vu de côté)
-            double x = r[profil_actuel.ordinal()]*Math.sin(angle);
-            double y = r[profil_actuel.ordinal()]*Math.cos(angle) + etat.avancee*avancee[profil_actuel.ordinal()];
+            double x = r[etat.haut][profil_actuel.ordinal()]*Math.sin(angle);
+            double y = r[etat.haut][profil_actuel.ordinal()]*Math.cos(angle) + etat.avancee*avancee[profil_actuel.ordinal()];
         
             double new_r = Math.sqrt(x*x+y*y);
             double new_angle = Math.atan2(x,y)-angle; // on cherche l'angle relatif pour la patte
@@ -243,5 +245,10 @@ class Patte {
         else
             System.out.println("On est jaune!");
 	    Patte.symetrie = symetrie;
+	}
+	
+	public static double getAvancee_effective()
+	{
+	    return avancee[profil_actuel.ordinal()]*2.34;
 	}
 }

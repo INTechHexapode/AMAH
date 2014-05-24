@@ -35,7 +35,7 @@ public enum EtatPatte {
         if(apres == EtatPatte.ARRIERE)
             return EtatPatte.POUSSE;
         else if(this == EtatPatte.ARRIERE && apres == EtatPatte.AVANT)
-            return EtatPatte.HAUT;
+            return EtatPatte.HAUT_AVANT;
         return null;
     }
     

@@ -55,16 +55,14 @@ public class Hexapode implements Service {
         try
         {
             recaler();
-            deplacement.setDirection(Direction.GAUCHE_BAS);
-            avancer_pres_bord(100);
-            deplacement.setDirection(Direction.BAS);
-            avancer_pres_bord(400);
+            Thread.sleep(5000);
+            deplacement.setAngle(-Math.PI+Math.PI/6);
+            deplacement.wait_jumper();
         } catch (Exception e)
         {
             // Exception impossible car le capteur est désactivé
             e.printStackTrace();
         }
-        deplacement.wait_jumper();
     }
     
     /**
@@ -103,24 +101,11 @@ public class Hexapode implements Service {
      * Se recale dans un coin supérieur droit (si jaune)
      * @throws EnnemiException 
      */
-    public void recaler() throws EnnemiException
+    public void recaler()
     {
-        deplacement.setMarche(Marche.RECALAGE);
         deplacement.setDirection(Direction.DROITE_HAUT);
-        deplacement.lever(EnumPatte.HAUT_DROITE);
-        deplacement.lever_gauche(EnumPatte.HAUT_GAUCHE);
-
-        EnumPatte[] ignore = {EnumPatte.HAUT_DROITE, EnumPatte.HAUT_GAUCHE};
-        try
-        {
-            avancer_pres_bord_en_ignorant(1000, ignore);
-        } catch (GoToException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        deplacement.arret();
-        deplacement.setMarche(Marche.BASIQUE);
+        deplacement.lever_droite(EnumPatte.HAUT_GAUCHE);
+        deplacement.lever_gauche(EnumPatte.HAUT_DROITE);
     }
 
     /**
@@ -330,7 +315,7 @@ public class Hexapode implements Service {
     */
    public void avancer_pres_bord_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, GoToException
    {
-       int nb_iteration = (int) Math.round(((double)distance) / Patte.avancee_effective);
+       int nb_iteration = (int) Math.round(((double)distance) / Patte.getAvancee_effective());
        while(nb_iteration > 0)
            if(deplacement.avancer_elementaire_pres_bord(ignore));
                nb_iteration--;
@@ -358,7 +343,7 @@ public class Hexapode implements Service {
     */
    public void avancer_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, BordureException, GoToException
    {
-       int nb_iteration = (int) Math.round(((double)distance) / Patte.avancee_effective);
+       int nb_iteration = (int) Math.round(((double)distance) / Patte.getAvancee_effective());
        while(nb_iteration > 0)
        {
            if(deplacement.avancer_elementaire(ignore)); // si on a bougé
@@ -383,6 +368,11 @@ public class Hexapode implements Service {
    public boolean isFini()
    {
        return isFini();
+   }
+   
+   public void setAngle(double angle)
+   {
+       deplacement.setAngle(angle);
    }
    
 }

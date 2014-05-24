@@ -30,6 +30,7 @@ public class Deplacement implements Service
     private Sleep sleep;
     
     private boolean maj_position;
+    private boolean bordure_activee;
 
     public Vec2 position; // position à laquelle l'hexapode se croit
     // Utilisé afin de pouvoir changer la direction
@@ -57,10 +58,12 @@ public class Deplacement implements Service
     private double angle_actuel = 0;
     private boolean isFini = false;
 
-    public Deplacement(Capteur capteur, Serial serie, Sleep sleep, boolean maj_position)
+    public Deplacement(Capteur capteur, Serial serie, Sleep sleep, boolean maj_position, boolean bordure_activee)
     {
         this.sleep = sleep;
         this.maj_position = maj_position;
+        this.bordure_activee = bordure_activee;
+        System.out.println("Bordure activee: "+bordure_activee);
         this.serie = serie;
         pattes = new Patte[6];
         
@@ -98,7 +101,7 @@ public class Deplacement implements Service
         arret();
         desasserv();
         // position = new Vec2(1300,1800);
-        position = new Vec2(0, 500);
+        position = new Vec2(0, 1000);
         setAngle(angle_actuel);
         
     }
@@ -182,7 +185,8 @@ public class Deplacement implements Service
         boolean out = goto_etat(prochain_pas);
 
         // On lève une exception si on est près d'une bordure et qu'on s'en rapproche (afin de pouvoir s'en dégager)
-        if(     (position.x > 1500-Config.ecart_bordure && Math.sin(angle_actuel) > 0)
+        if(     bordure_activee &&
+                (position.x > 1500-Config.ecart_bordure && Math.sin(angle_actuel) > 0)
                 || (position.x < -1500+Config.ecart_bordure && Math.sin(angle_actuel) < 0)
                 || (position.y > 2000-Config.ecart_bordure && Math.cos(angle_actuel) > 0)
                 || (position.y < Config.ecart_bordure && Math.cos(angle_actuel) < 0))
@@ -212,9 +216,9 @@ public class Deplacement implements Service
             if(intermediaire != null)
             {
                 avance |= (intermediaire == EtatPatte.POUSSE);
-
+                
                 int division_attente_tmp = pattes[i].getEtat().division_sleep_transition(obj);
-                if(division_attente_tmp != 0 && division_attente_tmp < division_attente)
+                if(division_attente == 0 || division_attente_tmp != 0 && division_attente_tmp < division_attente)
                     division_attente = division_attente_tmp;
                 pattes[i].goto_etat(intermediaire);
             }
@@ -231,7 +235,7 @@ public class Deplacement implements Service
             if(obj != pattes[i].getEtat()) // si on n'est pas encore arrivé
             {
                 int division_attente_tmp = pattes[i].getEtat().division_sleep_transition(obj);
-                if(division_attente_tmp != 0 && division_attente_tmp < division_attente)
+                if(division_attente == 0 || division_attente_tmp != 0 && division_attente_tmp < division_attente)
                     division_attente = division_attente_tmp;
     
                 pattes[i].goto_etat(obj);
@@ -481,9 +485,9 @@ public class Deplacement implements Service
     {
         if(maj_position)
         {
-            position.add(new Vec2((int) Math.round(Patte.avancee_effective
+            position.add(new Vec2((int) Math.round(Patte.getAvancee_effective()
                     * Math.cos(Math.PI/2 - pattes[0].angle_hexa)), (int) Math
-                    .round(Patte.avancee_effective
+                    .round(Patte.getAvancee_effective()
                             * Math.sin(Math.PI/2 - pattes[0].angle_hexa))));
             System.out.println(position);
         }
@@ -550,27 +554,7 @@ public class Deplacement implements Service
         if (angle != pattes[0].angle_hexa)
         {
             capteur.tourner(angle);
-            try
-            {
-                EtatPatte[] sauv = new EtatPatte[6];
-                for (int i = 0; i < 6; i++)
-                    sauv[i] = pattes[i].getEtat();
-
-                arret();
-
-                for (int i = 0; i < 3; i++)
-                    if (sauv[2 * i] != EtatPatte.OTHER)
-                        pattes[2 * i].goto_etat(sauv[2 * i]);
-                sleep.sleep();
-                for (int i = 0; i < 3; i++)
-                    if (sauv[2 * i + 1] != EtatPatte.OTHER)
-                        pattes[2 * i + 1].goto_etat(sauv[2 * i + 1]);
-                sleep.sleep();
-
-            } catch (GoToException e)
-            {
-                e.printStackTrace();
-            }
+            arret();
             System.out.println("Nouvel angle: " + angle);
         }
         for(int i = 0; i < 6; i++)

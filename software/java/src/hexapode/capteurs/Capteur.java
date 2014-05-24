@@ -37,6 +37,8 @@ public class Capteur implements Service {
      */
 	public boolean mesure()
 	{
+	    if(true)
+	        return false;
 	    if(!on)
 	        return false;
         // Calcul provenant des datasheets (SSC-32 et GP2Y0A21YK0F (sérieux, c'est quoi ce nom?? on dirait de la mauvaise SF))

@@ -20,6 +20,8 @@ public enum Mode
      */
     public EtatPatte getEtatPatte(char c)
     {
+        if(c == '?')
+            return EtatPatte.OTHER;
         return e[c-'0'];
     }
     

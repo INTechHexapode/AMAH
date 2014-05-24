@@ -1,5 +1,13 @@
 import hexapode.Deplacement;
+import hexapode.Hexapode;
+import hexapode.Vec2;
 import hexapode.capteurs.Sleep;
+import hexapode.enums.Marche;
+import hexapode.enums.Mode;
+import hexapode.enums.Profil;
+import hexapode.exceptions.BordureException;
+import hexapode.exceptions.EnnemiException;
+import hexapode.exceptions.GoToException;
 
 import java.util.*;
 
@@ -38,22 +46,54 @@ public class lanceur {
         }
 		
 		try {
-		    Container container = new Container(serie, false);
+		    Container container = new Container(serie, false, false);
     	    Deplacement deplacement = (Deplacement)container.getService("Deplacement");
+            Hexapode hexa = (Hexapode)container.getService("Hexapode");
+            Sleep sleep = (Sleep)container.getService("Sleep");
             if(serie != null)
             {
         		System.out.println("Attente");
         		scanner = new Scanner(System.in);
     		    scanner.nextLine();
             }
-    
+            if(serie == null)
+                throw new Exception();
+
+//            danse(deplacement, sleep);
+            
+            Sleep.temps_defaut = 1500;
+            hexa.avancer(300);
+            Sleep.temps_defaut = 100;
+            hexa.avancer(60);
+
+            sleep.sleep(3000);
+            Sleep.temps_defaut = 250;
+
+            while(true)
+            {
+                hexa.setAngle(0);
+                hexa.avancer(1000);
+                hexa.setAngle(Math.PI/3);
+                hexa.avancer(1000);
+                hexa.setAngle(2*Math.PI/3);
+                hexa.avancer(1000);
+                hexa.setAngle(Math.PI);
+                hexa.avancer(1000);
+                hexa.setAngle(-2*Math.PI/3);
+                hexa.avancer(1000);
+                hexa.setAngle(-Math.PI/3);
+                hexa.avancer(1000);
+            }
+            //lanceur_coupe(hexa);
+            
+            
 //            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
 //            TestEngine testEngine = new TestEngine(test);
 //            testEngine.start();
 
-          TestDeuxCoups test = new TestDeuxCoups(deplacement, 500000, 5000, 0, true, true);
-          TestEngine testEngine = new TestEngine(test);
-          testEngine.start();
+//          TestDeuxCoups test = new TestDeuxCoups(deplacement, 500000, 5000, 0, true, true);
+//          TestEngine testEngine = new TestEngine(test);
+//          testEngine.start();
           
 //            deplacement.setMode(Mode.BIPHASE, Marche.BASIQUE);
 //            hexa.avancer(100);
@@ -84,20 +124,50 @@ public class lanceur {
             try
             {
                 serie.communiquer("VD");
-                System.out.println("Mesure: "+serie.readByte());
+                System.out.println("Mesure: "+(int)(serie.readByte()));
             } catch (SerialException e)
             {
+                e.printStackTrace();
+            }
+            try
+            {
+                Thread.sleep(500);
+            } catch (InterruptedException e)
+            {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
 
 	}
 	
-	public static void lanceur_coupe(Serial serie)
+	public static void lanceur_coupe(Hexapode hexa)
 	{
-        Container container = new Container(serie, false);
-        Decision decision = (Decision)container.getService("Decision");
-        decision.lancement();
+        hexa.initialiser();
+        try
+        {
+            hexa.va_au_point(new Vec2(1600, 800));
+        } catch (EnnemiException | BordureException e)
+        {
+            e.printStackTrace();
+        }
+	}
+	
+	public static void danse(Deplacement deplacement, Sleep sleep)
+	{
+        Sleep.temps_defaut = 500;
+	    
+	    int[] tab = {0,1,2,5,4,3};
+	    for(int i = 0; i < 8; i++)
+	    {
+	        for(int j = 0; j < 6; j++)
+	        {
+                int k = tab[j];
+	            deplacement.lever(k);
+	            sleep.sleep();
+                deplacement.baisser((k+5)%6);
+	        }
+	    }
 	}
 	
 }
