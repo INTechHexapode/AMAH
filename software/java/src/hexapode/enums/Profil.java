@@ -9,6 +9,7 @@ package hexapode.enums;
 public enum Profil
 {
     BASIQUE,
-    ENJAMBER;
+    ENJAMBER,
+    COUPE;
 
 }

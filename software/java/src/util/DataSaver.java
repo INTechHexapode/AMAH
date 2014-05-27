@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import test.Markov;
+import test.MarkovNCoups;
 import test.TestStep;
 
 /**
@@ -48,20 +49,29 @@ public class DataSaver {
 		}
     }
 
-    public static void sauvegarder_matrice(Markov markov, boolean sauvegarde_intermediaire)
+    public static void sauvegarder_matrice(MarkovNCoups markov, boolean sauvegarde_intermediaire)
     {
-        markov.prepareForSave();
-			if(sauvegarde_intermediaire)
+        String filename;
+        long date = System.currentTimeMillis();
+        if(markov instanceof Markov)
+        {
+            
+            ((Markov)markov).prepareForSave();
+            filename = "logs/markov-"+date+".dat";
+        }
+        else
+            filename = "logs/markovNCoups-"+date+".dat";
+
+        if(sauvegarde_intermediaire)
+		{
+	    	try {
+				sauvegarder(markov, filename);
+	    	}
+			catch(Exception e)
 			{
-		    	try {
-					long date = System.currentTimeMillis();
-					sauvegarder(markov, "logs/markov-"+date+".dat");
-		    	}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				e.printStackTrace();
 			}
+		}
 
     	try {
 			sauvegarder(markov, "markov.dat");
@@ -94,10 +104,10 @@ public class DataSaver {
 		}
     }
     
-    public static Markov charger_matrice(String filename)
+    public static MarkovNCoups charger_matrice(String filename)
 	{
 		try {
-			Markov markov = (Markov) charger(filename);
+		    MarkovNCoups markov = (MarkovNCoups) charger(filename);
 			return markov;
 		}
 		catch(Exception e)
@@ -106,7 +116,20 @@ public class DataSaver {
 		}
 		return null;
 	}
-    
+
+    public static MarkovNCoups charger_matrice_deux_coups(String filename)
+    {
+        try {
+            MarkovNCoups markov = (MarkovNCoups) charger(filename);
+            return markov;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static double[] charger_matrice_equilibre(String filename)
 	{
 		try {

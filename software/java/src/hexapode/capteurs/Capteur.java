@@ -17,7 +17,6 @@ import serial.SerialException;
 
 public class Capteur implements Service {
 
-    // Pourquoi static? PARCE QUE CE CODE EST TRÈS MOCHE, VOILÀ POURQUOI.
     private static Serial serie;
     private static final int nb_mesures = 20;
     private int[] dernieres_mesures = new int[nb_mesures];
@@ -38,6 +37,8 @@ public class Capteur implements Service {
      */
 	public boolean mesure()
 	{
+	    if(true)
+	        return false;
 	    if(!on)
 	        return false;
         // Calcul provenant des datasheets (SSC-32 et GP2Y0A21YK0F (sérieux, c'est quoi ce nom?? on dirait de la mauvaise SF))
@@ -51,14 +52,14 @@ public class Capteur implements Service {
 	 * Tourne le capteur dans la direction désirée.
 	 * @param direction
 	 */
-	public void tourner(int direction)
+	public void tourner(double angle)
 	{
 	    // TODO: calcul de l'ordre en fonction de la direction
-	    int angle = 1500;
+	    int ordre = 1500;
 	    if(serie != null)
             try
             {
-                serie.communiquer("#15P"+Integer.toString(angle));
+                serie.communiquer("#15P"+Integer.toString(ordre));
             } catch (SerialException e)
             {
                 e.printStackTrace();
@@ -114,8 +115,6 @@ public class Capteur implements Service {
                 dernieres_mesures[indice] = mesure;
                 indice++;
                 indice %= nb_mesures;
-                
-                // Calcul de médiane
             } catch (SerialException e)
             {
                 e.printStackTrace();
@@ -135,11 +134,13 @@ public class Capteur implements Service {
 
     public void setOn()
     {
+        System.out.println("Capteur activé");
         on = true;
     }
     
     public void setOff()
     {
+        System.out.println("Capteur désactivé");
         on = false;
     }
     

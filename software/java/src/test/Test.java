@@ -16,7 +16,7 @@ public abstract class Test {
 	protected double consecutiveLearnTime;	//Temps de test entre chaque pause en seconde
 	protected double pauseTime;				//Temps d'arr�t par pause en seconde
 	protected Deplacement deplacement;
-	protected Markov markov;
+	protected MarkovNCoups markov;
 	protected boolean restartMarkov;
 	protected boolean validation;
 	protected String etat_actuel;
@@ -47,7 +47,7 @@ public abstract class Test {
 	{
         updateNote();
         if(!validation)
-            markov.updateMatrix(note, etat_actuel, etat_suivant);
+            markov.updateMatrix(note);
 //		if(!validation)
 //			sauvegarde_matrice(false);
 		//DataSaver.sauvegarder_test(etat_suivant, result);
@@ -87,13 +87,13 @@ public abstract class Test {
 		DataSaver.sauvegarder_matrice(markov, sauvegarde_intermediaire);
 	}
 	
-	protected Markov chargement_matrice()
+	protected MarkovNCoups chargement_matrice()
 	{
 		return chargement_matrice("markov.dat");
 	}
 	
-	protected Markov chargement_matrice(String filename)
+	protected MarkovNCoups chargement_matrice(String filename)
 	{
-		return Markov.charger_matrice(filename);
+		return MarkovNCoups.charger_matrice(filename);
 	}
 }

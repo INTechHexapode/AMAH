@@ -72,6 +72,22 @@ public class Vec2
     {
         return a.x*b.x+a.y*b.y;
     }
+
+    public double length()
+    {
+        return Math.sqrt(x*x+y*y);
+    }
+
+    public double squared_distance(Vec2 o)
+    {
+        return (x-o.x)*(x-o.x)+(y-o.y)*(y-o.y);
+    }
+    
+    public Vec2 clone()
+    {
+        return new Vec2(this);
+    }
+
     
     @Override
     public boolean equals(Object other)
@@ -82,6 +98,22 @@ public class Vec2
             return false;
         Vec2 a = (Vec2) other;
         return x == a.x && y == a.y;
+    }
+    
+    /**
+     * Renvoie la distance du point au bord du terrain.
+     * @return
+     */
+    public double distance_au_bord()
+    {
+        double min = y;
+        if(Math.abs(2000-y) < min)
+            min = Math.abs(2000-y);
+        if(Math.abs(1500-x) < min)
+            min = Math.abs(1500-x);
+        if(Math.abs(1500+x) < min)
+            min = Math.abs(1500+x);
+        return min;
     }
     
     @Override

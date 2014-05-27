@@ -1,5 +1,11 @@
 package test;
 
+/**
+ * Pair d'entier, utilisé pour la compression de matrice
+ * @author pf
+ *
+ */
+
 public class IntPair implements java.io.Serializable
 {
     private static final long serialVersionUID = 1L;

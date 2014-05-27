@@ -2,7 +2,6 @@ package test;
 
 import hexapode.Deplacement;
 import hexapode.enums.Mode;
-import hexapode.exceptions.EnnemiException;
 
 public class TestCoordinationPattesSimulation extends Test {
 
@@ -37,7 +36,7 @@ public class TestCoordinationPattesSimulation extends Test {
 			try
             {
 			    deplacement.goto_etat(etat_suivant);
-            } catch (EnnemiException e)
+            } catch (Exception e)
             {
                 e.printStackTrace();
             }
