@@ -135,6 +135,13 @@ public class Hexapode implements Service {
         deplacement.setMarche(Marche.BASIQUE);
     }
     
+    public void va_au_point_relatif(Vec2 relatif) throws EnnemiException, BordureException
+    {
+        Vec2 point = relatif.clone();
+        point.add(deplacement.getPosition());
+        va_au_point(point);
+    }
+    
 	/**
      * Va au point
 	 * @param points
@@ -143,10 +150,10 @@ public class Hexapode implements Service {
 	 */
 	public void va_au_point(Vec2 point) throws EnnemiException, BordureException
 	{
-        // Détermination de l'évitement (on évite du côté où on a de a place)
-        Evite evite;
         Vec2 relatif = point.clone();
         relatif.sub(deplacement.getPosition());
+        // Détermination de l'évitement (on évite du côté où on a de a place)
+        Evite evite;
         Vec2 point_gauche = new Vec2(-100*Math.max(point.x, point.y)/point.x, 100*Math.max(point.x, point.y)/point.y);
         Vec2 point_droite = new Vec2(100*Math.max(point.x, point.y)/point.x, -100*Math.max(point.x, point.y)/point.y);
         point_gauche.add(deplacement.getPosition());
@@ -339,7 +346,7 @@ public class Hexapode implements Service {
     * @param ignore
     * @throws EnnemiException
     * @throws BordureException
- * @throws GoToException 
+    * @throws GoToException 
     */
    public void avancer_en_ignorant(int distance, EnumPatte[] ignore) throws EnnemiException, BordureException, GoToException
    {
