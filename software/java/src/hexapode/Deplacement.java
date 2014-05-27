@@ -363,7 +363,7 @@ public class Deplacement implements Service
                 throw new EnnemiException();
         }
 
-        if (date_debut != -1 && System.currentTimeMillis() - date_debut > 90000)
+        if (date_debut != -1 && System.currentTimeMillis() - date_debut > 85000)
             fin_match();
     }
 
@@ -375,9 +375,14 @@ public class Deplacement implements Service
         isFini = true;
         arret();
         desasserv();
+        sleep.sleep(500);
         serie.close();
     }
     
+    /**
+     * A tester
+     * @return
+     */
     public boolean isFini()
     {
         return isFini;
@@ -493,6 +498,9 @@ public class Deplacement implements Service
         }
     }
 
+    /**
+     * Bloquant
+     */
     public void wait_jumper()
     {
         while(!capteur.jumper())
@@ -502,7 +510,7 @@ public class Deplacement implements Service
         Patte.setSymetrie(capteur.getInverser());
 
         capteur.setOn();
-        position = new Vec2(1300, 1800); // TODO ajuster
+//        position = new Vec2(1300, 1800); // TODO ajuster
     }
 
     /**
