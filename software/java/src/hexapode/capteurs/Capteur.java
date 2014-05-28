@@ -23,6 +23,7 @@ public class Capteur implements Service {
     private int indice = 0;
     private int mediane = 100;
     private boolean on = false;
+    private int infrarouge = 0; // 0: avant 1: arrière
     
     
     public Capteur(Serial serie)
@@ -54,11 +55,26 @@ public class Capteur implements Service {
 	 */
 	public void tourner(double angle)
 	{
+		if(angle*180/Math.PI < -50)
+		{
+			infrarouge = 1;
+			angle += Math.PI;
+		}
+		else if(angle*180/Math.PI > 130)
+		{
+			infrarouge = 1;
+			angle -= Math.PI;
+		}
+		else
+			infrarouge = 0;
+		
+		int ordre = (int)((angle/Math.PI+50/180)*(1200)) + 800;
+		
 	    // TODO: calcul de l'ordre en fonction de la direction
-	    int ordre = 1500;
 	    if(serie != null)
             try
             {
+            	if(ordre >= 800 && ordre <= 2000)
                 serie.communiquer("#15P"+Integer.toString(ordre));
             } catch (SerialException e)
             {
@@ -110,7 +126,10 @@ public class Capteur implements Service {
         if(serie != null)
             try
             {
-                serie.communiquer("VD");
+            	if(infrarouge == 0)
+            		serie.communiquer("VC");
+            	else
+            		serie.communiquer("VD");
                 int mesure = serie.readByte();
                 dernieres_mesures[indice] = mesure;
                 indice++;
