@@ -18,7 +18,7 @@ import serial.SerialException;
 public class Capteur implements Service {
 
     private static Serial serie;
-    private static final int nb_mesures = 20;
+    private static final int nb_mesures = 10;
     private int[] dernieres_mesures = new int[nb_mesures];
     private int indice = 0;
     private int mediane = 100;
@@ -87,7 +87,7 @@ public class Capteur implements Service {
 	}
 	
 	/**
-	 * Renvoie vrai si le jumper est retiré, faux sinon.
+	 * Renvoie faux si le jumper est retiré, true sinon.
 	 * @return
 	 */
 	public boolean jumper()
@@ -101,10 +101,10 @@ public class Capteur implements Service {
             {
                 e.printStackTrace();
             }
-        return true;
+        return false;
 	}
 
-	   /**
+	 /**
      * Renvoie vrai si on est rouge, faux sinon.
      * @return
      */
@@ -173,3 +173,4 @@ public class Capteur implements Service {
     }
     
 }
+    
