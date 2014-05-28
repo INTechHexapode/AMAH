@@ -54,10 +54,7 @@ public class Hexapode implements Service {
     {
         try
         {
-            
         	recaler();
-            Thread.sleep(5000);
-            deplacement.setAngle(-Math.PI+Math.PI/6);
             deplacement.wait_jumper();
         } catch (Exception e)
         {
@@ -88,7 +85,6 @@ public class Hexapode implements Service {
                         
 //            recaler();
             // TODO set position
-            
             deplacement.setDirection(Direction.BAS);
             //deplacement.setCapteurOn();
         } catch (Exception e)
@@ -104,9 +100,12 @@ public class Hexapode implements Service {
      */
     public void recaler()
     {
-        deplacement.setDirection(Direction.DROITE_HAUT);
         deplacement.lever_droite(EnumPatte.HAUT_GAUCHE);
         deplacement.lever_gauche(EnumPatte.HAUT_DROITE);
+        deplacement.lever(1);
+        deplacement.lever(2);
+        deplacement.lever(4);
+        deplacement.lever(5);
     }
 
     /**
@@ -169,7 +168,7 @@ public class Hexapode implements Service {
         else
             evite = Evite.PAR_LA_DROITE;
         
-        System.out.println(evite);
+//        System.out.println(evite);
         
         try
         {
@@ -180,6 +179,7 @@ public class Hexapode implements Service {
             e.printStackTrace();
             try
             {
+                System.out.println("Erreur d'angles, on utilise les six directions usuelles");
                 va_au_point_indirect(point, evite);
             } catch (GoToException e1)
             {
@@ -208,7 +208,7 @@ public class Hexapode implements Service {
 	 * @throws BordureException 
 	 * @throws GoToException 
 	 */
-	private void va_au_point_indirect(Vec2 point, Evite evite) throws EnnemiException, BordureException, GoToException
+	public void va_au_point_indirect(Vec2 point, Evite evite) throws EnnemiException, BordureException, GoToException
 	{
 	    // On décompose le vecteur (x,y) sur la base formée par les deux vecteurs direction les plus proches de (x,y).
 	    // Cette base n'étant pas orthogonale, la formule est peu plus complexe qu'un produit scalaire.
@@ -227,14 +227,14 @@ public class Hexapode implements Service {
         
         double longueur1 = 2*(Vec2.scalaire(relatif, orthogonal[2*((direction1+6)%6)]))/racinede3;
         double longueur2 = 2*(Vec2.scalaire(relatif, orthogonal[2*((direction1+6)%6)+1]))/racinede3;
-
+/*
         System.out.println("relatif: "+relatif);        
         System.out.println("direction1: "+direction1+", direction2: "+direction2);
         System.out.println("orthogonal1: "+orthogonal[1]);
         System.out.println("longueur1: "+longueur1+", longueur2: "+longueur2);
         System.out.println("x: "+(longueur1*Math.cos(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.cos(Math.PI/2-direction2*Math.PI/3)));
         System.out.println("y: "+(longueur1*Math.sin(Math.PI/2-direction1*Math.PI/3)+longueur2*Math.sin(Math.PI/2-direction2*Math.PI/3)));
-
+*/
         // Si trajectoire_horaire est vrai, on tourne à gauche avant de tourner à droite
         // Sinon, c'est le contraire            
         if(evite == Evite.PAR_LA_GAUCHE)
@@ -328,7 +328,7 @@ public class Hexapode implements Service {
        {
            if(deplacement.avancer_elementaire_pres_bord(ignore));
                nb_iteration--;
-           System.out.println(nb_iteration + " " + deplacement.avancer_elementaire_pres_bord(ignore));
+//           System.out.println(nb_iteration + " " + deplacement.avancer_elementaire_pres_bord(ignore));
        }
    }
 

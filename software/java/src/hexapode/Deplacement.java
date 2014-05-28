@@ -101,8 +101,8 @@ public class Deplacement implements Service
         arret();
         desasserv();
         // position = new Vec2(1300,1800);
-        position = new Vec2(0, 1000);
-        setAngle(angle_actuel);
+        position = new Vec2(0, 0);
+        setAngle(angle_actuel, true);
         
     }
 
@@ -186,10 +186,10 @@ public class Deplacement implements Service
 
         // On lève une exception si on est près d'une bordure et qu'on s'en rapproche (afin de pouvoir s'en dégager)
         if(     bordure_activee &&
-                (position.x > 1500-Config.ecart_bordure && Math.sin(angle_actuel) > 0)
+                ((position.x > 1500-Config.ecart_bordure && Math.sin(angle_actuel) > 0)
                 || (position.x < -1500+Config.ecart_bordure && Math.sin(angle_actuel) < 0)
                 || (position.y > 2000-Config.ecart_bordure && Math.cos(angle_actuel) > 0)
-                || (position.y < Config.ecart_bordure && Math.cos(angle_actuel) < 0))
+                || (position.y < Config.ecart_bordure && Math.cos(angle_actuel) < 0)))
             throw new BordureException(out);
         return out;
     }
@@ -256,7 +256,7 @@ public class Deplacement implements Service
         if (marche_actuelle == Marche.MARKOV)
         {
             pas_actuel = marcheApprise[mode.ordinal()].nextValidation(pas_actuel);
-            System.out.println("pas actuel: "+pas_actuel);
+//            System.out.println("pas actuel: "+pas_actuel);
         }
         else
         {
@@ -357,9 +357,9 @@ public class Deplacement implements Service
         while (detecter_ennemi())
         {
             System.out.println("Ennemi détecté! Attente.");
-            sleep.sleep(Config.attente_avant_evitement / 5);
+            sleep.sleep(Config.attente_avant_evitement / 10);
             attente++;
-            if (attente == 5)
+            if (attente == 10)
                 throw new EnnemiException();
         }
 
@@ -494,7 +494,7 @@ public class Deplacement implements Service
                     * Math.cos(Math.PI/2 - pattes[0].angle_hexa)), (int) Math
                     .round(Patte.getAvancee_effective()
                             * Math.sin(Math.PI/2 - pattes[0].angle_hexa))));
-            System.out.println(position);
+//            System.out.println(position);
         }
     }
 
@@ -504,16 +504,15 @@ public class Deplacement implements Service
     public void wait_jumper()
     {
         while(capteur.jumper())
-        {
-            System.out.println(capteur.jumper());
             sleep.sleep(100);
-        }
+
         System.out.println("Le match commence!");
         date_debut = System.currentTimeMillis();
-        Patte.setSymetrie(capteur.getInverser());
+        boolean symetrie = capteur.getInverser();
+
+        Patte.setSymetrie(symetrie);
 
         capteur.setOn();
-//        position = new Vec2(1300, 1800); // TODO ajuster
     }
 
     /**
@@ -554,6 +553,11 @@ public class Deplacement implements Service
      */
     public void setAngle(double angle)
     {
+        setAngle(angle, false);
+    }
+    
+    private void setAngle(double angle, boolean force)
+    {
         this.angle_actuel = angle;
         if(angle < -Math.PI)
             angle += 2*Math.PI;
@@ -562,11 +566,11 @@ public class Deplacement implements Service
 
         // si ce n'est pas déjà l'angle actuel
         // TODO mettre une tolérance au lieu d'une égalité
-        if (angle != pattes[0].angle_hexa)
+        if (force || angle != pattes[0].angle_hexa)
         {
             capteur.tourner(angle);
             arret();
-            System.out.println("Nouvel angle: " + angle);
+            System.out.println("Nouvelle direction: " + angle);
         }
         for(int i = 0; i < 6; i++)
             pattes[i].setAngle(angle);

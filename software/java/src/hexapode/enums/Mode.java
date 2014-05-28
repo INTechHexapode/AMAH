@@ -3,8 +3,8 @@ package hexapode.enums;
 public enum Mode
 {
     BIPHASE(new EtatPatte[] {EtatPatte.ARRIERE, EtatPatte.AVANT}),
-    TRIPHASE(new EtatPatte[] {EtatPatte.ARRIERE, EtatPatte.HAUT, EtatPatte.AVANT}),
-    QUADRIPHASE(new EtatPatte[] {EtatPatte.ARRIERE, EtatPatte.HAUT_ARRIERE, EtatPatte.HAUT_AVANT, EtatPatte.AVANT});
+    TRIPHASE(new EtatPatte[] {EtatPatte.ARRIERE, EtatPatte.HAUT, EtatPatte.AVANT});
+//    QUADRIPHASE(new EtatPatte[] {EtatPatte.ARRIERE, EtatPatte.HAUT_ARRIERE, EtatPatte.HAUT_AVANT, EtatPatte.AVANT});
     
     private EtatPatte[] e;
     

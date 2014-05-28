@@ -22,8 +22,9 @@ public class Capteur implements Service {
     private int[] dernieres_mesures = new int[nb_mesures];
     private int indice = 0;
     private int mediane = 100;
-    private boolean on = false;
+    private boolean on = true;
     private int infrarouge = 0; // 0: avant 1: arrière
+    private boolean symetrie;
     
     public Capteur(Serial serie)
     {
@@ -53,31 +54,32 @@ public class Capteur implements Service {
 	 */
 	public void tourner(double angle)
 	{
-	    // 600
-	    // 2300
-	    double initial = 0;
-	    System.out.println("angle: "+angle);
-		if(angle*180/Math.PI < initial)
-		{
-			infrarouge = 1;
-			angle += Math.PI;
-		}
-		else if(angle*180/Math.PI > 180+initial)
+        if(symetrie)
+            angle *= -1;
+
+        if(angle > Math.PI)
+	        angle -= 2*Math.PI;
+	    else if(angle < -Math.PI)
+	        angle += 2*Math.PI;
+
+	    if(angle < -130.*Math.PI/180.)
+	    {
+	        angle += Math.PI;
+	        infrarouge = 1;
+	    }
+	    else if(angle > (-130.+180.)*Math.PI/180.)
 		{
 			infrarouge = 1;
 			angle -= Math.PI;
 		}
 		else
 			infrarouge = 0;
-        System.out.println("angle: "+angle);
 		
-		int ordre = (int)((angle/Math.PI-initial/180.)*1700.) + 600;
+		int ordre = (int)((-angle/Math.PI-130./180.)*1700.) + 2300;
 		
-	    // TODO: calcul de l'ordre en fonction de la direction
 	    if(serie != null)
             try
             {
-                System.out.println("Ordre: "+ordre);
             	if(ordre >= 600 && ordre <= 2300)
                 serie.communiquer("#24P"+Integer.toString(ordre));
             } catch (SerialException e)
@@ -114,7 +116,8 @@ public class Capteur implements Service {
             try
             {
                 serie.communiquer("A");
-                return serie.readBoolean();
+                symetrie = serie.readBoolean();
+                return symetrie;
             } catch (SerialException e)
             {
                 e.printStackTrace();
@@ -131,9 +134,9 @@ public class Capteur implements Service {
             try
             {
             	if(infrarouge == 0)
-            		serie.communiquer("VB");
-            	else
             		serie.communiquer("VD");
+            	else
+            		serie.communiquer("VB");
                 int mesure = serie.readByte();
                 dernieres_mesures[indice] = mesure;
                 indice++;

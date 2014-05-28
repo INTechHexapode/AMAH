@@ -24,9 +24,9 @@ class Patte {
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
     private static final double[][] r = {{60, 60, 40}, {60, 60, 50}, {60, 60, 60}};    // rayon d'une patte posée
-    private static final double[] avancee = {30, 10, 20}; // avancée en millimètres
+    private static final double[] avancee = {25, 10, 20}; // avancée en millimètres
     // hauteurs: haut, baisse et pousse
-    private static final double[][] hauteurs = {{-80, -80, -80}, {-100, -150, -150}, {-120, -160, -160}};
+    private static final double[][] hauteurs = {{-80, -80, -80}, {-140, -150, -150}, {-140, -160, -160}};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
     private static boolean symetrie;
     public double angle_hexa;
@@ -71,7 +71,7 @@ class Patte {
 	 */
 	public void goto_etat(EtatPatte etat, int temps) throws GoToException
 	{
-	    System.out.println(etat);
+//	    System.out.println(etat);
 	    // On n'a pas le droit de demander à aller à OTHER (parce que ce n'est pas un endroit défini)
 	    if(etat == EtatPatte.OTHER)
 	        throw new GoToException();

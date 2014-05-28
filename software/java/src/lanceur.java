@@ -3,19 +3,12 @@ import hexapode.Hexapode;
 import hexapode.Vec2;
 import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
-import hexapode.enums.Marche;
-import hexapode.enums.Mode;
-import hexapode.enums.Profil;
+import hexapode.enums.Evite;
 import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
-
-import java.util.*;
-
 import container.Container;
-import scripts.Decision;
 import serial.Serial;
-import serial.SerialException;
 import serial.SerialManager;
 import test.*;
 
@@ -29,7 +22,6 @@ public class lanceur {
 	public static void main(String[] args) {
 		SerialManager serialmanager;
 		Serial serie = null;
-		Scanner scanner = null;
         Sleep.temps_defaut = 250;
 		try {
 		    serialmanager = new SerialManager();
@@ -43,58 +35,11 @@ public class lanceur {
 		    Container container = new Container(serie, false, false);
     	    Deplacement deplacement = (Deplacement)container.getService("Deplacement");
             Hexapode hexa = (Hexapode)container.getService("Hexapode");
-            Sleep sleep = (Sleep)container.getService("Sleep");
-            Capteur capteur = (Capteur)container.getService("Capteur");
-            if(serie != null)
-            {
-        		System.out.println("Attente");
-        		scanner = new Scanner(System.in);
-    		    scanner.nextLine();
-            }
             if(serie == null)
                 throw new Exception();
-
-            Sleep.temps_defaut = 250;
-            lanceur_coupe(hexa, deplacement);
-           /* if(true)
-            	return;
-            
-            Sleep.temps_defaut = 1500;
-            hexa.avancer(300);
-            Sleep.temps_defaut = 100;
-            hexa.avancer(60);
-
-            sleep.sleep(3000);
-            Sleep.temps_defaut = 250;
-
-            while(true)
-            {
-                hexa.setAngle(0);
-                hexa.avancer(1000);
-                hexa.setAngle(Math.PI/3);
-                hexa.avancer(1000);
-                hexa.setAngle(2*Math.PI/3);
-                hexa.avancer(1000);
-                hexa.setAngle(Math.PI);
-                hexa.avancer(1000);
-                hexa.setAngle(-2*Math.PI/3);
-                hexa.avancer(1000);
-                hexa.setAngle(-Math.PI/3);
-                hexa.avancer(1000);
-            }*/
-            
-            
-//            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
-//            TestEngine testEngine = new TestEngine(test);
-//            testEngine.start();
-
-//          TestDeuxCoups test = new TestDeuxCoups(deplacement, 500000, 5000, 0, true, true);
-//          TestEngine testEngine = new TestEngine(test);
-//          testEngine.start();
-          
-//            deplacement.setMode(Mode.BIPHASE, Marche.BASIQUE);
-//            hexa.avancer(100);
-    //        hexa.va_au_point(new Vec2(-100, 600), true);
+//            deplacement.arret();
+//            hexa.avancer(600);
+              lanceur_coupe(hexa, deplacement);
 		}
 		catch(Exception e)
 		{
@@ -102,7 +47,6 @@ public class lanceur {
 		}
 		if(serie != null)
 		{
-	        scanner.close();
 		    serie.close();
 		}
 	}
@@ -114,21 +58,17 @@ public class lanceur {
         testEngine.start();
 	}
 	
-	public static void test_capteur(Serial serie)
+	public static void test_capteur(Capteur capteur)
 	{
-        for(int i = 0; i < 100; i++)
+	    capteur.setOn();
+        for(int i = 0; i < 1000; i++)
         {
+            capteur.genere_mesure();
+            capteur.genere_mediane();
+            System.out.println(capteur.mesure());
             try
             {
-                serie.communiquer("VB");
-                System.out.println("Mesure: "+(int)(serie.readByte()));
-            } catch (SerialException e)
-            {
-                e.printStackTrace();
-            }
-            try
-            {
-                Thread.sleep(500);
+                Thread.sleep(50);
             } catch (InterruptedException e)
             {
                 // TODO Auto-generated catch block
@@ -143,17 +83,15 @@ public class lanceur {
         hexa.initialiser();
         
         try {
-			hexa.va_au_point_relatif(new Vec2(0, -500));
-			hexa.va_au_point_relatif(new Vec2(-1000, 0));
+			hexa.va_au_point_indirect(new Vec2(-1500, -100), Evite.PAR_LA_GAUCHE);
 		} catch (EnnemiException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BordureException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} catch (GoToException e) {
+            e.printStackTrace();
+        }
         
-    	hexa.poser_fresques();
 	}
 	
 	public static void danse(Deplacement deplacement, Sleep sleep)

@@ -33,18 +33,14 @@ public class Sleep implements Service {
      */
 	public void sleep(long millis)
 	{
+	    millis -= 80;
 		try {
-	        if(capteur.isOn())
-	        {
-    		    for(int i = 0; i < 5; i++)
-    		    {
-    		        capteur.genere_mesure();
-    		        Thread.sleep(millis/5);
-    		    }
-                capteur.genere_mediane();
-	        }
-	        else
-	            Thread.sleep(millis);
+		    for(int i = 0; i < 3; i++)
+		    {
+		        capteur.genere_mesure();
+		        Thread.sleep(millis/3);
+		    }
+            capteur.genere_mediane();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
