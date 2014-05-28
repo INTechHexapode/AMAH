@@ -1,6 +1,7 @@
 import hexapode.Deplacement;
 import hexapode.Hexapode;
 import hexapode.Vec2;
+import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
 import hexapode.enums.Marche;
 import hexapode.enums.Mode;
@@ -50,16 +51,59 @@ public class lanceur {
     	    Deplacement deplacement = (Deplacement)container.getService("Deplacement");
             Hexapode hexa = (Hexapode)container.getService("Hexapode");
             Sleep sleep = (Sleep)container.getService("Sleep");
-/*            if(serie != null)
+            Capteur capteur = (Capteur)container.getService("Capteur");
+            if(serie != null)
             {
         		System.out.println("Attente");
         		scanner = new Scanner(System.in);
     		    scanner.nextLine();
-            }*/
+            }
             if(serie == null)
                 throw new Exception();
-            test_capteur(serie);
-//            lanceur_coupe(hexa);
+
+//            danse(deplacement, sleep);
+            
+            capteur.tourner(0);
+            if(true)
+            	return;
+            
+            Sleep.temps_defaut = 1500;
+            hexa.avancer(300);
+            Sleep.temps_defaut = 100;
+            hexa.avancer(60);
+
+            sleep.sleep(3000);
+            Sleep.temps_defaut = 250;
+
+            while(true)
+            {
+                hexa.setAngle(0);
+                hexa.avancer(1000);
+                hexa.setAngle(Math.PI/3);
+                hexa.avancer(1000);
+                hexa.setAngle(2*Math.PI/3);
+                hexa.avancer(1000);
+                hexa.setAngle(Math.PI);
+                hexa.avancer(1000);
+                hexa.setAngle(-2*Math.PI/3);
+                hexa.avancer(1000);
+                hexa.setAngle(-Math.PI/3);
+                hexa.avancer(1000);
+            }
+            //lanceur_coupe(hexa);
+            
+            
+//            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
+//            TestEngine testEngine = new TestEngine(test);
+//            testEngine.start();
+
+//          TestDeuxCoups test = new TestDeuxCoups(deplacement, 500000, 5000, 0, true, true);
+//          TestEngine testEngine = new TestEngine(test);
+//          testEngine.start();
+          
+//            deplacement.setMode(Mode.BIPHASE, Marche.BASIQUE);
+//            hexa.avancer(100);
+    //        hexa.va_au_point(new Vec2(-100, 600), true);
 		}
 		catch(Exception e)
 		{
@@ -129,20 +173,6 @@ public class lanceur {
 	            sleep.sleep();
                 deplacement.baisser((k+5)%6);
 	        }
-	    }
-	}
-	
-	public static void peur(Hexapode hexa)
-	{
-	    try {
-            Sleep.temps_defaut = 1500;
-            hexa.avancer(300);
-            Sleep.temps_defaut = 100;
-            hexa.avancer(60);
-	    }
-	    catch(Exception e)
-	    {
-	        e.printStackTrace();
 	    }
 	}
 	
