@@ -21,14 +21,7 @@ import test.*;
 
 /*
  * TODO list (méca/élec)
- * Cartes électroniques (alim/capteurs)
- * Capteur 2 ultrason ou infrarouge + servo (on tourne le capteur dans la direction où on va)
- * Jumper
- * Bouton d'arrêt d'urgence
- * Raspberry
  * Lipo
- * Un ou deux boutons de manière à pouvoir le configurer sans pc?...
- * (un commutateur pour la couleur, un bouton poussoir pour le recalage)
  */
 
 public class lanceur {
@@ -61,10 +54,9 @@ public class lanceur {
             if(serie == null)
                 throw new Exception();
 
-//            danse(deplacement, sleep);
-            
-            capteur.tourner(0);
-            if(true)
+            Sleep.temps_defaut = 250;
+            lanceur_coupe(hexa, deplacement);
+           /* if(true)
             	return;
             
             Sleep.temps_defaut = 1500;
@@ -89,8 +81,7 @@ public class lanceur {
                 hexa.avancer(1000);
                 hexa.setAngle(-Math.PI/3);
                 hexa.avancer(1000);
-            }
-            //lanceur_coupe(hexa);
+            }*/
             
             
 //            TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000, 5000, 0, true, serie != null);
@@ -129,7 +120,7 @@ public class lanceur {
         {
             try
             {
-                serie.communiquer("VD");
+                serie.communiquer("VB");
                 System.out.println("Mesure: "+(int)(serie.readByte()));
             } catch (SerialException e)
             {
@@ -147,16 +138,22 @@ public class lanceur {
 
 	}
 	
-	public static void lanceur_coupe(Hexapode hexa)
+	public static void lanceur_coupe(Hexapode hexa, Deplacement deplacement)
 	{
         hexa.initialiser();
-        try
-        {
-            hexa.va_au_point(new Vec2(1600, 800));
-        } catch (EnnemiException | BordureException e)
-        {
-            e.printStackTrace();
-        }
+        
+        try {
+			hexa.va_au_point_relatif(new Vec2(0, -500));
+			hexa.va_au_point_relatif(new Vec2(-1000, 0));
+		} catch (EnnemiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BordureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+    	hexa.poser_fresques();
 	}
 	
 	public static void danse(Deplacement deplacement, Sleep sleep)

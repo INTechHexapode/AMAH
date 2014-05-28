@@ -38,10 +38,10 @@ public class Sleep implements Service {
 	        {
     		    for(int i = 0; i < 5; i++)
     		    {
-    //		        capteur.genere_mesure();
+    		        capteur.genere_mesure();
     		        Thread.sleep(millis/5);
     		    }
-    //            capteur.genere_mediane();
+                capteur.genere_mediane();
 	        }
 	        else
 	            Thread.sleep(millis);
