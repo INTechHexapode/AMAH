@@ -503,8 +503,11 @@ public class Deplacement implements Service
      */
     public void wait_jumper()
     {
-        while(!capteur.jumper())
+        while(capteur.jumper())
+        {
+            System.out.println(capteur.jumper());
             sleep.sleep(100);
+        }
         System.out.println("Le match commence!");
         date_debut = System.currentTimeMillis();
         Patte.setSymetrie(capteur.getInverser());

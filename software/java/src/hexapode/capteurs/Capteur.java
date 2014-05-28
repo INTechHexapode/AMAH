@@ -37,15 +37,14 @@ public class Capteur implements Service {
      */
 	public boolean mesure()
 	{
-	    if(true)
-	        return false;
 	    if(!on)
 	        return false;
         // Calcul provenant des datasheets (SSC-32 et GP2Y0A21YK0F (sérieux, c'est quoi ce nom?? on dirait de la mauvaise SF))
         // Le raisonnement: on a une entrée de 5*mesure/256 volts.
         // On capte à moins de 300mm si l'entrée est supérieur à 0.9V
         // On simplifie, et voilà...
-	    return mediane > 46;
+	    else
+	    	return mediane > 46;
 	}
 		
 	/**
@@ -96,7 +95,7 @@ public class Capteur implements Service {
         if(serie != null)
             try
             {
-                serie.communiquer("B");
+                serie.communiquer("C");
                 return serie.readBoolean();
             } catch (SerialException e)
             {
@@ -132,7 +131,7 @@ public class Capteur implements Service {
             try
             {
             	if(infrarouge == 0)
-            		serie.communiquer("VC");
+            		serie.communiquer("VB");
             	else
             		serie.communiquer("VD");
                 int mesure = serie.readByte();

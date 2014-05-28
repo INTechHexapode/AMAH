@@ -54,7 +54,8 @@ public class Hexapode implements Service {
     {
         try
         {
-            recaler();
+            
+        	recaler();
             Thread.sleep(5000);
             deplacement.setAngle(-Math.PI+Math.PI/6);
             deplacement.wait_jumper();
@@ -83,13 +84,13 @@ public class Hexapode implements Service {
             deplacement.lever_gauche(EnumPatte.HAUT_DROITE);
 
             EnumPatte[] ignore = {EnumPatte.HAUT_DROITE, EnumPatte.HAUT_GAUCHE};
-            avancer_pres_bord_en_ignorant(1000, ignore);
+            avancer_pres_bord_en_ignorant(40, ignore);
                         
 //            recaler();
             // TODO set position
             
             deplacement.setDirection(Direction.BAS);
-            deplacement.setCapteurOn();
+            //deplacement.setCapteurOn();
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -324,8 +325,11 @@ public class Hexapode implements Service {
    {
        int nb_iteration = (int) Math.round(((double)distance) / Patte.getAvancee_effective());
        while(nb_iteration > 0)
+       {
            if(deplacement.avancer_elementaire_pres_bord(ignore));
                nb_iteration--;
+           System.out.println(nb_iteration + " " + deplacement.avancer_elementaire_pres_bord(ignore));
+       }
    }
 
    /**
