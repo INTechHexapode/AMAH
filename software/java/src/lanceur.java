@@ -37,6 +37,8 @@ public class lanceur {
             Hexapode hexa = (Hexapode)container.getService("Hexapode");
             if(serie == null)
                 throw new Exception();
+            //hexa.initialiser();
+            //hexa.desasserv();
 //            deplacement.arret();
 //            hexa.avancer(600);
               lanceur_coupe(hexa, deplacement);
