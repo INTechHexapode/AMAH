@@ -34,6 +34,8 @@ public class Sleep implements Service {
 	public void sleep(long millis)
 	{
 	    millis -= 80;
+	    if(millis < 0)
+	    	millis = 0;
 		try {
 		    for(int i = 0; i < 3; i++)
 		    {
