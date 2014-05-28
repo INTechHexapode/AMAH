@@ -25,7 +25,6 @@ public class Capteur implements Service {
     private boolean on = false;
     private int infrarouge = 0; // 0: avant 1: arrière
     
-    
     public Capteur(Serial serie)
     {
         Capteur.serie = serie;
@@ -55,27 +54,33 @@ public class Capteur implements Service {
 	 */
 	public void tourner(double angle)
 	{
-		if(angle*180/Math.PI < -50)
+	    // 600
+	    // 2300
+	    double initial = 0;
+	    System.out.println("angle: "+angle);
+		if(angle*180/Math.PI < initial)
 		{
 			infrarouge = 1;
 			angle += Math.PI;
 		}
-		else if(angle*180/Math.PI > 130)
+		else if(angle*180/Math.PI > 180+initial)
 		{
 			infrarouge = 1;
 			angle -= Math.PI;
 		}
 		else
 			infrarouge = 0;
+        System.out.println("angle: "+angle);
 		
-		int ordre = (int)((angle/Math.PI+50/180)*(1200)) + 800;
+		int ordre = (int)((angle/Math.PI-initial/180.)*1700.) + 600;
 		
 	    // TODO: calcul de l'ordre en fonction de la direction
 	    if(serie != null)
             try
             {
-            	if(ordre >= 800 && ordre <= 2000)
-                serie.communiquer("#15P"+Integer.toString(ordre));
+                System.out.println("Ordre: "+ordre);
+            	if(ordre >= 600 && ordre <= 2300)
+                serie.communiquer("#24P"+Integer.toString(ordre));
             } catch (SerialException e)
             {
                 e.printStackTrace();
