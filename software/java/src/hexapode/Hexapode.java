@@ -286,8 +286,6 @@ public class Hexapode implements Service {
         // l'exception BordureException n'est pas traité et est directement passé au cran supérieur
         catch(EnnemiException e)
         {
-            if(true)
-                throw e;
             try {
                 System.out.println("Evitement de l'ennemi");
                 // le coefficient 2 vient de 1/cos(PI/3).
