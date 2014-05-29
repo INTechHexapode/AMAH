@@ -40,18 +40,8 @@ public class lanceur {
             if(serie == null)
                 throw new Exception();
             Sleep.temps_defaut = 250;
-//            for(int i = 0; i < 6; i++)
-//            deplacement.lever(i);
-            //hexa.avancer(3000);
-//            hexa.avancer(1000);
-            //hexa.desasserv();
-            //hexa.initialiser();
-            //hexa.desasserv();
-//            deplacement.arret();
-//            hexa.avancer(600);
-//            hexa.avancer_et_evite(1000, Evite.PAR_LA_DROITE);
-//            deplacement.tendre(0);
-            lanceur_coupe(hexa, deplacement);
+            danse(deplacement, hexa);
+            //lanceur_coupe(hexa, deplacement);
 		}
 		catch(Exception e)
 		{
@@ -92,7 +82,7 @@ public class lanceur {
 	
 	public static void lanceur_coupe(Hexapode hexa, Deplacement deplacement)
 	{
-        boolean symetrie = hexa.initialiser();
+        boolean symetrie = hexa.initialiser_match();
         
         try {
             if(!symetrie)
@@ -128,11 +118,45 @@ public class lanceur {
         
 	}
 	
-	public static void danse(Deplacement deplacement, Sleep sleep)
+	public static void danse(Deplacement deplacement, Hexapode hexa)
 	{
-        Sleep.temps_defaut = 500;
+        Sleep.temps_defaut = 200;
+        try {
+			hexa.lever_haut();
+			deplacement.tendre(3);
+			deplacement.tendre(2);
+			Thread.sleep(500);
+			hexa.lever_except("milieu", new int[]{2,3});
+			Thread.sleep(500);
+			hexa.lever_except("haut", new int[]{2,3});
+			
+			Thread.sleep(1000);
+		} catch (GoToException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+			deplacement.tourner_fixe(300);
+			Thread.sleep(100);
+			
+			deplacement.tourner_fixe(-300);
+			Thread.sleep(100);
+			deplacement.tourner_fixe(-300);
+			Thread.sleep(100);
+			deplacement.tourner_fixe(300);
+			Thread.sleep(100);
+		} catch (GoToException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	    
-	    int[] tab = {0,1,2,5,4,3};
+	    /*int[] tab = {0,1,2,5,4,3};
 	    for(int i = 0; i < 8; i++)
 	    {
 	        for(int j = 0; j < 6; j++)
@@ -142,7 +166,7 @@ public class lanceur {
 	            sleep.sleep();
                 deplacement.baisser((k+5)%6);
 	        }
-	    }
+	    }*/
 	}
 	
 }
