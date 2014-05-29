@@ -18,7 +18,7 @@ import serial.SerialException;
 public class Capteur implements Service {
 
     private static Serial serie;
-    private static final int nb_mesures = 10;
+    private static final int nb_mesures = 20;
     private int[] dernieres_mesures = new int[nb_mesures];
     private int indice = 0;
     private int mediane = 100;
@@ -46,7 +46,7 @@ public class Capteur implements Service {
         // On simplifie, et voilà...
 	    else
 	    	return mediane > 46;
-	}
+        }
 		
 	/**
 	 * Tourne le capteur dans la direction désirée.

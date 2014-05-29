@@ -4,6 +4,8 @@ import hexapode.Vec2;
 import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
 import hexapode.enums.Evite;
+import hexapode.enums.Marche;
+import hexapode.enums.Profil;
 import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
@@ -41,7 +43,9 @@ public class lanceur {
             //hexa.desasserv();
 //            deplacement.arret();
 //            hexa.avancer(600);
-              lanceur_coupe(hexa, deplacement);
+//            hexa.avancer_et_evite(1000, Evite.PAR_LA_DROITE);
+//            deplacement.tendre(0);
+            lanceur_coupe(hexa, deplacement);
 		}
 		catch(Exception e)
 		{
@@ -82,15 +86,36 @@ public class lanceur {
 	
 	public static void lanceur_coupe(Hexapode hexa, Deplacement deplacement)
 	{
-        hexa.initialiser();
+        boolean symetrie = hexa.initialiser();
         
         try {
-			hexa.va_au_point_indirect(new Vec2(-1500, -100), Evite.PAR_LA_GAUCHE);
+            if(!symetrie)
+            {
+                hexa.setAngle(-Math.PI*5/6);
+                hexa.avancer(700);
+                hexa.setAngle(-Math.PI/3);
+                hexa.avancer(200);
+                Thread.sleep(2000);
+                deplacement.tendre(0);
+                Thread.sleep(2000);
+                hexa.avancer(500);
+            }
+            else
+            {
+                hexa.setAngle(-Math.PI*5/6);
+                hexa.avancer(600);
+                hexa.setAngle(-Math.PI/3);
+                hexa.avancer(500);
+            }
 		} catch (EnnemiException e) {
 			e.printStackTrace();
 		} catch (BordureException e) {
 			e.printStackTrace();
 		} catch (GoToException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e)
+        {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         

@@ -50,16 +50,17 @@ public class Hexapode implements Service {
 	/**
      * Initialise l'hexapode en le recalant et attend le jumper
      */
-    public void initialiser()
+    public boolean initialiser()
     {
         try
         {
         	recaler();
-            deplacement.wait_jumper();
+            return deplacement.wait_jumper();
         } catch (Exception e)
         {
             // Exception impossible car le capteur est désactivé
             e.printStackTrace();
+            return false;
         }
     }
     
@@ -258,8 +259,9 @@ public class Hexapode implements Service {
 	 * @param distance
 	 * @throws BordureException
 	 * @throws GoToException 
+	 * @throws EnnemiException 
 	 */
-	public void avancer_et_evite(int distance, Evite evite) throws BordureException, GoToException 
+	public void avancer_et_evite(int distance, Evite evite) throws BordureException, GoToException, EnnemiException 
 	{
 	    try {
 	        avancer(distance);
@@ -267,6 +269,8 @@ public class Hexapode implements Service {
         // l'exception BordureException n'est pas traité et est directement passé au cran supérieur
         catch(EnnemiException e)
         {
+            if(true)
+                throw e;
             try {
                 System.out.println("Evitement de l'ennemi");
                 // le coefficient 2 vient de 1/cos(PI/3).

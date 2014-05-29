@@ -26,7 +26,7 @@ class Patte {
     private static final double[][] r = {{60, 60, 40}, {60, 60, 50}, {60, 60, 60}};    // rayon d'une patte posée
     private static final double[] avancee = {25, 10, 20}; // avancée en millimètres
     // hauteurs: haut, baisse et pousse
-    private static final double[][] hauteurs = {{-80, -80, -80}, {-140, -150, -150}, {-140, -160, -160}};
+    private static final double[][] hauteurs = {{-80, -80, -80}, {-120, -150, -150}, {-130, -160, -160}};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};
     private static boolean symetrie;
     public double angle_hexa;
@@ -158,6 +158,17 @@ class Patte {
     {
         try {
             goto_etat(1200, 2000, 2000);
+        }
+        catch(GoToException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void tendre()
+    {
+        try {
+            goto_etat(1200, 2000, 1400);
         }
         catch(GoToException e)
         {

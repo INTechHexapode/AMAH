@@ -138,6 +138,11 @@ public class Deplacement implements Service
         pattes[n].lever();
     }
 
+    public void tendre(int n)
+    {
+        pattes[n].tendre();
+    }
+
     public void baisser(int n)
     {
         pattes[n].baisser();
@@ -501,8 +506,10 @@ public class Deplacement implements Service
     /**
      * Bloquant
      */
-    public void wait_jumper()
+    public boolean wait_jumper()
     {
+        while(!capteur.jumper())
+            sleep.sleep(100);
         while(capteur.jumper())
             sleep.sleep(100);
 
@@ -513,6 +520,7 @@ public class Deplacement implements Service
         Patte.setSymetrie(symetrie);
 
         capteur.setOn();
+        return symetrie;
     }
 
     /**
