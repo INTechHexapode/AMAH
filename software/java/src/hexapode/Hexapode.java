@@ -50,7 +50,7 @@ public class Hexapode implements Service {
 	/**
      * Initialise l'hexapode en le recalant et attend le jumper
      */
-    public boolean initialiser()
+    public boolean initialiser_match()
     {
         try
         {
@@ -61,6 +61,23 @@ public class Hexapode implements Service {
             // Exception impossible car le capteur est désactivé
             e.printStackTrace();
             return false;
+        }
+    }
+    
+    /**
+     * Initialise l'hexapode en position
+     */
+    public void initialiser()
+    {
+        try
+        {
+        	for(int i=0; i<6;++i)
+            deplacement.lever(i);
+
+        } catch (Exception e)
+        {
+            // Exception impossible car le capteur est désactivé
+            e.printStackTrace();
         }
     }
     
