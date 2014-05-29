@@ -23,8 +23,8 @@ class Patte {
 	
     // Constantes
     private static final double a = 60, b = 120; // longueur des pattes
-    private static final double[][] r = {{60, 60, 40}, {60, 60, 50}, {60, 60, 60}};    // rayon d'une patte posée
-    private static final double[] avancee = {25, 10, 20}; // avancée en millimètres
+    private static final double[][] r = {{70, 60, 40}, {70, 60, 50}, {70, 60, 60}};    // rayon d'une patte posée
+    private static final double[] avancee = {20, 10, 20}; // avancée en millimètres
     // hauteurs: haut, baisse et pousse
     private static final double[][] hauteurs = {{-80, -80, -80}, {-120, -150, -150}, {-130, -160, -160}};
     private static final double[] angles = {-Math.PI/6, -Math.PI/2, -5*Math.PI/6, Math.PI/6, Math.PI/2, 5*Math.PI/6};

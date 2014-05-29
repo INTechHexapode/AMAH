@@ -39,6 +39,12 @@ public class lanceur {
             Hexapode hexa = (Hexapode)container.getService("Hexapode");
             if(serie == null)
                 throw new Exception();
+            Sleep.temps_defaut = 250;
+//            for(int i = 0; i < 6; i++)
+//            deplacement.lever(i);
+            //hexa.avancer(3000);
+//            hexa.avancer(1000);
+            //hexa.desasserv();
             //hexa.initialiser();
             //hexa.desasserv();
 //            deplacement.arret();
@@ -93,19 +99,20 @@ public class lanceur {
             {
                 hexa.setAngle(-Math.PI*5/6);
                 hexa.avancer(700);
-                hexa.setAngle(-Math.PI/3);
-                hexa.avancer(200);
+                hexa.va_au_point_relatif((new Vec2(-250, 500)));
                 Thread.sleep(2000);
-                deplacement.tendre(0);
                 Thread.sleep(2000);
+                
                 hexa.avancer(500);
             }
             else
             {
                 hexa.setAngle(-Math.PI*5/6);
-                hexa.avancer(600);
-                hexa.setAngle(-Math.PI/3);
-                hexa.avancer(500);
+                hexa.avancer(650);
+
+                hexa.va_au_point_relatif(new Vec2(-550, 400));
+                
+                hexa.va_au_point_relatif(new Vec2(100, -900));
             }
 		} catch (EnnemiException e) {
 			e.printStackTrace();
