@@ -1,5 +1,7 @@
 package hexapode;
 
+import java.util.Arrays;
+
 import container.Service;
 import hexapode.enums.Direction;
 import hexapode.enums.EnumPatte;
@@ -403,6 +405,53 @@ public class Hexapode implements Service {
    public void setAngle(double angle)
    {
        deplacement.setAngle(angle);
+   }
+   
+   /**
+    * Fonction de dance
+ * @throws GoToException 
+    */
+   
+   public void lever_except(String mode, int[] ignore) throws GoToException
+   {
+	   	for(int i=0; i<6;++i)
+	   		if(!contains(i, ignore))
+	   		{System.out.println(Arrays.asList(ignore).contains(i));
+	   			if(mode == "milieu")
+	   		        deplacement.go_to_angle(i, 1200, 1600, 1700);
+	   			else if(mode == "bas")
+	   		   		deplacement.go_to_angle(i, 1200, 2000, 2000);
+	   			else
+	   				deplacement.go_to_angle(i, 1200, 1000, 1000);
+	   		}
+   }
+   
+   private boolean contains(int i, int[] ignore)
+   {
+   	for(int in=0; in<ignore.length;++in)
+   		if(i == ignore[in])
+   			return true;
+	return false;
+   }
+   
+   public void lever_milieu() throws GoToException
+   {
+   	for(int i=0; i<6;++i)
+        deplacement.go_to_angle(i, 1200, 1600, 1700);
+   }
+   
+
+   public void lever_bas() throws GoToException
+   {
+   	for(int i=0; i<6;++i)
+   		deplacement.go_to_angle(i, 1200, 2000, 2000);
+   }
+   
+
+   public void lever_haut() throws GoToException
+   {
+   	for(int i=0; i<6;++i)
+   		deplacement.go_to_angle(i, 1200, 1000, 1000);
    }
    
 }

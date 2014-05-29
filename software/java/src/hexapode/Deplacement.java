@@ -138,6 +138,7 @@ public class Deplacement implements Service
         pattes[n].lever();
     }
 
+
     public void tendre(int n)
     {
         pattes[n].tendre();
@@ -403,7 +404,7 @@ public class Deplacement implements Service
     {
         setDirection(dir.ordinal());
     }
-
+    
     /**
      * "Tourne" vers la gauche (si différence < 0) ou vers la droite (si
      * différence > 0)
@@ -584,5 +585,24 @@ public class Deplacement implements Service
         for(int i = 0; i < 6; i++)
             pattes[i].setAngle(angle);
     }
+    
 
+    /**
+     * Fait tourner le corps sans lever les pattes
+     * @param angle relatif pour la rotation sur le premier moteur de chaque patte
+     * @param temps en ms
+     * @throws GoToException 
+     */
+    public void tourner_fixe(int angle) throws GoToException
+    {
+        for(int i = 0; i < 6; i++)
+            pattes[i].setAngleMoteur(0, angle, Sleep.temps_defaut);
+        sleep.sleep(Sleep.temps_defaut);
+    }
+    
+
+    public void go_to_angle(int n, int a, int b, int c) throws GoToException
+    {
+        pattes[n].goto_etat(a, b, c);
+    }
 }

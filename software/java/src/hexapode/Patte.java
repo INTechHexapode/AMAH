@@ -134,6 +134,23 @@ class Patte {
         
         moteurs.goto_etat(ordres, temps);
     }
+
+    /**
+     * Permet de bouger un moteur seul
+     * @param index indice du moteur à bouger
+     * @param angle nouvel angle
+     * @param temps en ms
+     * @throws GoToException 
+     */
+    public void setAngleMoteur(int index, int angle, int temps) throws GoToException
+    {
+    	int angles[] = moteurs.getAngles();
+    	for(int i=0; i < angles.length; ++i)
+    		if(i ==  index)
+    			angles[i] += angle;
+
+        moteurs.goto_etat(angles, temps);
+    }
     
 	/**
     * Baisse la patte
@@ -158,6 +175,17 @@ class Patte {
     {
         try {
             goto_etat(1200, 2000, 2000);
+        }
+        catch(GoToException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public void lever(int value)
+    {
+        try {
+            goto_etat(1200, value, 1300);
         }
         catch(GoToException e)
         {

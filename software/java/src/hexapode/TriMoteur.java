@@ -15,6 +15,7 @@ class TriMoteur {
 	private Serial serie;
 	private int id;
 	private boolean desasservi;
+	private int curAngles[];
 	
     private static final int[] angle_min = {900, 500, 1000};  // sécurité des moteurs
     private static final int[] angle_max = {1500, 2000, 2000}; // sécurité des moteurs
@@ -32,6 +33,7 @@ class TriMoteur {
 		this.serie = serie;
 		this.id = id;
 		desasserv();
+		curAngles = new int[3];
 	}
 
     /**
@@ -51,7 +53,10 @@ class TriMoteur {
                 String ordre = new String();
                 // S500 pour régler la vitesse maximale
                 for(int i = 0; i < 3; i++)
+                {
                     ordre += "#"+Integer.toString(id+i)+"P"+Integer.toString(angles[i])+" ";
+                    curAngles[i] = angles[i];
+                }
                 if(!desasservi) // c'est la datasheet du SSC-32 qui le dit.
                     ordre += "T"+Integer.toString(temps);
                 serie.communiquer(ordre);
@@ -74,6 +79,11 @@ class TriMoteur {
     			e1.printStackTrace();
     		}		
         desasservi = true;
+	}
+	
+	public int[] getAngles()
+	{
+		return curAngles;
 	}
 	
 }
