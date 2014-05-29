@@ -141,6 +141,7 @@ public class Deplacement implements Service
     public void tendre(int n)
     {
         pattes[n].tendre();
+        sleep.sleep(100);
     }
 
     public void baisser(int n)
