@@ -71,6 +71,7 @@ public class Hexapode implements Service {
      */
     public void initialiser()
     {
+        deplacement.wait_jumper();
         try
         {
         	for(int i=0; i<6;++i)
@@ -419,10 +420,16 @@ public class Hexapode implements Service {
 	   		{System.out.println(Arrays.asList(ignore).contains(i));
 	   			if(mode == "milieu")
 	   		        deplacement.go_to_angle(i, 1200, 1600, 1700);
+	   			else if(mode == "milieu gauche")
+	   		   		deplacement.go_to_angle(i, 1500, 2000, 2000);
+	   			else if(mode == "bas gauche")
+	   		   		deplacement.go_to_angle(i, 1500, 2000, 2000);
 	   			else if(mode == "bas")
 	   		   		deplacement.go_to_angle(i, 1200, 2000, 2000);
-	   			else
+	   			else if(mode == "haut")
 	   				deplacement.go_to_angle(i, 1200, 1000, 1000);
+	   			else if(mode == "haut gauche")
+	   				deplacement.go_to_angle(i, 1500, 1000, 1000);
 	   		}
    }
    
