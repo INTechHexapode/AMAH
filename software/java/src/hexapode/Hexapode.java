@@ -71,7 +71,7 @@ public class Hexapode implements Service {
      */
     public void initialiser()
     {
-        deplacement.wait_jumper();
+//        deplacement.wait_jumper();
         try
         {
         	for(int i=0; i<6;++i)

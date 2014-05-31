@@ -33,21 +33,26 @@ public class lanceur {
             System.out.println("Pas de série: "+e);
         }
 		
+        Container container = new Container(serie, false, false);
+        Deplacement deplacement = (Deplacement)container.getService("Deplacement");
+        Hexapode hexa = (Hexapode)container.getService("Hexapode");
 		try {
-		    Container container = new Container(serie, false, false);
-    	    Deplacement deplacement = (Deplacement)container.getService("Deplacement");
-            Hexapode hexa = (Hexapode)container.getService("Hexapode");
             if(serie == null)
                 throw new Exception();
             Sleep.temps_defaut = 250;
-            //lanceur_coupe(hexa, deplacement);
-            danse(deplacement, hexa);
+            lanceur_coupe(hexa, deplacement);
+            System.out.println("E");
 
 		}
 		catch(Exception e)
 		{
 		    e.printStackTrace();
 		}
+        System.out.println("F");
+
+		danse(deplacement, hexa);
+        System.out.println("G");
+		
 		if(serie != null)
 		{
 		    serie.close();
@@ -92,17 +97,18 @@ public class lanceur {
                 hexa.avancer(700);
                 hexa.va_au_point_relatif((new Vec2(-250, 500)));
                 Thread.sleep(2000);
-                Thread.sleep(2000);
-                
+                Thread.sleep(2000);                
             }
             else
             {
                 hexa.setAngle(-Math.PI*5/6);
                 hexa.avancer(650);
-
+                System.out.println("A");
                 hexa.va_au_point_relatif(new Vec2(-550, 400));
+                System.out.println("B");
                 
                 hexa.va_au_point_relatif(new Vec2(100, -900));
+                System.out.println("C");
             }
 		} catch (EnnemiException e) {
 			e.printStackTrace();
@@ -115,7 +121,8 @@ public class lanceur {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+        System.out.println("D");
+
 	}
 	
 	public static void danse(Deplacement deplacement, Hexapode hexa)
