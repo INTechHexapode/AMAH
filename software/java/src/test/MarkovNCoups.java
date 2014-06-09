@@ -35,6 +35,9 @@ public class MarkovNCoups implements java.io.Serializable {
     protected int etat_suivant_sauv;
     protected int etat_precedent_sauv;
     private int indice = 0;
+    private transient int total = 0;
+    private transient int convergence = 0;
+    
     
     /**
      * Chargement de l'apprentissage réalisé pour ce mode.
@@ -202,6 +205,20 @@ public class MarkovNCoups implements java.io.Serializable {
             return index2string(etat_suivant % dimension_x).substring(0, 6);
         }
     }
+    
+    public void razConvergence()
+    {
+        convergence = 0;
+        total = 0;
+    }
+    
+    public double getConvergence()
+    {
+        if(total != 0)
+            return ((double) convergence)/((double) total);
+        else
+            return 0;
+    }
         
     /**
      * Met à jour la matrice avec le résultat d'un test.
@@ -213,8 +230,10 @@ public class MarkovNCoups implements java.io.Serializable {
     {
 //        System.out.println("updateMatrix: "+index2string(etat_precedent)+" "+index2string(etat_suivant)+": "+ resultat);
         int note_actuelle = matrice[etat_precedent][etat_suivant];
-        if(resultat != 0 && (resultat >>= diviseur) == 0)
-            System.out.println("Convergence?");
+        if(resultat != 0 && (resultat >> diviseur) == 0)
+            convergence++;
+        total++;
+        
         resultat >>= diviseur;
         // S'il y a un overflow, on divise par 2 toutes les notes de la lignes
         // Les prochaines notes aussi seront divisées par deux.

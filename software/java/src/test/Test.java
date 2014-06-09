@@ -53,6 +53,17 @@ public abstract class Test {
 	public abstract void init();		//Au lancement de tous les tests
 	public abstract void updateNote();  //Met à jour la note après proceedTest
 	
+	/**
+	 * Méthode appelée quelque fois. Debug purpose.
+	 */
+	public boolean sometimes()
+	{
+	    System.out.println("Pourcentage de convergence: "+100*markov.getConvergence());
+	    boolean out = markov.getConvergence() == 1f;
+	    markov.razConvergence();
+	    return out;
+	}
+	
 	public void onExit()				//A la fin de chaque test
 	{
         updateNote();

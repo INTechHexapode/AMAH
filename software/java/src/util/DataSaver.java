@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import test.Markov;
 import test.MarkovNCoups;
 import test.TestStep;
 
@@ -15,7 +14,6 @@ import test.TestStep;
  *
  */
 
-@SuppressWarnings("deprecation")
 public class DataSaver {
 
     private DataSaver()
@@ -54,13 +52,7 @@ public class DataSaver {
     {
         String filename;
         long date = System.currentTimeMillis();
-        if(markov instanceof Markov)
-        {   
-            ((Markov)markov).prepareForSave();
-            filename = "logs/markov-"+date+".dat";
-        }
-        else
-            filename = "logs/markovNCoups-"+date+".dat";
+        filename = "logs/markovNCoups-"+date+".dat";
 
         if(sauvegarde_intermediaire)
 		{

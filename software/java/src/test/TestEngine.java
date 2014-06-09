@@ -31,9 +31,16 @@ public class TestEngine {
 			    if(100*index/(test.getNbIteration()-1) > pourcentage)
 			    {
 			        pourcentage = (int)(100*index/(test.getNbIteration()-1));
-	                System.out.println(pourcentage+"%");
+                    System.out.println(pourcentage+"%");
+                    if((pourcentage%5)==0 && test.sometimes())
+                    {
+                        System.out.println("Test terminé car la convergence a été atteinte");
+                        index = test.getNbIteration();
+                    }
+                    
 			    }
-				test.onStart();
+
+			    test.onStart();
 				if(test.isValidation())
 					test.validTest();
 				else

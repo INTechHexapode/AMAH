@@ -30,34 +30,32 @@ public class lanceur {
         Container container = new Container(serie, false, false);
         Deplacement deplacement = (Deplacement)container.getService("Deplacement");
         Hexapode hexa = (Hexapode)container.getService("Hexapode");
-		
-        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 100000000, 50, 0, true);
+/*		
+        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 1000000000, 50, 0, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
 
         TestCoordinationPattesSimulation test_valid = new TestCoordinationPattesSimulation(deplacement);
         TestEngine testEngine_valid = new TestEngine(test_valid);
         testEngine_valid.start();
-
-/*        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 100000, 50, 1, true);
+*/
+/*        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 10000000, 50, 1, true);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
 
         TestCoordinationTriphasee test_valid = new TestCoordinationTriphasee(deplacement);
         TestEngine testEngine_valid = new TestEngine(test_valid);
         testEngine_valid.start();
-  */      
-                
-/*        try
+  */              
+        try
         {
-            deplacement.setMode(Mode.BIPHASE, Marche.MARKOV);
-            hexa.avancer(5000);
             deplacement.setMode(Mode.TRIPHASE, Marche.MARKOV);
             hexa.avancer(5000);
+            hexa.desasserv();
         } catch (Exception e)
         {
             e.printStackTrace();
-        }*/
+        }
         
         if(serie != null)
 		{
