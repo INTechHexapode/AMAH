@@ -12,7 +12,7 @@ import hexapode.Deplacement;
 
 public abstract class Test {
 	
-	protected int nbIteration;				//Nombre de tests � executer
+	protected long nbIteration;				//Nombre de tests � executer
 	protected double consecutiveLearnTime;	//Temps de test entre chaque pause en seconde
 	protected double pauseTime;				//Temps d'arr�t par pause en seconde
 	protected Deplacement deplacement;
@@ -26,14 +26,24 @@ public abstract class Test {
 	//variables utilis�es pour la sauvegarde
 	protected int result;
 	
-	public Test(Deplacement deplacement, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
+	public Test(Deplacement deplacement, long nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov)
 	{
 		this.deplacement = deplacement;
 		this.nbIteration = nbIteration;
 		this.consecutiveLearnTime = consecutiveLearnTime;
 		this.pauseTime = pauseTime;
 		this.restartMarkov = restartMarkov;
-		this.validation = validation;
+		validation = false;
+	}
+	
+	public Test(Deplacement deplacement)
+	{
+	    this.deplacement = deplacement;
+        nbIteration = 500;
+        consecutiveLearnTime = 60;
+        pauseTime = 10;
+        restartMarkov = false;
+	    validation = true;
 	}
 
 	public abstract void onStart();		//Au d�part de chaque test
@@ -47,7 +57,7 @@ public abstract class Test {
 	{
         updateNote();
         if(!validation)
-            markov.updateMatrix(note);
+            markov.updateMatrix(note, markov.string2index(etat_actuel), markov.string2index(etat_suivant));
 //		if(!validation)
 //			sauvegarde_matrice(false);
 		//DataSaver.sauvegarder_test(etat_suivant, result);
@@ -62,7 +72,7 @@ public abstract class Test {
 		}
 	}
 	
-	public int getNbIteration()			//Nombre d'it�rations � effectuer
+	public long getNbIteration()			//Nombre d'it�rations � effectuer
 	{
 		return nbIteration;
 	}

@@ -14,13 +14,13 @@ import util.DataSaver;
  *
  */
 
+@Deprecated
 public class Markov extends MarkovNCoups implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private transient short matrice[][]; // utilisé pour le remplissage seulement, à ne pas sauvegarder
 	private ArrayList<ArrayList<IntPair>> compressed_matrix;
 	private int dimension;
-	private int diviseur = 0; // en puissance de 2
 	
 	/**
 	 * Chargement de l'apprentissage réalisé pour ce mode.
@@ -49,6 +49,8 @@ public class Markov extends MarkovNCoups implements java.io.Serializable {
 	public void prepareForSave()
 	{
 	    compressed_matrix = new ArrayList<ArrayList<IntPair>>();
+        System.out.println("This = "+this);
+	    System.out.println("Matrice = "+matrice);
 	    for(int i = 0; i < dimension; i++)
 	    {
 	        ArrayList<IntPair> ligne = new ArrayList<IntPair>();
@@ -110,35 +112,11 @@ public class Markov extends MarkovNCoups implements java.io.Serializable {
 		return null;
 	}
 	
-	/**
-	 * Met à jour la matrice avec le résultat d'un test.
-	 * @param resultat
-	 * @param etatPrecedent
-	 * @param etatSuivant
-	 */
-	public void updateMatrix(int resultat, String etatPrecedent, String etatSuivant)
-	{
-	    int note_actuelle = matrice[string2index(etatPrecedent)][string2index(etatSuivant)];
-	    resultat >>= diviseur;
-	    // S'il y a un overflow, on divise par 2 toutes les notes de la lignes
-		// Les prochaines notes aussi seront divisées par deux.
-	    if((note_actuelle+resultat) != (int)(short)(note_actuelle+resultat))
-	    {
-	        System.out.println("Overflow des notes!");
-	        for(int i = 0; i < dimension; i++)
-	            for(int j = 0; j < dimension; j++)
-	                matrice[i][j] >>= 1;
-	        diviseur++;
-	        resultat >>= 1;
-	    }
-	        
-		matrice[string2index(etatPrecedent)][string2index(etatSuivant)]+=resultat;
-	}
 
    /**
     * N'affiche que les cases non nulles!
     */
-	@Override
+/*	@Override
 	public String toString()
 	{
 		String s = "";
@@ -146,6 +124,6 @@ public class Markov extends MarkovNCoups implements java.io.Serializable {
 			for(IntPair e: compressed_matrix.get(i))
 			    s += index2string(i)+" "+index2string(e.etat_suivant)+": "+e.score+"\n";
 		return s;
-	}
+	}*/
 	
 }

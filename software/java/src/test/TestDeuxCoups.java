@@ -18,11 +18,15 @@ public class TestDeuxCoups extends Test
     
     public TestDeuxCoups(Deplacement deplacement, int nbIteration,
             double consecutiveLearnTime, double pauseTime,
-            boolean restartMarkov, boolean validation)
+            boolean restartMarkov)
     {
-        super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov,
-                validation);
+        super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov);
         randomgenerator = new Random();
+    }
+
+    public TestDeuxCoups(Deplacement deplacement)
+    {
+        super(deplacement);
     }
 
     @Override

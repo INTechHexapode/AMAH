@@ -15,6 +15,7 @@ import test.TestStep;
  *
  */
 
+@SuppressWarnings("deprecation")
 public class DataSaver {
 
     private DataSaver()
@@ -47,15 +48,14 @@ public class DataSaver {
     		System.out.println("Cr�ation d'une nouvelle sauvegarde dans steps.dat");
 			e.printStackTrace();
 		}
-    }
-
+    }    
+    
     public static void sauvegarder_matrice(MarkovNCoups markov, boolean sauvegarde_intermediaire)
     {
         String filename;
         long date = System.currentTimeMillis();
         if(markov instanceof Markov)
-        {
-            
+        {   
             ((Markov)markov).prepareForSave();
             filename = "logs/markov-"+date+".dat";
         }
@@ -117,7 +117,7 @@ public class DataSaver {
 		return null;
 	}
 
-    public static MarkovNCoups charger_matrice_deux_coups(String filename)
+    public static MarkovNCoups charger_matrice_n_coups(String filename)
     {
         try {
             MarkovNCoups markov = (MarkovNCoups) charger(filename);

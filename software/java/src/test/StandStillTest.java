@@ -8,9 +8,14 @@ public class StandStillTest extends Test {
 	private boolean last_good = false;
 	
 	public StandStillTest(Deplacement deplacement, int nbIteration,
-			double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation)
+			double consecutiveLearnTime, double pauseTime, boolean restartMarkov)
 	{
-		super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
+		super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov);
+	}
+	
+	public StandStillTest(Deplacement deplacement)
+	{
+	    super(deplacement);
 	}
 
 	@Override
@@ -84,7 +89,7 @@ public class StandStillTest extends Test {
 	@Override
 	public void init() {
 		if(restartMarkov)
-			markov = new Markov(2);
+			markov = new MarkovNCoups(1, 2);
 		else
 			markov = chargement_matrice();
 	}

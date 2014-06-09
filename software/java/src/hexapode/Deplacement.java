@@ -2,7 +2,7 @@ package hexapode;
 
 import container.Service;
 import serial.Serial;
-import test.Markov;
+import test.MarkovNCoups;
 import util.Config;
 import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
@@ -49,7 +49,7 @@ public class Deplacement implements Service
                     new String("010101"), new String("111111"),
                     new String("000000") } } };
     private Marche marche_actuelle = Marche.BASIQUE;
-    private Markov[] marcheApprise = new Markov[Mode.values().length];
+    private MarkovNCoups[] marcheApprise = new MarkovNCoups[Mode.values().length];
     private Mode mode = Mode.BIPHASE;
     private String pas_actuel = "000000";
     private Patte[] pattes;
@@ -89,7 +89,7 @@ public class Deplacement implements Service
 */
         for(Mode m: Mode.values())
             try {
-                marcheApprise[m.ordinal()] = Markov.getLearnedMarkov(m);
+                marcheApprise[m.ordinal()] = MarkovNCoups.getLearnedMarkov(m, 1);
                 System.out.println("Matrice de "+m+" correctement chargée.");
             }
             catch(Exception e)
@@ -184,11 +184,15 @@ public class Deplacement implements Service
     {
         String prochain_pas = getProchainPas();
 
+        System.out.println("Mode: "+mode+", marche: "+marche_actuelle);
+        
         // On ignore certaines pattes dans le mouvement
         if(ignore != null)
             for(EnumPatte patte: ignore)
                 prochain_pas = prochain_pas.substring(0,patte.ordinal()) + "?" + prochain_pas.substring(patte.ordinal()+1);
 
+        System.out.println(prochain_pas);
+        
         boolean out = goto_etat(prochain_pas);
 
         // On lève une exception si on est près d'une bordure et qu'on s'en rapproche (afin de pouvoir s'en dégager)
@@ -295,10 +299,11 @@ public class Deplacement implements Service
     {
         if(this.mode != mode)
         {
+            System.out.println("Nouveau mode: "+mode);
             this.mode = mode;
             pas_actuel = "000000";
-            setMarche(marche);
         }
+        setMarche(marche);
     }
 
     /**
@@ -310,6 +315,7 @@ public class Deplacement implements Service
     {
         if(marche_actuelle != marche)
         {
+            System.out.println("Nouvelle marche: "+marche);
             marche_actuelle = marche;
             pas = 0;
         }

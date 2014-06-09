@@ -5,11 +5,16 @@ import hexapode.enums.Mode;
 
 public class TestCoordinationPattes extends Test {
 
-	public TestCoordinationPattes(Deplacement deplacement, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation) 
+	public TestCoordinationPattes(Deplacement deplacement, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov) 
 	{
-		super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
+		super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov);
 	}
 
+    public TestCoordinationPattes(Deplacement deplacement)
+    {
+        super(deplacement);
+    }
+	
 	@Override
 	public void onStart() {
 		etat_actuel = etat_suivant;
@@ -52,7 +57,7 @@ public class TestCoordinationPattes extends Test {
 	@Override
 	public void init() 
 	{
-		markov = new Markov(2);
+		markov = new MarkovNCoups(1, 2);
 		deplacement.setMode(Mode.BIPHASE);
 	}
 	

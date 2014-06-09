@@ -23,14 +23,14 @@ public class TestEngine {
 		long lastPauseTime = System.currentTimeMillis();
         int pourcentage = 0;
         System.out.println("0%");
-		for(int index = 0; index < test.getNbIteration(); ++index)
+		for(long index = 0; index < test.getNbIteration(); ++index)
 		{
 			long currentTime = System.currentTimeMillis();
 			if((currentTime - lastPauseTime) / 1000 <= test.getConsecutiveLearnTime())
 			{
 			    if(100*index/(test.getNbIteration()-1) > pourcentage)
 			    {
-			        pourcentage = 100*index/(test.getNbIteration()-1);
+			        pourcentage = (int)(100*index/(test.getNbIteration()-1));
 	                System.out.println(pourcentage+"%");
 			    }
 				test.onStart();

@@ -18,11 +18,15 @@ public class TestCoordinationTriphasee extends Test
     
     public TestCoordinationTriphasee(Deplacement deplacement, int nbIteration,
             double consecutiveLearnTime, double pauseTime,
-            boolean restartMarkov, boolean validation)
+            boolean restartMarkov)
     {
-        super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov,
-                validation);
+        super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov);
         randomgenerator = new Random();
+    }
+
+    public TestCoordinationTriphasee(Deplacement deplacement)
+    {
+        super(deplacement);
     }
 
     @Override
@@ -131,7 +135,7 @@ public class TestCoordinationTriphasee extends Test
         if(validation)
             markov=chargement_matrice();
         else
-            markov = new Markov(3);
+            markov = new MarkovNCoups(1, 3);
 
         deplacement.setMode(Mode.TRIPHASE);
         

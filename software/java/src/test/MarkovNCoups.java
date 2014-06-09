@@ -9,10 +9,13 @@ import java.util.Random;
 import util.DataSaver;
 
 /**
- * Contient la matrice de transition sur deux coups. C'est-à-dire que la matrice prend en coup
- * en entrée et renvoie deux coups.
+ * WARNING:
+ * A priori, "Markov.java", qui implémente la compression de matrice, est buggée.
+ * On utilisera à sa place MarkovNCoups avec un nombre de coups égal à 1.
+ * 
+ * Contient la matrice de transition sur n coups. C'est-à-dire que la matrice prend en coup
+ * en entrée et renvoie n coups.
  * Sérialisable afin d'avoir des données persistantes.
- * Changera à chaque changement de tests
  * @author pf
  *
  */
@@ -20,7 +23,7 @@ import util.DataSaver;
 public class MarkovNCoups implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
-    protected short matrice[][]; // utilisé pour le remplissage seulement, à ne pas sauvegarder
+    protected short matrice[][];
     protected transient List<char[]> positionsViables; // transient = pas sauvegardé
     protected transient Random randomgenerator = new Random();
     protected int nbEtatsParPattes;
@@ -37,9 +40,9 @@ public class MarkovNCoups implements java.io.Serializable {
      * Chargement de l'apprentissage réalisé pour ce mode.
      * @param mode (biphasé ou triphasé)
      */
-    public static MarkovNCoups getLearnedMarkov(Mode mode)
+    public static MarkovNCoups getLearnedMarkov(Mode mode, int combien_coups)
     {
-        return charger_matrice("markov2coups_"+mode+".dat");
+        return charger_matrice("markov"+combien_coups+"coups_"+mode+".dat");
     }
     
     /**
@@ -47,7 +50,7 @@ public class MarkovNCoups implements java.io.Serializable {
      */
     public static MarkovNCoups charger_matrice(String filename)
     {
-        MarkovNCoups out = DataSaver.charger_matrice_deux_coups(filename);
+        MarkovNCoups out = DataSaver.charger_matrice_n_coups(filename);
         // Initialisation des attributs transient
         out.randomgenerator = new Random();
         out.getPositionsViables();
@@ -78,7 +81,7 @@ public class MarkovNCoups implements java.io.Serializable {
             for(int j = 0; j < dimension_y; j++)
                 matrice[i][j] = 0;
         getPositionsViables();
-        }
+    }
     
     /**
      * Retourne vrai si la position est viable, faux sinon.
@@ -193,23 +196,25 @@ public class MarkovNCoups implements java.io.Serializable {
         // Cas impossible
         return null;
         }
-        else // si etat_suivant != 0
+        else // si indice != 0
         {
             indice--;
             return index2string(etat_suivant % dimension_x).substring(0, 6);
         }
     }
-    
+        
     /**
      * Met à jour la matrice avec le résultat d'un test.
      * @param resultat
      * @param etatPrecedent
      * @param etatSuivant
      */
-    public void updateMatrix(int resultat)
+    public void updateMatrix(int resultat, int etat_precedent, int etat_suivant)
     {
-        System.out.println(etat_precedent_sauv+" "+etat_suivant_sauv+": "+ resultat);
-        int note_actuelle = matrice[etat_precedent_sauv][etat_suivant_sauv];
+//        System.out.println("updateMatrix: "+index2string(etat_precedent)+" "+index2string(etat_suivant)+": "+ resultat);
+        int note_actuelle = matrice[etat_precedent][etat_suivant];
+        if(resultat != 0 && (resultat >>= diviseur) == 0)
+            System.out.println("Convergence?");
         resultat >>= diviseur;
         // S'il y a un overflow, on divise par 2 toutes les notes de la lignes
         // Les prochaines notes aussi seront divisées par deux.
@@ -223,7 +228,7 @@ public class MarkovNCoups implements java.io.Serializable {
             resultat >>= 1;
         }
             
-        matrice[etat_precedent_sauv][etat_suivant_sauv] += resultat;
+        matrice[etat_precedent][etat_suivant] += resultat;
     }
     
     /**

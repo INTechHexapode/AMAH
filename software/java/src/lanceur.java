@@ -3,9 +3,8 @@ import hexapode.Hexapode;
 import hexapode.Vec2;
 import hexapode.capteurs.Capteur;
 import hexapode.capteurs.Sleep;
-import hexapode.enums.Evite;
 import hexapode.enums.Marche;
-import hexapode.enums.Profil;
+import hexapode.enums.Mode;
 import hexapode.exceptions.BordureException;
 import hexapode.exceptions.EnnemiException;
 import hexapode.exceptions.GoToException;
@@ -13,11 +12,6 @@ import container.Container;
 import serial.Serial;
 import serial.SerialManager;
 import test.*;
-
-/*
- * TODO list (méca/élec)
- * Lipo
- */
 
 public class lanceur {
 
@@ -36,24 +30,36 @@ public class lanceur {
         Container container = new Container(serie, false, false);
         Deplacement deplacement = (Deplacement)container.getService("Deplacement");
         Hexapode hexa = (Hexapode)container.getService("Hexapode");
-		try {
-            if(serie == null)
-                throw new Exception();
-            Sleep.temps_defaut = 250;
-            lanceur_coupe(hexa, deplacement);
-            System.out.println("E");
-
-		}
-		catch(Exception e)
-		{
-		    e.printStackTrace();
-		}
-        System.out.println("F");
-
-		danse(deplacement, hexa);
-        System.out.println("G");
 		
-		if(serie != null)
+        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 100000000, 50, 0, true);
+        TestEngine testEngine = new TestEngine(test);
+        testEngine.start();
+
+        TestCoordinationPattesSimulation test_valid = new TestCoordinationPattesSimulation(deplacement);
+        TestEngine testEngine_valid = new TestEngine(test_valid);
+        testEngine_valid.start();
+
+/*        TestCoordinationTriphasee test = new TestCoordinationTriphasee(deplacement, 100000, 50, 1, true);
+        TestEngine testEngine = new TestEngine(test);
+        testEngine.start();
+
+        TestCoordinationTriphasee test_valid = new TestCoordinationTriphasee(deplacement);
+        TestEngine testEngine_valid = new TestEngine(test_valid);
+        testEngine_valid.start();
+  */      
+                
+/*        try
+        {
+            deplacement.setMode(Mode.BIPHASE, Marche.MARKOV);
+            hexa.avancer(5000);
+            deplacement.setMode(Mode.TRIPHASE, Marche.MARKOV);
+            hexa.avancer(5000);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
+        
+        if(serie != null)
 		{
 		    serie.close();
 		}
@@ -61,7 +67,7 @@ public class lanceur {
 
 	public static void test_validation(Deplacement deplacement)
 	{
-        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement, 10000, 50, 1, true, true);
+        TestCoordinationPattesSimulation test = new TestCoordinationPattesSimulation(deplacement);
         TestEngine testEngine = new TestEngine(test);
         testEngine.start();
 	}
@@ -79,7 +85,6 @@ public class lanceur {
                 Thread.sleep(50);
             } catch (InterruptedException e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -118,7 +123,6 @@ public class lanceur {
             e.printStackTrace();
         } catch (InterruptedException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         System.out.println("D");
@@ -334,10 +338,8 @@ public class lanceur {
                 
 
     		} catch (GoToException e) {
-    			// TODO Auto-generated catch block
     			e.printStackTrace();
     		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
     			e.printStackTrace();
     		} 
         	
@@ -371,10 +373,8 @@ public class lanceur {
 
     		Thread.sleep(2500);
 		} catch (GoToException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}/*
 		try {
@@ -388,10 +388,8 @@ public class lanceur {
 			deplacement.tourner_fixe(300);
 			Thread.sleep(100);
 		} catch (GoToException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
 	    

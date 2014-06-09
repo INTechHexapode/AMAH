@@ -5,10 +5,15 @@ import hexapode.enums.Mode;
 
 public class TestCoordinationPattesSimulation extends Test {
 
-		public TestCoordinationPattesSimulation(Deplacement deplacement, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov, boolean validation) 
+		public TestCoordinationPattesSimulation(Deplacement deplacement, int nbIteration, double consecutiveLearnTime, double pauseTime, boolean restartMarkov) 
 		{
-			super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov, validation);
+			super(deplacement, nbIteration, consecutiveLearnTime, pauseTime, restartMarkov);
 		}
+
+	    public TestCoordinationPattesSimulation(Deplacement deplacement)
+	    {
+	        super(deplacement);
+	    }
 
 		@Override
 		public void onStart() {
@@ -35,6 +40,7 @@ public class TestCoordinationPattesSimulation extends Test {
 			//On demande � l'hexapode de se mettre en position
 			try
             {
+			    System.out.println(etat_suivant);
 			    deplacement.goto_etat(etat_suivant);
             } catch (Exception e)
             {
@@ -57,7 +63,7 @@ public class TestCoordinationPattesSimulation extends Test {
 			}
 			else
 			{
-				markov = new Markov(2);
+				markov = new MarkovNCoups(1,2);
 			}
 			
 			deplacement.setMode(Mode.BIPHASE);
