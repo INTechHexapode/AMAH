@@ -133,15 +133,16 @@ public class Capteur implements Service {
         if(serie != null)
             try
             {
-            	if(infrarouge == 0)
+/*            	if(infrarouge == 0)
             		serie.communiquer("VD");
             	else
             		serie.communiquer("VB");
-                int mesure = serie.readByte();
+                int mesure = serie.readByte();*/
+                int mesure = 3000;
                 dernieres_mesures[indice] = mesure;
                 indice++;
                 indice %= nb_mesures;
-            } catch (SerialException e)
+            } catch (Exception e)
             {
                 e.printStackTrace();
             }
