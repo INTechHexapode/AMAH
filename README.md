@@ -8,3 +8,10 @@ A few videos :
 * [AMAH learns to stay upright](https://www.youtube.com/watch?v=HAIdLsz8gmg&feature=player_embedded)
 * [Its first, painful walk](https://www.youtube.com/watch?v=2Z7JvmVVERA)
 * [A presentation video, in french](https://www.youtube.com/watch?v=ZjIlJP-vDPI)
+* [The dance of AMAH](https://www.facebook.com/190110074395003/videos/675518149187524/)
+
+![Overview 1](https://raw.githubusercontent.com/PFGimenez/AMAH/master/resources/img1.jpg)
+
+![Overview 2](https://raw.githubusercontent.com/PFGimenez/AMAH/master/resources/img2.jpg)
+
+![Leg](https://raw.githubusercontent.com/PFGimenez/AMAH/master/resources/img3.jpg)
